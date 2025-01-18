@@ -7,6 +7,10 @@ import os
 app = Flask(__name__)
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
+@app.route('/')
+def home():
+    return "Welcome to the homepage!"
+
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
