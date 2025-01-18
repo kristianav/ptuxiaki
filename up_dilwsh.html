@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Υπεύθυνη Δήλωση Ν. 1599/86</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px 30px;
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #343a40;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: justify;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #495057;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[readonly] {
+            background-color: #e9ecef;
+        }
+
+        .full-width {
+            grid-column: span 4;
+        }
+
+        .half-width {
+            grid-column: span 2;
+        }
+
+        .signature {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .signature .date {
+            text-align: right;
+        }
+
+        .signature .date input {
+            width: 200px;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .signature .line {
+            width: 300px;
+            border-top: 1px solid #000;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+        .header img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="0.png" class="up_dilwsh-logo">
+        </div>
+        <h2><strong>Υπεύθυνη Δήλωση</strong></h2>
+        <h3><strong>(Άρθρο 8 Ν. 1599/1986)</strong></h3>
+        <p>Η ακρίβεια των στοιχείων που υποβάλλονται με αυτή τη δήλωση μπορεί να ελεγχθεί με βάση το αρχείο άλλων υπηρεσιών (άρθρο 8, παρ. 4 Ν. 1599/1986).</p>
+
+        <form id="updilwsh_form">
+            <div class="form-grid">
+                <div class="full-width">
+                    <label for="recipient">ΠΡΟΣ(1):</label>
+                    <input type="text" id="recipient" name="recipient" value="Γραμματεία Τμήματος ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ Πανεπιστημίου Πελοποννήσου" readonly>
+                </div>
+
+                <div class="half-width">
+                    <label for="name">Ο-Η Όνομα:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="surname">Επώνυμο:</label>
+                    <input type="text" id="surname" name="surname" required>
+                </div>
+
+                <div class="full-width">
+                    <label for="fathername">Όνομα και Επώνυμο Πατέρα:</label>
+                    <input type="text" id="fathername" name="fathername" required>
+                </div>
+
+                <div class="full-width">
+                    <label for="mothername">Όνομα και Επώνυμο Μητέρας:</label>
+                    <input type="text" id="mothername" name="mothername" required>
+                </div>
+
+                <div class="full-width">
+                    <label for="birthdate">Ημερομηνία γέννησης(2):</label>
+                    <input type="date" id="birthdate" name="birthdate" required>
+                </div>
+
+                <div class="full-width">
+                    <label for="birthplace">Τόπος Γέννησης:</label>
+                    <input type="text" id="birthplace" name="birthplace" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="idnumber">Αριθμός Δελτίου Ταυτότητας:</label>
+                    <input type="text" id="idnumber" name="idnumber" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="phone">Τηλ:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="city">Τόπος κατοικίας</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="address">Οδός:</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="number">Αριθ:</label>
+                    <input type="number" id="number" name="number" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="postal_code">ΤΚ:</label>
+                    <input type="text" id="postal_code" name="postal_code" required>
+                </div>
+
+                <div class="half-width">
+                    <label for="FAX">Αρ. Τηλεομοιοτύπου(Fax)</label>
+                    <input type="text" id="FAX" name="FAX">
+                </div>
+
+                <div class="half-width">
+                    <label for="email">Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail)</label>
+                    <input type="text" id="email" name="email" required>
+                </div>
+            </div>
+
+            <label><p>Με ατομική μου ευθύνη και γνωρίζοντας τις κυρώσεις (3), που προβλέπονται από της διατάξεις της παρ. 6 του άρθρου 22 του Ν. 1599/1986, δηλώνω ότι:</p></label>
+            <p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης.</p>
+            <p>(2)Δεν εργάζομαι ως υπάλληλος του δημοσίου τομέα  (συμπεριλαμβάνονται και τα σώματα ασφαλείας), κατά την
+                περίοδο της πρακτικής άσκησης.</p>
+            <p>(3)Δε βρίσκομαι στη διάρκεια της στρατιωτικής μου θητείας, κατά τη περίοδο της πρακτικής άσκησης.</p>
+            <p>(4) Δε στοιχειοθετείται συγγένεια (Β’ βαθμού και άνω, σε ευθεία γραμμή, πλάγια γραμμή και εξ’ αγχιστείας) όπως και
+                συζυγική σχέση με το νόμιμο εκπρόσωπο της επιχείρησης. Επίσης, σε κάθε περίπτωση συγγένειας Β’ βαθμού και
+                άνω όπως και συζυγικής σχέσης με άλλο πρόσωπο απασχολούμενο στον φορέα – επιχείρηση, το πρόσωπο αυτό
+                δεν μπορεί να ορισθεί ως επόπτης εκ μέρους του συνεργαζόμενου Φορέα.</p>
+
+            <div class="signature">
+                <div class="margin-right">
+                    <label for="date">Ημερομηνία:</label>
+                    <input type="date" id="date" name="date" placeholder=".../../20...">
+
+                    <label for="name">Ο-Η Δηλών/ούσα</label>
+                    <p>(υπογραφή)</p>
+                </div>
+            </div>
+        </form>
+
+
+        <p>(1) Αναγράφεται από τον ενδιαφερόμενο πολίτη ή Αρχή ή η Υπηρεσία του δημόσιου τομέα, που απευθύνεται η αίτηση.<br> </p>
+        <p>(2) Αναγράφεται ολογράφως. <br> </p>
+        <p>(3) «Όποιος εν γνώσει του δηλώνει ψευδή γεγονότα ή αρνείται ή αποκρύπτει τα αληθινά με έγγραφη υπεύθυνη δήλωση του άρθρου 8 
+        τιμωρείται με φυλάκιση τουλάχιστον τριών μηνών. Εάν ο υπαίτιος αυτών των πράξεων σκόπευε να προσπορίσει στον εαυτόν του ή σε
+        άλλον περιουσιακό όφελος βλάπτοντας τρίτον ή σκόπευε να βλάψει άλλον, τιμωρείται με κάθειρξη μέχρι 10 ετών <br> </p>
+        <p>(4) Σε περίπτωση ανεπάρκειας χώρου η δήλωση συνεχίζεται στην πίσω όψη της και υπογράφεται από τον δηλούντα ή την δηλούσα. <br> </p>
+
+        <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('updilwsh_form');
+            const submitbutton = document.getElementById('submit_button');
+
+            if (form) {
+                submitbutton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log('Form submission triggered');
+                    const formData = {};
+                    const formElements = form.elements;
+                    for(let element of formElements) {
+                        if (element.name) {
+                            formData[element.name] = element.value;
+                        }
+                    }
+                    console.log('Form data:', formData);
+
+                    try{
+                        localStorage.setItem('submittedForm', JSON.stringify(formData));
+                        alert('Η δήλωση υποβλήθηκε επιτυχώς!');
+                        window.location.href = "form.html";
+                    }
+                    catch(error) {
+                        alert('Σφάλμα κατά την υποβολή της δήλωσης.' +error.message);
+                    }
+                });
+            } else {
+                console.log('Form not found.');
+            }
+        });
+    </script>
+</body>
+</html>
