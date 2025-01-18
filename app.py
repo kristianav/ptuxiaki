@@ -4,12 +4,12 @@ import sqlite3
 import os
 
 
-app = Flask(__name__, static_folder='public')
+app = Flask(__name__, static_folder='.')
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
 @app.route('/')
 def home():
-    return send_from_directory('public', 'login.html')
+    return send_from_directory('.', 'login.html')
 
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
