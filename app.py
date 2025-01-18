@@ -1,15 +1,15 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, send_from_directory, request, jsonify, render_template
 from flask_cors import CORS
 import sqlite3
 import os
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='public')
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
 @app.route('/')
 def home():
-    return "Welcome to the homepage!"
+    return send_from_directory('public', 'index.html')
 
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
@@ -82,6 +82,10 @@ def init_db():
     conn.commit()
     conn.close()
 
+#static files
+@app.route('/<path:filename>')
+def static_files(filename):
+    return send_from_directory('public', filename)
 # Login Endpoint
 @app.route('/login', methods=['POST'])
 def login():
