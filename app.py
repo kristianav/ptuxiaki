@@ -3,6 +3,7 @@ from flask_cors import CORS
 import sqlite3
 import os
 
+
 app = Flask(__name__)
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
