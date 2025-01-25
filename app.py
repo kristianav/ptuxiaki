@@ -169,5 +169,6 @@ def get_students():
 
 if __name__ == '__main__':
     init_db()
-    app.run()
+    port = int(os.environ.get("PORT", 5000))  # Χρησιμοποιεί τη μεταβλητή PORT
+    app.run(host='0.0.0.0', port=port)  # "0.0.0.0" για να δέχεται εξωτερικές συνδέσεις
 
