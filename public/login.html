@@ -70,8 +70,12 @@
             <div class="header">
                 <img src="papel.png" class="papel-logo">
             </div>
-            <h2>Σύνδεση φοιτητή</h2>
+            <h2>Σύνδεση </h2>
             <form id="loginform">
+                <select id="userType" required>
+                    <option value="student">Φοιτητής</option>
+                    <option value="secretary">Γραμματεία</option>
+                </select>
                 <input type="text" id="username" placeholder="Όνομα χρήστη" required />
                 <input type="password" id="password" placeholder="Κωδικός" required />
                 <button type="submit">Σύνδεση</button>
@@ -81,7 +85,8 @@
         <script>
             document.getElementById("loginform").addEventListener("submit", function(e) {
                 e.preventDefault(); // Αποτρέπει το default submit της φόρμας
-    
+
+                const userType = document.getElementById("userType").value;
                 const username = document.getElementById("username").value.trim();
                 const password = document.getElementById("password").value.trim();
             
@@ -110,9 +115,13 @@
                         messageElement.style.color = "green";
                         messageElement.textContent = "Επιτυχής σύνδεση!";
     
-                        // Redirect μετά την επιτυχή σύνδεση
+                        // Redirect ανάλογα με τον τύπο χρήστη
                         setTimeout(function() {
-                            window.location.href = "form.html"; // Ανακατεύθυνση στη φόρμα
+                            if (userType === "student") {
+                                window.location.href = "form.html";
+                            } else if (userType === "secretary") {
+                                window.location.href = "admin.html";
+                            }
                         }, 1000);
                     } else {
                         messageElement.style.color = "red";

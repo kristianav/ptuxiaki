@@ -20,6 +20,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 users = {
     "student1": "password123",
     "student2": "mypassword",
+    "dssec1": "secpassword",
+    "dssec2": "secpass"
 }
 
 # Σύνδεση με βάση δεδομένων
@@ -94,7 +96,8 @@ def login():
     password = data.get('password')
 
     if username in users and users[username] == password:
-        return jsonify({"success": True})
+        user_role = "secretary" if username.startswith("secretary") else "student"
+        return jsonify({"success": True, "role": user_role})
     else:
         return jsonify({"success": False})
 
@@ -102,6 +105,12 @@ def login():
 @app.route('/form')
 def student_form():
     return render_template("form.html")
+
+#Πίνακας διαχείρισης γραμματείας (HTML)
+@app.route('/admin')
+def admin_panel():
+    return render_template("admin.html")
+
 
 # Υποβολή Φόρμας
 @app.route('/submit_form', methods=['POST'])
@@ -166,7 +175,24 @@ def get_students():
     rows = cursor.fetchall()
     conn.close()
     return jsonify([dict(row) for row in rows])
+# Ενημέρωση κατάστασης αίτησης από τη γραμματεία
+@app.route('/update_application', methods=['POST'])
+def update_application():
+    data = request.json
+    student_id = data.get('id')
+    status = data.get('status')
+    comments = data.get('comments', '')
+    
+    if not student_id or not status:
+        return jsonify({"success": False, "message": "Missing data"}), 400
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE students SET status = ?, secretary_comments = ? WHERE id = ?", (status, comments, student_id))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"success": True, "message": "Application updated successfully"})
 if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 5000))  # Χρησιμοποιεί τη μεταβλητή PORT

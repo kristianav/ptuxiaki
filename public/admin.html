@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Πίνακας Διαχείρισης - Γραμματεία</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .button-group button { margin-right: 5px; padding: 5px 10px; border: none; cursor: pointer; }
+        .approve-btn { background-color: green; color: white; }
+        .reject-btn { background-color: red; color: white; }
+        .view-btn { background-color: blue; color: white; }
+    </style>
+</head>
+<body>
+    <h2>Πίνακας Διαχείρισης Αιτήσεων</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Όνομα</th>
+                <th>Email</th>
+                <th>Κατάσταση</th>
+                <th>Δράση</th>
+            </tr>
+        </thead>
+        <tbody id="applications-table">
+            <!-- Τα δεδομένα θα φορτωθούν εδώ δυναμικά -->
+        </tbody>
+    </table>
+    
+    <script>
+        function fetchApplications() {
+            $.get("/students", function(data) {
+                let tableBody = "";
+                data.forEach(student => {
+                    tableBody += `
+                        <tr>
+                            <td>${student.id}</td>
+                            <td>${student.stud_name} ${student.stud_surname}</td>
+                            <td>${student.stud_email}</td>
+                            <td>${student.status || 'Σε αναμονή'}</td>
+                            <td class="button-group">
+                                <button class="approve-btn" onclick="updateApplication(${student.id}, 'approved')">Έγκριση</button>
+                                <button class="reject-btn" onclick="updateApplication(${student.id}, 'rejected')">Απόρριψη</button>
+                                <button class="view-btn" onclick="viewDetails(${student.id})">Προβολή</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                $("#applications-table").html(tableBody);
+            });
+        }
+        
+        function updateApplication(id, status) {
+            let comments = prompt("Εισάγετε σχόλια (προαιρετικά):");
+            $.ajax({
+                url: "/update_application",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ id: id, status: status, comments: comments }),
+                success: function(response) {
+                    alert(response.message);
+                    fetchApplications();
+                },
+                error: function() {
+                    alert("Σφάλμα κατά την ενημέρωση της αίτησης.");
+                }
+            });
+        }
+        
+        function viewDetails(id) {
+            $.get(`/application_details?id=${id}`, function(data) {
+                let detailsWindow = window.open("", "_blank");
+                detailsWindow.document.write("<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+            });
+        }
+        
+        $(document).ready(fetchApplications);
+    </script>
+</body>
+</html>
