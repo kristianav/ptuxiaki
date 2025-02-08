@@ -201,6 +201,7 @@
                             <input type="text" id="stud_sem" name="stud_sem" required>
 
                             <label for="stud_address"><strong>Διεύθυνση:</strong></label>
+                            <input type="text" id="stud_address" name="stud_address" required>
                         
                             <label for="stud_city">Πόλη:</label>
                             <input type="text" id="stud_city" name="stud_city" required>
@@ -301,12 +302,82 @@
                 nextWeek.setDate(today.getDate() + 7);
                 const nextWeekFormatted = nextWeek.toLocaleDateString("el-GR");
                 startDateField.value = nextWeekFormatted;
-            });
-                const submitButton = document.getElementById("submit_button");
-                submitButton.addEventListener("click", function() {
-                    alert("Η αίτησή σας στάλθηκε με επιτυχία στη γραμματεία!");
+                 });
+
+             document.getElementById("submit_button").addEventListener("click", function() {
+                const form = document.querySelector("form");
+                const formData = new FormData(form);
+                fetch("https://ptuxiaki.onrender.com/submit_form", {
+                    method: "POST",
+                    body: formData
                 })
-            
+                .then(response => response.text())
+                .then(text => {
+                    console.log("Response text:", text);
+                    try{
+                        const data = JSON.parse(text);
+                        if (data.success) {
+                            alert("Η αίτηση υποβλήθηκε επιτυχώς!");
+                            window.location.href = "form.html";
+                        } else {
+                            alert("Σφάλμα κατά την υποβολή της αίτησης.");
+                        }
+                    } catch (error) {
+                        console.error("Fetch error:", error);
+                        alert("Σφάλμα κατά την υποβολή της αίτησης.");
+                    }
+             });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('adminForm').addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    let isValid = true;
+
+                    // Example validation: Check if a required field is filled
+                    const requiredFields = document.querySelectorAll('#adminForm [required]');
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            field.classList.add('error');
+                        } else {
+                            field.classList.remove('error');
+                        }
+                    });
+
+                    // Validate PDF upload
+                    const pdfUpload = document.getElementById('pdfUpload');
+                    if (pdfUpload.files.length === 0) {
+                        isValid = false;
+                        pdfUpload.classList.add('error');
+                    } else {
+                        pdfUpload.classList.remove('error');
+                    }
+
+                    if (!isValid) {
+                        alert('Παρακαλώ συμπληρώστε όλα τα απαιτούμενα πεδία και ανεβάστε ένα PDF.');
+                        return;
+                    }
+
+                    // Submit the form data
+                    const formData = new FormData(document.getElementById('adminForm'));
+                    try {
+                        const response = await fetch('https://ptuxiaki.onrender.com/submit_form', {
+                            method: 'POST',
+                            body: formData,
+                        });
+
+                        if (response.ok) {
+                            alert('Η φόρμα υποβλήθηκε επιτυχώς.');
+                        } else {
+                            const errorData = await response.json();
+                            alert(`Υπήρξε ένα σφάλμα: ${errorData.message}`);
+                        }
+                    } catch (error) {
+                        alert(`Υπήρξε ένα σφάλμα: ${error.message}`);
+                    }
+                });
+            });
         </script>
     </body>
 </html>

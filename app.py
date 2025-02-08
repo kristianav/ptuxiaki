@@ -83,6 +83,8 @@ def init_db():
     ''')
     conn.commit()
     conn.close()
+    print("Database initialized successfully!")
+
 
 #static files
 @app.route('/<path:filename>')
@@ -181,17 +183,39 @@ def update_application():
     data = request.json
     student_id = data.get('id')
     status = data.get('status')
-    comments = data.get('comments', '')
+    comments = data.get('comments', '') #προαιρετικά
     
     if not student_id or not status:
         return jsonify({"success": False, "message": "Missing data"}), 400
-
+    try: 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE students SET status = ?, secretary_comments = ? WHERE id = ?", (status, comments, student_id))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "message": "Application updated successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+# Λήψη όλων των αιτήσεων από τη γραμματεία
+@app.route('/applications', methods=['GET'])
+def get_applications():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("UPDATE students SET status = ?, secretary_comments = ? WHERE id = ?", (status, comments, student_id))
-    conn.commit()
+    cursor.execute('SELECT * FROM students WHERE status IS NOT NULL')
+    rows = cursor.fetchall()
     conn.close()
+    return jsonify([{
+        'id': row['id'],
+        'stud_surname': row['stud_surname'],
+        'stud_name': row['stud_name'],
+        'status': row['status'],
+        'secretary_comments': row['secretary_comments'],
+        'date': row['date']
+    } for row in rows])
     
+    
+    return jsonify({"success": True, "message": "Application updated successfully"})
+
     return jsonify({"success": True, "message": "Application updated successfully"})
 if __name__ == '__main__':
     init_db()
