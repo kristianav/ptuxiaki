@@ -304,29 +304,13 @@
                 startDateField.value = nextWeekFormatted;
                  });
 
-             document.getElementById("submit_button").addEventListener("click", function() {
+                 document.getElementById("submit_button").addEventListener("click", function() {
                 const form = document.querySelector("form");
                 const formData = new FormData(form);
                 fetch("https://ptuxiaki.onrender.com/submit_form", {
                     method: "POST",
                     body: formData
                 })
-                .then(response => response.text())
-                .then(text => {
-                    try{
-                        console.log("Response from server:", text); // Δείτε τι επιστρέφει ο server
-                        const data = JSON.parse(text);
-                        if (data.success) {
-                            alert("Η αίτηση υποβλήθηκε επιτυχώς!");
-                            window.location.href = "form.html";
-                        } else {
-                            alert("Σφάλμα κατά την υποβολή της αίτησης.");
-                        }
-                    } catch (error) {
-                        console.error("Fetch error:", error);
-                        alert("Σφάλμα κατά την υποβολή της αίτησης.");
-                    }
-             });
             });
         </script>
     </body>

@@ -164,9 +164,9 @@ def submit_form():
         conn.commit()
         conn.close()
 
-        return "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!"
+        return jsonify({"success": True, "message": "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!"})
     except Exception as e:
-        return f"Υπήρξε ένα σφάλμα: {str(e)}", 500
+        return jsonify({"success": False, "error": str(e)}), 500
 
 # Λήψη όλων των φοιτητών
 @app.route('/students', methods=['GET'])
