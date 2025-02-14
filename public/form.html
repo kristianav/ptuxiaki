@@ -1,317 +1,330 @@
-<!DOCTYPE html>
-<html lang="el">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Αίτηση για Έγκριση Πρακτικής Άσκησης</title>
-        <style>
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background-color: #f4f4f9;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                height: 100%;
-                color: #333;
-            }
+    <!DOCTYPE html>
+    <html lang="el">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Αίτηση για Έγκριση Πρακτικής Άσκησης</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    background-color: #f4f4f9;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-start;
+                    height: 100%;
+                    color: #333;
+                }
 
-            .main-container {
-                width: 90%;
-                max-width: 1200px;
-                margin-top: 30px;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: 10px;
-                box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
-            }
+                .main-container {
+                    width: 90%;
+                    max-width: 1200px;
+                    margin-top: 30px;
+                    padding: 20px;
+                    background-color: #fff;
+                    border-radius: 10px;
+                    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+                }
 
-            h2 {
-                text-align: center;
-                color: #000000;
-                font-size: 2em;
-                margin-bottom: 30px;
-            }
+                h2 {
+                    text-align: center;
+                    color: #000000;
+                    font-size: 2em;
+                    margin-bottom: 30px;
+                }
 
-            .form-container {
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-                margin-bottom: 30px;
-            }
+                .form-container {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                    margin-bottom: 30px;
+                }
 
-            .header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 20px;
-                background-color: #fafafa;
-            }
-            .university-logo {
-                height: auto;
-            }
-            .university-info {
-                margin-left: 50px;
-                text-align: right;
-            }
-            .university-info p {
-                margin: 0;
-                font-weight: bold;
-            }
+                .header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 20px;
+                    background-color: #fafafa;
+                }
+                .university-logo {
+                    height: auto;
+                }
+                .university-info {
+                    margin-left: 50px;
+                    text-align: right;
+                }
+                .university-info p {
+                    margin: 0;
+                    font-weight: bold;
+                }
 
-            fieldset {
-                border: 2px solid #f4f4f9;
-                padding: 20px;
-                margin-bottom: 20px;
-                border-radius: 10px;
-                background-color: #fafafa;
-                box-sizing: border-box;
-                width: 100%;
-            }
+                fieldset {
+                    border: 2px solid #f4f4f9;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    border-radius: 10px;
+                    background-color: #fafafa;
+                    box-sizing: border-box;
+                    width: 100%;
+                }
 
-            legend {
-                font-size: 1.4em;
-                color: #ab0606;
-                font-weight: bold;
-            }
+                legend {
+                    font-size: 1.4em;
+                    color: #ab0606;
+                    font-weight: bold;
+                }
 
-            label {
-                display: block;
-                margin: 10px 0 5px;
-                color: #333;
-                font-weight: 500;
-            }
+                label {
+                    display: block;
+                    margin: 10px 0 5px;
+                    color: #333;
+                    font-weight: 500;
+                }
 
-            input, textarea {
-                width: 100%;
-                padding: 10px;
-                margin: 8px 0 20px;
-                border-radius: 8px;
-                border: 1px solid #ccc;
-                box-sizing: border-box;
-                font-size: 1em;
-                transition: all 0.3s ease;
-            }
+                input, textarea {
+                    width: 100%;
+                    padding: 10px;
+                    margin: 8px 0 20px;
+                    border-radius: 8px;
+                    border: 1px solid #ccc;
+                    box-sizing: border-box;
+                    font-size: 1em;
+                    transition: all 0.3s ease;
+                }
 
-            input[type="text"], input[type="email"], input[type="number"] {
-                font-size: 1.1em;
-            }
+                input[type="text"], input[type="email"], input[type="number"] {
+                    font-size: 1.1em;
+                }
 
-            input:focus, textarea:focus {
-                border-color: #000000;
-                outline: none;
-            }
+                input:focus, textarea:focus {
+                    border-color: #000000;
+                    outline: none;
+                }
 
-            textarea {
-                resize: vertical;
-            }
+                textarea {
+                    resize: vertical;
+                }
 
-            button {
-                width: 100%;
-                padding: 12px;
-                background-color: #000000;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-size: 1.2em;
-                transition: background-color 0.3s ease;
-                margin-bottom: 20px;
-            }
+                button {
+                    width: 100%;
+                    padding: 12px;
+                    background-color: #000000;
+                    color: #fff;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1.2em;
+                    transition: background-color 0.3s ease;
+                    margin-bottom: 20px;
+                }
 
-            button:hover {
-                background-color: #000000;
-            }
+                button:hover {
+                    background-color: #000000;
+                }
 
-            .student-container, .employer-container {
-                width: 48%;
-                box-sizing: border-box;
-                padding: 0 20px;
-            }
+                .student-container, .employer-container {
+                    width: 48%;
+                    box-sizing: border-box;
+                    padding: 0 20px;
+                }
 
-            .file-input-container {
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-            }
+                .file-input-container {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                }
 
-            .file-input {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .approval-row {
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-                align-items: center;
-            }
-            .signature p{
-                margin: 0;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="main-container">
-            <div class="header">
-                <img src="unofpel.png" class="university-logo">
-                <div class="university-info">
-                    <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
-                    <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
-                </div>
-            </div>
-            <h2>Αίτηση Έγκρισης Πρακτικής Άσκησης</h2>
-            <form method="post" action="/submit_form" enctype="multipart/form-data">
-                <div class="form-container">
-                    <!-- Στοιχεία Φοιτητή και Θέμα Έγκρισης (Αριστερά) -->
-                    <div class="student-container">
-                        <h3>ΑΙΤΗΣΗ</h3>
-                        <fieldset>
-                            <legend>Στοιχεία Φοιτητή</legend>
-                            <label for="stud_surname">Επώνυμο:</label>
-                            <input type="text" id="stud_surname" name="stud_surname" required>
-
-                            <label for="stud_name">Όνομα:</label>
-                            <input type="text" id="stud_name" name="stud_name" required>
-
-                            <label for="stud_fname">Όνομα Πατρός:</label>
-                            <input type="text" id="stud_fname" name="stud_fname" required>
-
-                            <label for="stud_mname">Όνομα Μητρός:</label>
-                            <input type="text" id="stud_mname" name="stud_mname" required>
-
-                            <label for="department">Τμήμα:</label>
-                            <input type="text" id="department" name="department" value="Ψηφιακών Συστημάτων" readonly>
-
-                            <label for="sxolh">Σχολή:</label>
-                            <input type="text" id="sxolh" name="sxolh" value="Οικονομίας και Τεχνολογίας" readonly>
-
-                            <label for="university">Πανεπιστήμιο:</label>
-                            <input type="text" id="university" name="university" value="Πανεπιστήμιο Πελοποννήσου" readonly>
-
-                            <label for="stud_id">Αριθμός Μητρώου:</label>
-                            <input type="text" id="stud_id" name="stud_id" required>
-
-                            <label for="stud_afm">ΑΦΜ:</label>
-                            <input type="text" id="stud_afm" name="stud_afm" required>
-
-                            <label for="stud_sem">Εξάμηνο Σπουδών:</label>
-                            <input type="text" id="stud_sem" name="stud_sem" required>
-
-                            <label for="stud_address"><strong>Διεύθυνση:</strong></label>
-                            <input type="text" id="stud_address" name="stud_address" required>
-                        
-                            <label for="stud_city">Πόλη:</label>
-                            <input type="text" id="stud_city" name="stud_city" required>
-                        
-                            <label for="stud_zipcode">Ταχ. Κώδικας:</label>
-                            <input type="text" id="stud_zipcode" name="stud_zipcode" required>
-                        
-                            <label for="stud_tel">Τηλ.:</label>
-                            <input type="text" id="stud_tel" name="stud_tel" required>
-                        
-                            <label for="stud_email">Email:</label>
-                            <input type="email" id="stud_email" name="stud_email"required>
-
-                        <!-- Θέμα Έγκρισης -->
-                        <h3>ΘΕΜΑ: Έγκριση Πρακτικής Άσκησης</h3>
-                        <p>ΣΠΑΡΤΗ: <input type="text" id="current-date" readonly></p>
-                        <p><strong>ΕΠΙΤΡΟΠΗ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ:</strong></p>
-                        <p>Εγκρίνεται η πραγματοποίηση της Π.Α. στη βάση των δεδομένων και των επισυναπτόμενων της αίτησης και ορίζονται:</p>
-                        <p>α. Ημερομηνία έναρξης Π.Α.: <input type="text" id="start-date" readonly></p>
-                        <p>β. Επόπτης Καθηγητής: <input type="text" id="supervisor" required></p>
-                        <div class="approval-row">
-                            <div class="signature">
-                                <p>Ο Πρόεδρος</p>
-                                <p>____________________</p>
-                            </div>
-                            <div class="signature">
-                                <p>Τα μέλη</p>
-                                <p>____________________</p>
-                            </div>
-                        </div>
-                        </fieldset> 
+                .file-input {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                
+                .approval-row {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 20px;
+                    align-items: center;
+                }
+                .signature p{
+                    margin: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="main-container">
+                <div class="header">
+                    <img src="unofpel.png" class="university-logo">
+                    <div class="university-info">
+                        <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
+                        <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
                     </div>
-
-                <!-- Στοιχεία Φορέα -->
-                <div class="employer-container">
-                    <h3>Προς: Επιτροπή Πρακτικής Άσκησης</h3>
-                    <p><strong>Παρακαλώ όπως εγκρίνετε την πραγματοποίηση της πρακτικής μου άσκησης στην υπηρεσία / επιχείρηση με τα παρακάτω στοιχεία:</strong></p>
-                    <fieldset>
-                        <legend>Στοιχεία Φορέα</legend>
-                        <label for="emp-name">Όνομα Φορέα</label>
-                        <input type="text" id="emp-name" required>
-
-                        <label for="emp-addr">Διεύθυνση Φορέα</label>
-                        <input type="text" id="emp-addr" required>
-
-                        <label for="emp-phone">Τηλέφωνο Φορέα</label>
-                        <input type="text" id="emp-phone" required>
-
-                        <label for="emp-email">Ηλ. Διεύθυνση Φορέα</label>
-                        <input type="email" id="emp-email" required>
-
-                        <label for="emp-sup">Επόπτης Φορέα</label>
-                        <input type="text" id="emp-sup" required>
-
-                    <!-- Δήλωση Φοιτητή -->
-                        <label>Δηλώνω υπεύθυνα ότι:</label>
-                        <p>α) δεν επιθυμώ να συμμετάσχω στο χρηματοδοτούμενο μέσω ΕΣΠΑ Πρόγραμμα Π.Α. και</p>
-                        <p>β) εντός ενός μηνός από την λήξη της πρακτικής μου άσκησης, οφείλω να καταθέσω στη Γραμματεία του Τμήματος με δική μου ευθύνη Έκθεση Πεπραγμένων, αντίγραφο κατάστασης απόδοσης ενσήμων (από τον Ε.Φ.Κ.Α. πρώην Ι.Κ.Α.) για την πιστοποίηση της ασφάλισης του/της φοιτητή/τριας κατά το διάστημα της πρακτικής άσκησης, καθώς και βεβαίωση περάτωσης της πρακτικής άσκησης από τον Φορέα.</p>
-                        <div class="approval-row">
-                            <div class="signature">
-                                <p><strong>Ο/Η Αιτών/ούσα</strong></p>
-                                <p>____________________</p>
-                                <p>Υπογραφή</p>
-                            </div>
-                        </div>
-
-                        <div class="attachments">
-                            <p><strong>Συνημμένα:</strong></p>
-                            <p>1.Βεβαίωση ότι πληρώ τις προϋποθέσεις έναρξης Πρακτικής Άσκησης ή Αναλυτική Βαθμολογία από τη Γραμματεία του Τμήματος.</a></p>
-                            <label for="anal_vathm" class="upload-file">Ανεβάστε νέο αρχείο:</label>
-                            <input type="file" id="anal_vathm" name="anal_vathm">
-                            <p>2. <a href="vevaiwsi_apodoxis.html" class="attach-link">Βεβαίωση αποδοχής απασχόλησης από το φορέα.</a></p>
-                            <label for="vevaiwsi_apodoxis" class="upload-file">Ανεβάστε νέο αρχείο:</label>
-                            <input type="file" id="vevaiwsi_apodoxis" name="vevaiwsi_apodoxis">
-                            <p>3. <a href="up_dilwsh.html" class="attach-link">Υπεύθυνη Δήλωση.</a></p>
-                            <label for="up_dilwsh" class="upload-file">Ανεβάστε νέο αρχείο:</label>
-                            <input type="file" id="up_dilwsh" name="up_dilwsh">
-                        </div>
-
-                    </fieldset>
                 </div>
+                <h2>Αίτηση Έγκρισης Πρακτικής Άσκησης</h2>
+                <form method="post" action="/submit_form" enctype="multipart/form-data">
+                    <div class="form-container">
+                        <!-- Στοιχεία Φοιτητή και Θέμα Έγκρισης (Αριστερά) -->
+                        <div class="student-container">
+                            <h3>ΑΙΤΗΣΗ</h3>
+                            <fieldset>
+                                <legend>Στοιχεία Φοιτητή</legend>
+                                <label for="stud_surname">Επώνυμο:</label>
+                                <input type="text" id="stud_surname" name="stud_surname" required>
+
+                                <label for="stud_name">Όνομα:</label>
+                                <input type="text" id="stud_name" name="stud_name" required>
+
+                                <label for="stud_fname">Όνομα Πατρός:</label>
+                                <input type="text" id="stud_fname" name="stud_fname" required>
+
+                                <label for="stud_mname">Όνομα Μητρός:</label>
+                                <input type="text" id="stud_mname" name="stud_mname" required>
+
+                                <label for="department">Τμήμα:</label>
+                                <input type="text" id="department" name="department" value="Ψηφιακών Συστημάτων" readonly>
+
+                                <label for="sxolh">Σχολή:</label>
+                                <input type="text" id="sxolh" name="sxolh" value="Οικονομίας και Τεχνολογίας" readonly>
+
+                                <label for="university">Πανεπιστήμιο:</label>
+                                <input type="text" id="university" name="university" value="Πανεπιστήμιο Πελοποννήσου" readonly>
+
+                                <label for="stud_id">Αριθμός Μητρώου:</label>
+                                <input type="text" id="stud_id" name="stud_id" required>
+
+                                <label for="stud_afm">ΑΦΜ:</label>
+                                <input type="text" id="stud_afm" name="stud_afm" required>
+
+                                <label for="stud_sem">Εξάμηνο Σπουδών:</label>
+                                <input type="text" id="stud_sem" name="stud_sem" required>
+
+                                <label for="stud_address"><strong>Διεύθυνση:</strong></label>
+                                <input type="text" id="stud_address" name="stud_address" required>
+                            
+                                <label for="stud_city">Πόλη:</label>
+                                <input type="text" id="stud_city" name="stud_city" required>
+                            
+                                <label for="stud_zipcode">Ταχ. Κώδικας:</label>
+                                <input type="text" id="stud_zipcode" name="stud_zipcode" required>
+                            
+                                <label for="stud_tel">Τηλ.:</label>
+                                <input type="text" id="stud_tel" name="stud_tel" required>
+                            
+                                <label for="stud_email">Email:</label>
+                                <input type="email" id="stud_email" name="stud_email"required>
+
+                            <!-- Θέμα Έγκρισης -->
+                            <h3>ΘΕΜΑ: Έγκριση Πρακτικής Άσκησης</h3>
+                            <p>ΣΠΑΡΤΗ: <input type="text" id="current-date" readonly></p>
+                            <p><strong>ΕΠΙΤΡΟΠΗ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ:</strong></p>
+                            <p>Εγκρίνεται η πραγματοποίηση της Π.Α. στη βάση των δεδομένων και των επισυναπτόμενων της αίτησης και ορίζονται:</p>
+                            <p>α. Ημερομηνία έναρξης Π.Α.: <input type="text" id="start-date" readonly></p>
+                            <p>β. Επόπτης Καθηγητής: <input type="text" id="supervisor" required></p>
+                            <div class="approval-row">
+                                <div class="signature">
+                                    <p>Ο Πρόεδρος</p>
+                                    <p>____________________</p>
+                                </div>
+                                <div class="signature">
+                                    <p>Τα μέλη</p>
+                                    <p>____________________</p>
+                                </div>
+                            </div>
+                            </fieldset> 
+                        </div>
+
+                    <!-- Στοιχεία Φορέα -->
+                    <div class="employer-container">
+                        <h3>Προς: Επιτροπή Πρακτικής Άσκησης</h3>
+                        <p><strong>Παρακαλώ όπως εγκρίνετε την πραγματοποίηση της πρακτικής μου άσκησης στην υπηρεσία / επιχείρηση με τα παρακάτω στοιχεία:</strong></p>
+                        <fieldset>
+                            <legend>Στοιχεία Φορέα</legend>
+                            <label for="emp-name">Όνομα Φορέα</label>
+                            <input type="text" id="emp-name" required>
+
+                            <label for="emp-addr">Διεύθυνση Φορέα</label>
+                            <input type="text" id="emp-addr" required>
+
+                            <label for="emp-phone">Τηλέφωνο Φορέα</label>
+                            <input type="text" id="emp-phone" required>
+
+                            <label for="emp-email">Ηλ. Διεύθυνση Φορέα</label>
+                            <input type="email" id="emp-email" required>
+
+                            <label for="emp-sup">Επόπτης Φορέα</label>
+                            <input type="text" id="emp-sup" required>
+
+                        <!-- Δήλωση Φοιτητή -->
+                            <label>Δηλώνω υπεύθυνα ότι:</label>
+                            <p>α) δεν επιθυμώ να συμμετάσχω στο χρηματοδοτούμενο μέσω ΕΣΠΑ Πρόγραμμα Π.Α. και</p>
+                            <p>β) εντός ενός μηνός από την λήξη της πρακτικής μου άσκησης, οφείλω να καταθέσω στη Γραμματεία του Τμήματος με δική μου ευθύνη Έκθεση Πεπραγμένων, αντίγραφο κατάστασης απόδοσης ενσήμων (από τον Ε.Φ.Κ.Α. πρώην Ι.Κ.Α.) για την πιστοποίηση της ασφάλισης του/της φοιτητή/τριας κατά το διάστημα της πρακτικής άσκησης, καθώς και βεβαίωση περάτωσης της πρακτικής άσκησης από τον Φορέα.</p>
+                            <div class="approval-row">
+                                <div class="signature">
+                                    <p><strong>Ο/Η Αιτών/ούσα</strong></p>
+                                    <p>____________________</p>
+                                    <p>Υπογραφή</p>
+                                </div>
+                            </div>
+
+                            <div class="attachments">
+                                <p><strong>Συνημμένα:</strong></p>
+                                <p>1.Βεβαίωση ότι πληρώ τις προϋποθέσεις έναρξης Πρακτικής Άσκησης ή Αναλυτική Βαθμολογία από τη Γραμματεία του Τμήματος.</a></p>
+                                <label for="anal_vathm" class="upload-file">Ανεβάστε νέο αρχείο:</label>
+                                <input type="file" id="anal_vathm" name="anal_vathm">
+                                <p>2. <a href="vevaiwsi_apodoxis.html" class="attach-link">Βεβαίωση αποδοχής απασχόλησης από το φορέα.</a></p>
+                                <label for="vevaiwsi_apodoxis" class="upload-file">Ανεβάστε νέο αρχείο:</label>
+                                <input type="file" id="vevaiwsi_apodoxis" name="vevaiwsi_apodoxis">
+                                <p>3. <a href="up_dilwsh.html" class="attach-link">Υπεύθυνη Δήλωση.</a></p>
+                                <label for="up_dilwsh" class="upload-file">Ανεβάστε νέο αρχείο:</label>
+                                <input type="file" id="up_dilwsh" name="up_dilwsh">
+                            </div>
+
+                        </fieldset>
+                    </div>
+                </div>
+                <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
             </div>
-            <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
-        </div>
-        <script>
-            // Αυτόματη συμπλήρωση ημερομηνίας
-            document.addEventListener("DOMContentLoaded", function() {
-                const currentDateField = document.getElementById("current-date");
-                const startDateField = document.getElementById("start-date");
-                const supervisorField = document.getElementById("supervisor");
+            <script>
+                // Αυτόματη συμπλήρωση ημερομηνίας
+                document.addEventListener("DOMContentLoaded", function() {
+                    const currentDateField = document.getElementById("current-date");
+                    const startDateField = document.getElementById("start-date");
+                    const supervisorField = document.getElementById("supervisor");
 
-                // Σημερινή ημερομηνία
-                const today = new Date();
-                const todayFormatted = today.toLocaleDateString("el-GR");
-                currentDateField.value = todayFormatted;
+                    // Σημερινή ημερομηνία
+                    const today = new Date();
+                    const todayFormatted = today.toLocaleDateString("el-GR");
+                    currentDateField.value = todayFormatted;
 
-                const nextWeek = new Date();
-                nextWeek.setDate(today.getDate() + 7);
-                const nextWeekFormatted = nextWeek.toLocaleDateString("el-GR");
-                startDateField.value = nextWeekFormatted;
-                 });
+                    const nextWeek = new Date();
+                    nextWeek.setDate(today.getDate() + 7);
+                    const nextWeekFormatted = nextWeek.toLocaleDateString("el-GR");
+                    startDateField.value = nextWeekFormatted;
+                    });
 
-                 document.getElementById("submit_button").addEventListener("click", function() {
-                const form = document.querySelector("form");
-                const formData = new FormData(form);
-                fetch("https://ptuxiaki.onrender.com/submit_form", {
-                    method: "POST",
-                    body: formData
-                })
-            });
-        </script>
-    </body>
-</html>
+                    document.getElementById("submit_button").addEventListener("click", function() {
+                    const form = document.querySelector("form");
+                    const formData = new FormData(form);
+                    fetch("https://ptuxiaki.onrender.com/submit_form", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Η αίτηση υποβλήθηκε επιτυχώς!");
+                            window.location.href = "form.html";
+                        } else {
+                            alert("Σφάλμα κατά την υποβολή της αίτησης.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Σφάλμα κατά την υποβολή της αίτησης.");
+                    });
+                });
+            </script>
+        </body>
+    </html>

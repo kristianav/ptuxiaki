@@ -120,6 +120,7 @@ def submit_form():
     try:
         # Λήψη δεδομένων από τη φόρμα
         student_data = request.form
+        print(student_data)
 
         # Λήψη και αποθήκευση αρχείων
         files = {}
@@ -164,7 +165,7 @@ def submit_form():
         conn.commit()
         conn.close()
 
-        return jsonify({"success": True, "message": "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!"})
+        return jsonify({"success": True, "message": "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!"}), 200
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
