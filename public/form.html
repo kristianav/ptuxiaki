@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <h2>Αίτηση Έγκρισης Πρακτικής Άσκησης</h2>
-                <form method="post" action="/submit_form" enctype="multipart/form-data">
+                <form id="form" method="post" action="/submit_form" enctype="multipart/form-data">
                     <div class="form-container">
                         <!-- Στοιχεία Φοιτητή και Θέμα Έγκρισης (Αριστερά) -->
                         <div class="student-container">
@@ -241,20 +241,20 @@
                         <p><strong>Παρακαλώ όπως εγκρίνετε την πραγματοποίηση της πρακτικής μου άσκησης στην υπηρεσία / επιχείρηση με τα παρακάτω στοιχεία:</strong></p>
                         <fieldset>
                             <legend>Στοιχεία Φορέα</legend>
-                            <label for="emp-name">Όνομα Φορέα</label>
-                            <input type="text" id="emp-name" required>
+                            <label for="emp_name">Όνομα Φορέα</label>
+                            <input type="text" id="emp_name" name="emp_name" required>
 
-                            <label for="emp-addr">Διεύθυνση Φορέα</label>
-                            <input type="text" id="emp-addr" required>
+                            <label for="emp_addr">Διεύθυνση Φορέα</label>
+                            <input type="text" id="emp_addr" name="emp_addr" required>
 
-                            <label for="emp-phone">Τηλέφωνο Φορέα</label>
-                            <input type="text" id="emp-phone" required>
+                            <label for="emp_phone">Τηλέφωνο Φορέα</label>
+                            <input type="text" id="emp_phone" name="emp_phone" required>
 
-                            <label for="emp-email">Ηλ. Διεύθυνση Φορέα</label>
-                            <input type="email" id="emp-email" required>
+                            <label for="emp_email">Ηλ. Διεύθυνση Φορέα</label>
+                            <input type="email" id="emp_email" name="emp_email" required>
 
-                            <label for="emp-sup">Επόπτης Φορέα</label>
-                            <input type="text" id="emp-sup" required>
+                            <label for="emp_sup">Επόπτης Φορέα</label>
+                            <input type="text" id="emp_sup" name="emp_sup" required>
 
                         <!-- Δήλωση Φοιτητή -->
                             <label>Δηλώνω υπεύθυνα ότι:</label>
@@ -304,27 +304,38 @@
                     startDateField.value = nextWeekFormatted;
                     });
 
-                    document.getElementById("submit_button").addEventListener("click", function() {
-                    const form = document.querySelector("form");
-                    const formData = new FormData(form);
-                    fetch("https://ptuxiaki.onrender.com/submit_form", {
-                        method: "POST",
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Η αίτηση υποβλήθηκε επιτυχώς!");
-                            window.location.href = "form.html";
-                        } else {
-                            alert("Σφάλμα κατά την υποβολή της αίτησης.");
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const form = document.getElementById('form');
+                        const submitButton = document.getElementById('submit_button');
+
+                        if (form) {
+                            submitButton.addEventListener('click', function (event) {
+                                event.preventDefault();
+                                console.log('Form submission triggered');
+                                
+                                const formData = {};
+                                const formElements = form.elements;
+                                
+                                for (let element of formElements) {
+                                    if (element.name) {
+                                        formData[element.name] = element.value;
+                                    }
+                                }
+                        try {
+                            let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+                            submissions.push(formData);
+                            localStorage.setItem('submissions', JSON.stringify(submissions));
+                            alert('Η αίτηση υποβλήθηκε επιτυχώς!');
+                        } catch (error) {
+                            alert('Σφάλμα κατά την υποβολή της αίτησης: ' + error.message);
                         }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("Σφάλμα κατά την υποβολή της αίτησης.");
                     });
-                });
+                } else {
+                    console.log('Form not found.');
+                }
+                console.log(JSON.parse(localStorage.getItem('formSubmissions')));
+
+        });
             </script>
         </body>
     </html>

@@ -1,90 +1,204 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Διαχείριση Αιτήσεων</title>
-  <style>
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαχείριση Αιτήσεων</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f1f3f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2, h3 {
+            text-align: center;
+            color: #444;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        td input, td select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+        td input:focus, td select:focus {
+            border-color: #ccc;
+            background-color: #fff;
+        }
+        button {
+            padding: 12px 20px;
+            font-size: 14px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #5a6368;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 60%;
+        }
+        .popup button {
+            background-color: #6c757d;
+            color: white;
+        }
+        .popup button:hover {
+            background-color: #5a6368;
+        }
+        #clearApplications {
+            background-color: #dc3545;
+        }
+        #clearApplications:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Διαχείριση Αιτήσεων Έναρξης Πρακτικής Άσκησης</h2>
+        <h3>Κατάλογος Αιτήσεων</h3>
+        <table id="applicationsTable">
+            <thead>
+                <tr>
+                    <th>ΑΑ</th>
+                    <th>Ονοματεπώνυμο Φοιτητή</th>
+                    <th>AM</th>
+                    <th>Φορέας</th>
+                    <th>Κατάσταση</th>
+                    <th>Η απόφαση μου</th>
+                    <th>Ημερομηνία απόφασης</th>
+                    <th>Αιτιολόγηση απόφασης</th>
+                    <th>Φόρμες</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button id="clearApplications">Διαγραφή Αιτήσεων</button>
+    </div>
 
-<h2>Αιτήσεις Φοιτητών</h2>
+    <div id="popup" class="popup">
+        <h3>Φόρμα</h3>
+        <div id="popupContent"></div>
+        <button onclick="closePopup()">Κλείσιμο</button>
+    </div>
 
-<table id="applicationsTable">
-  <tr>
-    <th>Όνομα</th>
-    <th>Επώνυμο</th>
-    <th>Ημερομηνία</th>
-    <th>Κατάσταση</th>
-    <th>Παρατηρήσεις</th>
-    <th>Αποθήκευση</th>
-  </tr>
-</table>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const applicationsTable = document.querySelector("#applicationsTable tbody");
+            let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Φόρτωση αιτήσεων από τον server
-    async function loadApplications() {
-      const response = await fetch('/applications');
-      const applications = await response.json();
+            const mergeData = (newData, key) => {
+                const existingIndex = submissions.findIndex(sub => sub.stud_id === newData.stud_id);
+                if (existingIndex !== -1) {
+                    submissions[existingIndex][key] = newData[key];
+                } else {
+                    submissions.push(newData);
+                }
+                localStorage.setItem('submissions', JSON.stringify(submissions));
+            };
 
-      const table = document.getElementById('applicationsTable');
-      applications.forEach(app => {
-        const row = table.insertRow();
-        row.insertCell(0).innerText = app.stud_name;
-        row.insertCell(1).innerText = app.stud_surname;
-        row.insertCell(2).innerText = app.date;
-        row.insertCell(3).innerText = app.status || 'Σε αναμονή';
-        row.insertCell(4).innerHTML = `<input type="text" id="remarks-${app.id}" value="${app.secretary_comments || ''}">`;
-        row.insertCell(5).innerHTML = `<button onclick="saveRemarks(${app.id})">Αποθήκευση</button>`;
-      });
-    }
+            const submittedFormData = JSON.parse(localStorage.getItem('submittedForm'));
+            if (submittedFormData) {
+                mergeData(submittedFormData, 'up_dilwsh_data');
+                localStorage.removeItem('submittedForm');
+            }
 
-    window.saveRemarks = async function(id) {
-      const remarksInput = document.getElementById(`remarks-${id}`);
-      const remarks = remarksInput.value;
+            const acceptanceFormData = JSON.parse(localStorage.getItem('acceptanceForm'));
+            if (acceptanceFormData) {
+                mergeData(acceptanceFormData, 'vevaiwsi_apodoxis_data');
+                localStorage.removeItem('acceptanceForm');
+            }
 
-      try {
-        const response = await fetch('/update_application', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            id: id,
-            status: 'Αναθεωρημένη',
-            comments: remarks,
-          }),
+            submissions.forEach((data, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${data.stud_name || "-"} ${data.stud_surname || "-"}</td>
+                    <td>${data.stud_id || "-"}</td>
+                    <td>${data.emp_name || "-"}</td>
+                    <td>${data.status || "-"}</td>
+                    <td>
+                        <select onchange="updateDecision(this)">
+                            <option value="Εγκρίνεται">Εγκρίνεται</option>
+                            <option value="Απορρίπτεται">Απορρίπτεται</option>
+                        </select>
+                    </td>
+                    <td>${data.decisionDate || "-"}</td>
+                    <td><input type="text" id="justification" placeholder="Αιτιολόγηση"/></td>
+                    <td>
+                        <button onclick="viewForm(${index}, 'up_dilwsh_data')">Υπεύθυνη δήλωση</button> 
+                        <button onclick="viewForm(${index}, 'vevaiwsi_apodoxis_data')">Βεβαίωση αποδοχής</button>
+                    </td>
+                `;
+                applicationsTable.appendChild(row);
+            });
+
+            document.getElementById("clearApplications").addEventListener("click", () => {
+                localStorage.removeItem("submissions");
+                location.reload();
+            });
         });
 
-        if (response.ok) {
-          alert('Οι παρατηρήσεις αποθηκεύτηκαν.');
-        } else {
-          const errorData = await response.json();
-          alert(`Υπήρξε ένα σφάλμα: ${errorData.message}`);
+        function viewForm(index, formType) {
+            const submissions = JSON.parse(localStorage.getItem('submissions'));
+            const data = submissions[index][formType];
+            let content = '';
+            if (data) {
+                content = Object.entries(data).map(([key, value]) => `<p><strong>${key}:</strong> ${value}</p>`).join('');
+            } else {
+                content = "<p>Δεν υπάρχουν δεδομένα</p>";
+            }
+            document.getElementById("popupContent").innerHTML = content;
+            document.getElementById("popup").style.display = "block";
         }
-      } catch (error) {
-        alert(`Υπήρξε ένα σφάλμα: ${error.message}`);
-      }
-    }
 
-    // Φόρτωση αιτήσεων κατά την φόρτωση της σελίδας
-    loadApplications();
-  });
-</script>
-
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
 </body>
 </html>

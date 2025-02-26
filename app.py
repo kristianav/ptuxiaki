@@ -1,15 +1,16 @@
-from flask import Flask, send_from_directory, request, jsonify, render_template
+from flask import Flask, send_from_directory, request, jsonify, render_template, url_for
 from flask_cors import CORS
 import sqlite3
 import os
+DB_PATH = os.path.join(os.path.dirname(__file__), 'example.db')
 
 
-app = Flask(__name__, static_folder='public')
+app = Flask(__name__, static_folder='static', template_folder='templates')
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
 @app.route('/')
 def home():
-    return send_from_directory('public', 'login.html')
+    return render_template("login.html")
 
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
@@ -26,7 +27,7 @@ users = {
 
 # Σύνδεση με βάση δεδομένων
 def get_db_connection():
-    conn = sqlite3.connect('example.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -136,7 +137,7 @@ def submit_form():
             INSERT INTO students (
                 stud_surname, stud_name, stud_fname, stud_mname, stud_id, stud_afm, 
                 stud_sem, stud_address, stud_city, stud_zipcode, stud_tel, stud_email, 
-                emp_name, emp_addr, emp_phone, emp_email, emp_sup, org, repr, addr, 
+                emp-name, emp_addr, emp_phone, emp_email, emp_sup, org, repr, addr, 
                 job_desc, upeuthunos, pos, contact, email, date, repr_name, repr_job, 
                 fathername, mothername, birthdate, birthplace, idnumber, phone, 
                 city, address, number, postal_code, fax, 
@@ -215,9 +216,6 @@ def get_applications():
     } for row in rows])
     
     
-    return jsonify({"success": True, "message": "Application updated successfully"})
-
-    return jsonify({"success": True, "message": "Application updated successfully"})
 if __name__ == '__main__':
     init_db()
     port = int(os.environ.get("PORT", 5000))  # Χρησιμοποιεί τη μεταβλητή PORT
