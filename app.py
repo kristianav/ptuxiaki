@@ -10,7 +10,7 @@ CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
 
 @app.route('/')
 def home():
-    return render_template("login.html")
+    return send_from_directory('public', 'login.html')
 
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
