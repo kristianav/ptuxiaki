@@ -1,21 +1,23 @@
-from flask import Flask, send_from_directory, request, jsonify, render_template, url_for
+from flask import Flask, send_from_directory, request, jsonify, render_template
 from flask_cors import CORS
 import sqlite3
 import os
-DB_PATH = os.path.join(os.path.dirname(__file__), 'example.db')
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
+DB_PATH = os.path.join(os.path.dirname(__file__), 'forms.db')
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder='static', template_folder='public')
 CORS(app)  # Ενεργοποίηση CORS για όλα τα endpoints
-
-@app.route('/')
-def home():
-    return send_from_directory('public', 'login.html')
 
 # Φάκελος για αποθήκευση αρχείων
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Μέγιστο μέγεθος upload 16MB
+
+# Επιτρεπόμενες επεκτάσεις αρχείων
+ALLOWED_EXTENSIONS = {'pdf', 'docx', 'jpg', 'jpeg', 'png'}
 
 # Dummy χρήστες για login
 users = {
@@ -35,62 +37,86 @@ def get_db_connection():
 def init_db():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS students (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            stud_surname TEXT NOT NULL,
-            stud_name TEXT NOT NULL,
-            stud_fname TEXT,
-            stud_mname TEXT,
-            stud_id TEXT NOT NULL,
-            stud_afm TEXT,
-            stud_sem INTEGER,
-            stud_address TEXT,
-            stud_city TEXT,
-            stud_zipcode TEXT,
-            stud_tel TEXT,
-            stud_email TEXT,
-            emp_name TEXT,
-            emp_addr TEXT,
-            emp_phone TEXT,
-            emp_email TEXT,
-            emp_sup TEXT,
-            org TEXT,
-            repr TEXT,
-            addr TEXT,
-            job_desc TEXT,
-            upeuthunos TEXT,
-            pos TEXT,
-            contact TEXT,
-            email TEXT,
-            date TEXT,
-            repr_name TEXT,
-            repr_job TEXT,
-            fathername TEXT,
-            mothername TEXT,
-            birthdate TEXT,
-            birthplace TEXT,
-            idnumber TEXT,
-            phone TEXT,
-            city TEXT,
-            address TEXT,
-            number TEXT,
-            postal_code TEXT,
-            fax TEXT,
-            anal_vathm_path TEXT,
-            vevaiwsi_apodoxis_path TEXT,
-            up_dilwsh_path TEXT
-        )
-    ''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS students (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        stud_surname TEXT NOT NULL,
+        stud_name TEXT NOT NULL,
+        stud_fname TEXT,
+        stud_mname TEXT,
+        stud_id TEXT NOT NULL,
+        stud_afm TEXT,
+        stud_sem INTEGER,
+        stud_address TEXT,
+        stud_city TEXT,
+        stud_zipcode TEXT,
+        stud_tel TEXT,
+        stud_email TEXT,
+        emp_name TEXT,
+        emp_addr TEXT,
+        emp_phone TEXT,
+        emp_email TEXT,
+        emp_sup TEXT,
+        department TEXT,
+        sxolh TEXT,
+        university TEXT,
+        supervisor TEXT,
+        current_date TEXT,
+        start_date TEXT,
+        rep TEXT,
+        org TEXT,
+        addr TEXT,
+        job_desc TEXT,
+        upeuthunos TEXT,
+        pos TEXT,
+        contact TEXT,
+        email TEXT,
+        date TEXT,
+        repr_name TEXT,
+        repr_job TEXT,
+        birthdate TEXT,
+        birthplace TEXT,
+        idnumber TEXT,
+        ad_number TEXT,
+        FAX TEXT,
+        anal_vathm_path TEXT,
+        vevaiwsi_apodoxis_path TEXT,
+        up_dilwsh_path TEXT,
+        vevaiwsi_apodoxis_html TEXT,
+        up_dilwsh_html TEXT,
+        status TEXT DEFAULT 'Pending', 
+        secretary_comments TEXT,
+        submission_date TEXT
+    )''')
+    
     conn.commit()
     conn.close()
     print("Database initialized successfully!")
 
+# Έλεγχος αν το αρχείο έχει επιτρεπόμενη επέκταση
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-#static files
+# Αποθήκευση αρχείου με μοναδικό όνομα
+def save_file(file):
+    if file and allowed_file(file.filename):
+        # Δημιουργία μοναδικού ονόματος αρχείου
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = secure_filename(file.filename)
+        unique_filename = f"{timestamp}_{filename}"
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        file.save(file_path)
+        return file_path
+    return ''
+
+@app.route('/')
+def index():
+    return send_from_directory('public', 'form.html')
+
+# Στατικά αρχεία
 @app.route('/<path:filename>')
 def static_files(filename):
     return send_from_directory('public', filename)
+
 # Login Endpoint
 @app.route('/login', methods=['POST'])
 def login():
@@ -99,125 +125,159 @@ def login():
     password = data.get('password')
 
     if username in users and users[username] == password:
-        user_role = "secretary" if username.startswith("secretary") else "student"
+        user_role = "secretary" if username.startswith("dssec") else "student"
         return jsonify({"success": True, "role": user_role})
     else:
         return jsonify({"success": False})
-
-# Φόρμα φοιτητή (HTML)
-@app.route('/form')
-def student_form():
-    return render_template("form.html")
-
-#Πίνακας διαχείρισης γραμματείας (HTML)
-@app.route('/admin')
-def admin_panel():
-    return render_template("admin.html")
-
 
 # Υποβολή Φόρμας
 @app.route('/submit_form', methods=['POST'])
 def submit_form():
     try:
+        print("Form data received:", request.form)
+
         # Λήψη δεδομένων από τη φόρμα
-        student_data = request.form
-        print(student_data)
-
-        # Λήψη και αποθήκευση αρχείων
-        files = {}
-        for field in ["anal_vathm", "vevaiwsi_apodoxis", "up_dilwsh"]:
-            file = request.files.get(field)
-            if file:
-                filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-                file.save(filename)  # Αποθήκευση του αρχείου
-                files[field] = filename  # Αποθήκευση διαδρομής
-
-        # Εισαγωγή δεδομένων στη βάση
-        query = '''
-            INSERT INTO students (
-                stud_surname, stud_name, stud_fname, stud_mname, stud_id, stud_afm, 
-                stud_sem, stud_address, stud_city, stud_zipcode, stud_tel, stud_email, 
-                emp-name, emp_addr, emp_phone, emp_email, emp_sup, org, repr, addr, 
-                job_desc, upeuthunos, pos, contact, email, date, repr_name, repr_job, 
-                fathername, mothername, birthdate, birthplace, idnumber, phone, 
-                city, address, number, postal_code, fax, 
-                anal_vathm_path, vevaiwsi_apodoxis_path, up_dilwsh_path
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        '''
+        form_data = request.form
+        
+        # Αρχικοποίηση για τα πεδία που θα εισαχθούν στη βάση
+        data = {}
+        
+        # Μεταφορά όλων των πεδίων φόρμας στο dictionary
+        for key in form_data:
+            data[key] = form_data[key]
+        
+        # Διόρθωση των ονομάτων κλειδιών που έχουν παύλα
+        if 'current-date' in data:
+            data['current_date'] = data.pop('current-date')
+        if 'start-date' in data:
+            data['start_date'] = data.pop('start-date')
+        
+        # Επεξεργασία και αποθήκευση αρχείων
+        files = request.files
+        
+        # Αποθήκευση αρχείων αν υπάρχουν
+        if 'anal_vathm' in files:
+            data['anal_vathm_path'] = save_file(files['anal_vathm'])
+        
+        if 'up_dilwsh_file' in files:
+            data['up_dilwsh_path'] = save_file(files['up_dilwsh_file'])
+        
+        if 'vevaiwsi_apodoxis_file' in files:
+            data['vevaiwsi_apodoxis_path'] = save_file(files['vevaiwsi_apodoxis_file'])
+        
+        # Προσθήκη τρέχουσας ημερομηνίας υποβολής
+        data['submission_date'] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        
+        # Δημιουργία SQL ερωτήματος για εισαγωγή δεδομένων
+        fields = list(data.keys())
+        values = list(data.values())
+        placeholders = ', '.join(['?' for _ in fields])
+        
+        # Σύνδεση με βάση δεδομένων και εισαγωγή δεδομένων
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(query, (
-            student_data['stud_surname'], student_data['stud_name'], student_data.get('stud_fname'), 
-            student_data.get('stud_mname'), student_data['stud_id'], student_data.get('stud_afm'), 
-            student_data.get('stud_sem'), student_data.get('stud_address'), student_data.get('stud_city'), 
-            student_data.get('stud_zipcode'), student_data.get('stud_tel'), student_data.get('stud_email'), 
-            student_data.get('emp_name'), student_data.get('emp_addr'), student_data.get('emp_phone'), 
-            student_data.get('emp_email'), student_data.get('emp_sup'), student_data.get('org'), 
-            student_data.get('repr'), student_data.get('addr'), student_data.get('job_desc'), 
-            student_data.get('upeuthunos'), student_data.get('pos'), student_data.get('contact'), 
-            student_data.get('email'), student_data.get('date'), student_data.get('repr_name'), 
-            student_data.get('repr_job'), student_data.get('fathername'), student_data.get('mothername'), 
-            student_data.get('birthdate'), student_data.get('birthplace'), student_data.get('idnumber'), 
-            student_data.get('phone'), student_data.get('city'), student_data.get('address'), 
-            student_data.get('number'), student_data.get('postal_code'), student_data.get('fax'), 
-            files.get('anal_vathm'), files.get('vevaiwsi_apodoxis'), files.get('up_dilwsh')
-        ))
+        
+        query = f"""
+            INSERT INTO students ({', '.join(fields)})
+            VALUES ({placeholders})
+        """
+        
+        cursor.execute(query, values)
         conn.commit()
+        
+        # Λήψη του ID της εγγραφής που μόλις εισήχθη
+        application_id = cursor.lastrowid
         conn.close()
+        
+        return jsonify({
+            "success": True, 
+            "message": "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!",
+            "application_id": application_id
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in submit_form: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
-        return jsonify({"success": True, "message": "Η υποβολή ήταν επιτυχής! Ευχαριστούμε!"}), 200
+# Λήψη όλων των αιτήσεων
+@app.route('/applications', methods=['GET'])
+def get_applications():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT id, stud_surname, stud_name, stud_id, emp_name, submission_date, status, secretary_comments
+            FROM students
+            ORDER BY submission_date DESC
+        ''')
+        rows = cursor.fetchall()
+        conn.close()
+        
+        applications = []
+        for row in rows:
+            applications.append({
+                'id': row['id'],
+                'stud_surname': row['stud_surname'],
+                'stud_name': row['stud_name'],
+                'stud_id': row['stud_id'],
+                'emp_name': row['emp_name'],
+                'submission_date': row['submission_date'],
+                'status': row['status'],
+                'secretary_comments': row['secretary_comments']
+            })
+        
+        return jsonify({"success": True, "applications": applications})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
-# Λήψη όλων των φοιτητών
-@app.route('/students', methods=['GET'])
-def get_students():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM students')
-    rows = cursor.fetchall()
-    conn.close()
-    return jsonify([dict(row) for row in rows])
-# Ενημέρωση κατάστασης αίτησης από τη γραμματεία
-@app.route('/update_application', methods=['POST'])
-def update_application():
-    data = request.json
-    student_id = data.get('id')
-    status = data.get('status')
-    comments = data.get('comments', '') #προαιρετικά
-    
-    if not student_id or not status:
-        return jsonify({"success": False, "message": "Missing data"}), 400
-    try: 
+# Λήψη συγκεκριμένης αίτησης
+@app.route('/applications/<int:application_id>', methods=['GET'])
+def get_application(application_id):
+    try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("UPDATE students SET status = ?, secretary_comments = ? WHERE id = ?", (status, comments, student_id))
+        cursor.execute('SELECT * FROM students WHERE id = ?', (application_id,))
+        row = cursor.fetchone()
+        conn.close()
+        
+        if not row:
+            return jsonify({"success": False, "error": "Η αίτηση δεν βρέθηκε"}), 404
+        
+        # Μετατροπή του αποτελέσματος σε dictionary
+        application = {}
+        for key in row.keys():
+            application[key] = row[key]
+        
+        return jsonify({"success": True, "application": application})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# Ενημέρωση κατάστασης αίτησης
+@app.route('/applications/<int:application_id>', methods=['PUT'])
+def update_application_status(application_id):
+    try:
+        data = request.json
+        status = data.get('status')
+        comments = data.get('secretary_comments', '')
+        
+        if not status:
+            return jsonify({"success": False, "error": "Δεν δόθηκε κατάσταση"}), 400
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'UPDATE students SET status = ?, secretary_comments = ? WHERE id = ?',
+            (status, comments, application_id)
+        )
         conn.commit()
         conn.close()
-        return jsonify({"success": True, "message": "Application updated successfully"})
+        
+        return jsonify({"success": True, "message": "Η κατάσταση της αίτησης ενημερώθηκε με επιτυχία"})
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)}), 500
-# Λήψη όλων των αιτήσεων από τη γραμματεία
-@app.route('/applications', methods=['GET'])
-def get_applications():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM students WHERE status IS NOT NULL')
-    rows = cursor.fetchall()
-    conn.close()
-    return jsonify([{
-        'id': row['id'],
-        'stud_surname': row['stud_surname'],
-        'stud_name': row['stud_name'],
-        'status': row['status'],
-        'secretary_comments': row['secretary_comments'],
-        'date': row['date']
-    } for row in rows])
-    
-    
+        return jsonify({"success": False, "error": str(e)}), 500
+
+# Εκτέλεση της εφαρμογής
 if __name__ == '__main__':
     init_db()
-    port = int(os.environ.get("PORT", 5000))  # Χρησιμοποιεί τη μεταβλητή PORT
-    app.run(host='0.0.0.0', port=port)  # "0.0.0.0" για να δέχεται εξωτερικές συνδέσεις
-
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)

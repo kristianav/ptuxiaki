@@ -3,202 +3,660 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Διαχείριση Αιτήσεων</title>
+    <title>Διαχείριση Αιτήσεων Πρακτικής Άσκησης</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f1f3f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            color: #333;
         }
-        .container {
+
+        .main-container {
             width: 90%;
             max-width: 1200px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
         }
-        h2, h3 {
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        h2 {
+            color: #000000;
             text-align: center;
-            color: #444;
+            margin-bottom: 30px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
         }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
+
         th, td {
-            padding: 12px;
+            padding: 12px 15px;
             text-align: left;
-            font-size: 14px;
+            border-bottom: 1px solid #ddd;
         }
+
         th {
-            background-color: #f8f9fa;
+            background-color: #f8f8f8;
+            font-weight: bold;
         }
-        td input, td select {
-            width: 100%;
-            padding: 8px;
-            font-size: 14px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background-color: #f9f9f9;
+
+        tr:hover {
+            background-color: #f5f5f5;
         }
-        td input:focus, td select:focus {
-            border-color: #ccc;
-            background-color: #fff;
+
+        .status-pending {
+            color: #e67e22;
+            font-weight: bold;
         }
+
+        .status-approved {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
         button {
-            padding: 12px 20px;
-            font-size: 14px;
-            background-color: #6c757d;
-            color: white;
+            padding: 8px 12px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 6px;
-            display: block;
-            margin: 20px auto;
+            font-weight: bold;
             transition: background-color 0.3s;
         }
-        button:hover {
-            background-color: #5a6368;
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            width: 60%;
-        }
-        .popup button {
-            background-color: #6c757d;
+
+        .btn-view {
+            background-color: #3498db;
             color: white;
         }
-        .popup button:hover {
-            background-color: #5a6368;
+
+        .btn-approve {
+            background-color: #2ecc71;
+            color: white;
         }
-        #clearApplications {
-            background-color: #dc3545;
+
+        .btn-reject {
+            background-color: #e74c3c;
+            color: white;
         }
-        #clearApplications:hover {
-            background-color: #c82333;
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-save {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .logout-btn {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .university-logo {
+            height: auto;
+            max-width: 150px;
+        }
+
+        .university-info {
+            text-align: right;
+        }
+
+        .university-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .btn-clear {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            float: right;
+        }
+
+        .detail-view {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-section h3 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            width: 200px;
+        }
+
+        .detail-value {
+            flex: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Διαχείριση Αιτήσεων Έναρξης Πρακτικής Άσκησης</h2>
-        <h3>Κατάλογος Αιτήσεων</h3>
-        <table id="applicationsTable">
+    <div class="main-container">
+        <div class="header">
+            <img src="unofpel.png" class="university-logo">
+            <div class="university-info">
+                <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
+                <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
+            </div>
+            <a href="login.html" class="logout-btn">Αποσύνδεση</a>
+        </div>
+
+        <h2>Διαχείριση Αιτήσεων Πρακτικής Άσκησης</h2>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="status-filter">Κατάσταση:</label>
+                <select id="status-filter">
+                    <option value="all">Όλες</option>
+                    <option value="Pending">Εκκρεμείς</option>
+                    <option value="Approved">Εγκεκριμένες</option>
+                    <option value="Rejected">Απορριφθείσες</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="search">Αναζήτηση:</label>
+                <input type="text" id="search" placeholder="Όνομα ή επώνυμο...">
+            </div>
+        </div>
+
+        <button id="clear-all" class="btn-clear">Διαγραφή Όλων των Αιτήσεων</button>
+
+        <div id="loading" class="loading">Φόρτωση αιτήσεων...</div>
+        <div id="no-data" class="no-data" style="display: none;">Δεν υπάρχουν αιτήσεις προς εμφάνιση.</div>
+        
+        <table id="applications-table" style="display: none;">
             <thead>
                 <tr>
-                    <th>ΑΑ</th>
-                    <th>Ονοματεπώνυμο Φοιτητή</th>
-                    <th>AM</th>
-                    <th>Φορέας</th>
+                    <th>ID</th>
+                    <th>Επώνυμο</th>
+                    <th>Όνομα</th>
+                    <th>Ημερομηνία</th>
                     <th>Κατάσταση</th>
-                    <th>Η απόφαση μου</th>
-                    <th>Ημερομηνία απόφασης</th>
-                    <th>Αιτιολόγηση απόφασης</th>
-                    <th>Φόρμες</th>
+                    <th>Σχόλια</th>
+                    <th>Ενέργειες</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="applications-list">
+                <!-- Οι αιτήσεις θα προστεθούν εδώ  -->
             </tbody>
         </table>
-        <button id="clearApplications">Διαγραφή Αιτήσεων</button>
-    </div>
 
-    <div id="popup" class="popup">
-        <h3>Φόρμα</h3>
-        <div id="popupContent"></div>
-        <button onclick="closePopup()">Κλείσιμο</button>
+        <!-- Modal για λεπτομέρειες αίτησης -->
+        <div id="application-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Λεπτομέρειες Αίτησης</h3>
+                
+                <div id="application-details" class="detail-view">
+                    <!-- Οι λεπτομέρειες-->
+                </div>
+                
+                <div class="form-group">
+                    <label for="status-update">Ενημέρωση Κατάστασης:</label>
+                    <select id="status-update">
+                        <option value="Pending">Εκκρεμής</option>
+                        <option value="Approved">Εγκεκριμένη</option>
+                        <option value="Rejected">Απορριφθείσα</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comments">Σχόλια Γραμματείας:</label>
+                    <textarea id="comments" placeholder="Προσθέστε σχόλια σχετικά με την αίτηση..."></textarea>
+                </div>
+                
+                <button id="save-changes" class="btn-save">Αποθήκευση Αλλαγών</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const applicationsTable = document.querySelector("#applicationsTable tbody");
-            let submissions = JSON.parse(localStorage.getItem('submissions')) || [];
-
-            const mergeData = (newData, key) => {
-                const existingIndex = submissions.findIndex(sub => sub.stud_id === newData.stud_id);
-                if (existingIndex !== -1) {
-                    submissions[existingIndex][key] = newData[key];
-                } else {
-                    submissions.push(newData);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const applicationsTable = document.getElementById('applications-table');
+            const applicationsList = document.getElementById('applications-list');
+            const modal = document.getElementById('application-modal');
+            const closeBtn = document.querySelector('.close');
+            const saveChangesBtn = document.getElementById('save-changes');
+            const statusFilter = document.getElementById('status-filter');
+            const searchInput = document.getElementById('search');
+            const clearAllBtn = document.getElementById('clear-all');
+            const loadingElement = document.getElementById('loading');
+            const noDataElement = document.getElementById('no-data');
+            
+            // Current application ID for modal
+            let currentApplicationId = null;
+            // Store all applications
+            let allApplications = [];
+            
+            // Load applications
+            fetchApplications();
+            
+            // Event Listeners
+            closeBtn.addEventListener('click', closeModal);
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    closeModal();
                 }
-                localStorage.setItem('submissions', JSON.stringify(submissions));
-            };
-
-            const submittedFormData = JSON.parse(localStorage.getItem('submittedForm'));
-            if (submittedFormData) {
-                mergeData(submittedFormData, 'up_dilwsh_data');
-                localStorage.removeItem('submittedForm');
-            }
-
-            const acceptanceFormData = JSON.parse(localStorage.getItem('acceptanceForm'));
-            if (acceptanceFormData) {
-                mergeData(acceptanceFormData, 'vevaiwsi_apodoxis_data');
-                localStorage.removeItem('acceptanceForm');
-            }
-
-            submissions.forEach((data, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${data.stud_name || "-"} ${data.stud_surname || "-"}</td>
-                    <td>${data.stud_id || "-"}</td>
-                    <td>${data.emp_name || "-"}</td>
-                    <td>${data.status || "-"}</td>
-                    <td>
-                        <select onchange="updateDecision(this)">
-                            <option value="Εγκρίνεται">Εγκρίνεται</option>
-                            <option value="Απορρίπτεται">Απορρίπτεται</option>
-                        </select>
-                    </td>
-                    <td>${data.decisionDate || "-"}</td>
-                    <td><input type="text" id="justification" placeholder="Αιτιολόγηση"/></td>
-                    <td>
-                        <button onclick="viewForm(${index}, 'up_dilwsh_data')">Υπεύθυνη δήλωση</button> 
-                        <button onclick="viewForm(${index}, 'vevaiwsi_apodoxis_data')">Βεβαίωση αποδοχής</button>
-                    </td>
-                `;
-                applicationsTable.appendChild(row);
             });
-
-            document.getElementById("clearApplications").addEventListener("click", () => {
-                localStorage.removeItem("submissions");
-                location.reload();
-            });
+            
+            saveChangesBtn.addEventListener('click', updateApplication);
+            statusFilter.addEventListener('change', filterApplications);
+            searchInput.addEventListener('input', filterApplications);
+            clearAllBtn.addEventListener('click', confirmClearAll);
+            
+            // Functions
+            function fetchApplications() {
+                loadingElement.style.display = 'block';
+                applicationsTable.style.display = 'none';
+                noDataElement.style.display = 'none';
+                
+                // Διαβάζουμε τις αιτήσεις από το localStorage ή δημιουργούμε δείγμα δεδομένων αν δεν υπάρχουν
+                try {
+                    const storedApplications = localStorage.getItem('applications');
+                    if (storedApplications) {
+                        allApplications = JSON.parse(storedApplications);
+                    } else {
+                        // Αποθήκευση στο localStorage
+                        localStorage.setItem('applications', JSON.stringify(allApplications));
+                    }
+                    
+                    loadingElement.style.display = 'none';
+                    
+                    if (allApplications.length === 0) {
+                        noDataElement.style.display = 'block';
+                    } else {
+                        applicationsTable.style.display = 'table';
+                        renderApplications(allApplications);
+                    }
+                } catch (error) {
+                    console.error('Error loading applications:', error);
+                    loadingElement.textContent = 'Σφάλμα κατά τη φόρτωση δεδομένων. Παρακαλώ δοκιμάστε ξανά.';
+                    loadingElement.style.color = 'red';
+                }
+            }
+            
+            function renderApplications(applications) {
+                applicationsList.innerHTML = '';
+                
+                applications.forEach(app => {
+                    const row = document.createElement('tr');
+                    
+                    // Get status class
+                    let statusClass = '';
+                    if (app.status === 'Approved') {
+                        statusClass = 'status-approved';
+                    } else if (app.status === 'Rejected') {
+                        statusClass = 'status-rejected';
+                    } else {
+                        statusClass = 'status-pending';
+                    }
+                    
+                    // Create row content
+                    row.innerHTML = `
+                        <td>${app.id}</td>
+                        <td>${app.stud_surname}</td>
+                        <td>${app.stud_name}</td>
+                        <td>${app.date || 'Μη διαθέσιμο'}</td>
+                        <td class="${statusClass}">${app.status || 'Pending'}</td>
+                        <td>${app.secretary_comments || '-'}</td>
+                        <td class="actions">
+                            <button class="btn-view" data-id="${app.id}">Προβολή</button>
+                            <button class="btn-approve" data-id="${app.id}">Έγκριση</button>
+                            <button class="btn-reject" data-id="${app.id}">Απόρριψη</button>
+                        </td>
+                    `;
+                    
+                    applicationsList.appendChild(row);
+                });
+                
+                // Add event listeners to buttons
+                document.querySelectorAll('.btn-view').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const appId = this.getAttribute('data-id');
+                        openModal(appId);
+                    });
+                });
+                
+                document.querySelectorAll('.btn-approve').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const appId = this.getAttribute('data-id');
+                        updateStatus(appId, 'Approved');
+                    });
+                });
+                
+                document.querySelectorAll('.btn-reject').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const appId = this.getAttribute('data-id');
+                        updateStatus(appId, 'Rejected');
+                    });
+                });
+            }
+            
+            function openModal(appId) {
+                currentApplicationId = appId;
+                
+                // Βρίσκουμε την αίτηση από το ID
+                const application = allApplications.find(app => app.id == appId);
+                
+                if (application) {
+                    // Γεμίζουμε τις λεπτομέρειες της αίτησης
+                    const detailsContainer = document.getElementById('application-details');
+                    
+                    // Τα στοιχεία φοιτητή
+                    let detailsHTML = `
+                        <div class="detail-section">
+                            <h3>Στοιχεία Φοιτητή</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Αριθμός Μητρώου:</div>
+                                <div class="detail-value">${application.stud_id || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Ονοματεπώνυμο:</div>
+                                <div class="detail-value">${application.stud_name || '-'} ${application.stud_surname || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Email:</div>
+                                <div class="detail-value">${application.stud_email || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Τηλέφωνο:</div>
+                                <div class="detail-value">${application.stud_phone || '-'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Στοιχεία Πρακτικής Άσκησης</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Εταιρεία:</div>
+                                <div class="detail-value">${application.company_name || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Διεύθυνση Εταιρείας:</div>
+                                <div class="detail-value">${application.company_address || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Τμήμα:</div>
+                                <div class="detail-value">${application.company_department || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Ημερομηνία Έναρξης:</div>
+                                <div class="detail-value">${application.start_date || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Ημερομηνία Λήξης:</div>
+                                <div class="detail-value">${application.end_date || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Υπεύθυνος Εταιρείας:</div>
+                                <div class="detail-value">${application.supervisor_name || '-'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h3>Επιπλέον Στοιχεία</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Ημερομηνία Αίτησης:</div>
+                                <div class="detail-value">${application.date || '-'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Κατάσταση:</div>
+                                <div class="detail-value">${application.status || 'Εκκρεμής'}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Σχόλια Φοιτητή:</div>
+                                <div class="detail-value">${application.student_comments || '-'}</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    detailsContainer.innerHTML = detailsHTML;
+                    
+                    // Ορίζουμε την τρέχουσα κατάσταση στο dropdown
+                    document.getElementById('status-update').value = application.status || 'Pending';
+                    
+                    // Ορίζουμε τα σχόλια της γραμματείας
+                    document.getElementById('comments').value = application.secretary_comments || '';
+                    
+                    // Εμφανίζουμε το modal
+                    modal.style.display = 'block';
+                }
+            }
+            
+            function closeModal() {
+                modal.style.display = 'none';
+                currentApplicationId = null;
+            }
+            
+            function updateApplication() {
+                if (!currentApplicationId) return;
+                
+                const newStatus = document.getElementById('status-update').value;
+                const comments = document.getElementById('comments').value;
+                
+                // Ενημέρωση στο localStorage
+                const appIndex = allApplications.findIndex(app => app.id == currentApplicationId);
+                if (appIndex !== -1) {
+                    allApplications[appIndex].status = newStatus;
+                    allApplications[appIndex].secretary_comments = comments;
+                    
+                    // Αποθήκευση στο localStorage
+                    localStorage.setItem('applications', JSON.stringify(allApplications));
+                    
+                    // Ενημέρωση του πίνακα
+                    renderApplications(filterData());
+                    
+                    closeModal();
+                    
+                    // Εμφάνιση μηνύματος επιτυχίας
+                    alert('Η αίτηση ενημερώθηκε επιτυχώς!');
+                }
+            }
+            
+            function updateStatus(appId, status) {
+                // Άμεση ενημέρωση κατάστασης χωρίς άνοιγμα modal
+                const appIndex = allApplications.findIndex(app => app.id == appId);
+                if (appIndex !== -1) {
+                    allApplications[appIndex].status = status;
+                    
+                    // Αποθήκευση στο localStorage
+                    localStorage.setItem('applications', JSON.stringify(allApplications));
+                    
+                    // Ενημέρωση του πίνακα
+                    renderApplications(filterData());
+                    
+                    // Εμφάνιση μηνύματος επιτυχίας
+                    alert(`Η αίτηση ${status === 'Approved' ? 'εγκρίθηκε' : 'απορρίφθηκε'} επιτυχώς!`);
+                }
+            }
+            
+            function filterData() {
+                const statusValue = statusFilter.value;
+                const searchValue = searchInput.value.toLowerCase();
+                
+                return allApplications.filter(app => {
+                    // Φίλτρο κατάστασης
+                    const statusMatch = statusValue === 'all' || app.status === statusValue;
+                    
+                    // Φίλτρο αναζήτησης
+                    const searchMatch = 
+                        app.stud_name.toLowerCase().includes(searchValue) || 
+                        app.stud_surname.toLowerCase().includes(searchValue);
+                    
+                    return statusMatch && searchMatch;
+                });
+            }
+            
+            function filterApplications() {
+                const filteredData = filterData();
+                
+                if (filteredData.length === 0) {
+                    applicationsTable.style.display = 'none';
+                    noDataElement.textContent = 'Δεν βρέθηκαν αιτήσεις που να ταιριάζουν με τα κριτήρια αναζήτησης.';
+                    noDataElement.style.display = 'block';
+                } else {
+                    applicationsTable.style.display = 'table';
+                    noDataElement.style.display = 'none';
+                    renderApplications(filteredData);
+                }
+            }
+            
+function confirmClearAll() {
+    // Ζητάμε επιβεβαίωση από τον χρήστη
+    const confirmed = confirm('Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις αιτήσεις; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί!');
+    
+    if (confirmed) {
+        // Καθαρίζουμε το localStorage
+        localStorage.removeItem('applications');
+        
+        // Καθαρίζουμε τα allApplications
+        allApplications = [];
+        
+        // Ενημερώνουμε την οθόνη
+        applicationsTable.style.display = 'none';
+        noDataElement.textContent = 'Δεν υπάρχουν αιτήσεις προς εμφάνιση.';
+        noDataElement.style.display = 'block';
+        
+        // Εμφάνιση μηνύματος επιτυχίας
+        alert('Όλες οι αιτήσεις διαγράφηκαν επιτυχώς!');
+    }
+}
         });
-
-        function viewForm(index, formType) {
-            const submissions = JSON.parse(localStorage.getItem('submissions'));
-            const data = submissions[index][formType];
-            let content = '';
-            if (data) {
-                content = Object.entries(data).map(([key, value]) => `<p><strong>${key}:</strong> ${value}</p>`).join('');
-            } else {
-                content = "<p>Δεν υπάρχουν δεδομένα</p>";
-            }
-            document.getElementById("popupContent").innerHTML = content;
-            document.getElementById("popup").style.display = "block";
-        }
-
-        function closePopup() {
-            document.getElementById("popup").style.display = "none";
-        }
     </script>
 </body>
 </html>

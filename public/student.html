@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Κατάσταση Αίτησης</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #fafafa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+
+        .logout-btn {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .university-logo {
+            height: auto;
+            max-width: 150px;
+        }
+
+        .university-info {
+            text-align: right;
+        }
+
+        .university-info p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .status-container {
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .file-status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .file-status i {
+            margin-right: 10px;
+        }
+
+        .status {
+            color: #27ae60;
+        }
+
+        .not-submitted {
+            color: #e74c3c;
+        }
+
+        .file-links p {
+            margin: 10px 0;
+        }
+
+        .file-link {
+            color: #3498db;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .file-link:hover {
+            text-decoration: underline;
+        }
+
+        .file-previews {
+            margin-top: 30px;
+        }
+
+        .pdf-preview {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 40px;
+            font-size: 1.2em;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #1a252f;
+        }
+
+        /* Προσθήκη στυλ για το modal popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .document-preview {
+            background-color: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            min-height: 500px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .document-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .document-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .document-body {
+            line-height: 1.6;
+        }
+
+        .document-footer {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature-area {
+            width: 45%;
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .document-preview {
+                padding: 15px;
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <img src="unofpel.png" class="university-logo">
+            <div class="university-info">
+                <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
+                <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
+            </div>
+            <a href="login.html" class="logout-btn">Αποσύνδεση</a>
+        </div>     
+
+        <h2>Κατάσταση Αίτησης Πρακτικής Άσκησης</h2>
+        <form id="applicationForm"></form>
+
+        <div class="status-container">
+            <h3>Στοιχεία Φοιτητή:</h3>
+            <p><strong>Όνομα:</strong> <span id="stud_name"></span></p>
+            <p><strong>Επώνυμο:</strong> <span id="stud_surname"></span></p>
+            <p><strong>Αριθμός Μητρώου:</strong> <span id="stud_id"></span></p>
+            <p><strong>Ημερομηνία Υποβολής:</strong> <span id="current-date"></span></p>
+        </div>
+
+        <div class="status-container">
+            <h3>Κατάσταση Εγγράφων:</h3>
+            <div class="file-status">
+                <i class="fas fa-file-alt"></i> 
+                <span><strong>Βεβαίωση Αποδοχής:</strong> <span id="vevaiwsi_apodoxis_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
+            </div>
+            <div class="file-status">
+                <i class="fas fa-file-signature"></i> 
+                <span><strong>Υπεύθυνη Δήλωση:</strong> <span id="up_dilwsh_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
+            </div>
+            <div class="file-status">
+                <i class="fas fa-file-alt"></i> 
+                <span><strong>Αναλυτική Βαθμολογία:</strong> <span id="analytiki_vathmologia_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
+            </div>
+        </div>
+
+        <div class="file-links">
+            <h3>Αρχεία:</h3>
+            <p><strong>Βεβαίωση Αποδοχής:</strong> <a id="vevaiwsi_apodoxis_link" class="file-link" href="#" target="_blank"></a>
+                <a id="vevaiwsi_apodoxis_preview_link" href="#" class="file-link">Προβολή Βεβαίωσης Αποδοχής</a></p>
+            <p><strong>Υπεύθυνη Δήλωση:</strong> <a id="up_dilwsh_link" class="file-link" href="#" target="_blank"></a>
+                <a id="up_dilwsh_preview_link" href="#" class="file-link">Προβολή Υπεύθυνης Δήλωσης</a></p>
+            <p><strong>Αναλυτική Βαθμολογία:</strong> <a id="analytiki_vathmologia_link" class="file-link" href="#" target="_blank"></a>
+                <a id="analytiki_vathmologia_preview_link" href="#" class="file-link">Προβολή Αναλυτικής Βαθμολογίας</a></p>
+        </div>
+        <button onclick="downloadApplication()">Κατεβάστε την αίτηση</button>
+    </div>
+
+    <!-- Modal για την προεπισκόπηση εγγράφων -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="modalTitle">Προεπισκόπηση Εγγράφου</h3>
+            <div id="documentPreview" class="document-preview">
+                <!-- Εδώ θα εμφανίζεται το περιεχόμενο του εγγράφου -->
+            </div>
+        </div>
+    </div>
+
+ <script>
+// Αρχικοποίηση δεδομένων φοιτητή
+let studentData = {};
+let vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsiData') || {});
+let updilwshData = JSON.parse(localStorage.getItem('updilwshData') || {});
+let allData = {};
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Ενημέρωση της ημερομηνίας υποβολής
+    const currentDate = new Date().toLocaleDateString('el-GR');
+    document.getElementById("current-date").textContent = currentDate;
+
+    // Ανάκτηση των δεδομένων από το localStorage
+    studentData = JSON.parse(localStorage.getItem('applicationForm')) || {};
+    
+    // Αρχικοποίηση των προκαθορισμένων τιμών αν δεν υπάρχουν
+    if (!localStorage.getItem('vevaiwsiData')) {
+        localStorage.setItem('vevaiwsiData', JSON.stringify(vevaiwsiValues));
+    }
+    
+    if (!localStorage.getItem('updilwshData')) {
+        localStorage.setItem('updilwshData', JSON.stringify(updilValues));
+    }
+
+    // Ανανέωση των τιμών από το localStorage
+    vevaiwsiValues = JSON.parse(localStorage.getItem('vevaiwsiData'));
+    updilValues = JSON.parse(localStorage.getItem('updilwshData'));
+
+    // Συγχώνευση όλων των δεδομένων
+    allData = { ...studentData, ...vevaiwsiValues, ...updilValues };
+    
+    // Γέμισμα των πεδίων με τα δεδομένα
+    document.getElementById("stud_name").textContent = studentData.stud_name;
+    document.getElementById("stud_surname").textContent = studentData.stud_surname;
+    document.getElementById("stud_id").textContent = studentData.stud_id;
+
+    // Δημιουργία προτύπων εγγράφων αν δεν υπάρχουν
+    createDocumentTemplates();
+
+    // Προσομοίωση υποβληθέντων εγγράφων
+    simulateSubmittedDocuments();
+
+    // Προσθήκη event listeners για το modal
+    const modal = document.getElementById('documentModal');
+    const closeModal = document.getElementsByClassName('close-modal')[0];
+    
+    closeModal.onclick = function() {
+        modal.style.display = "none";
+    }
+    
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    
+    // Event listeners για τα links προεπισκόπησης
+    document.getElementById('vevaiwsi_apodoxis_preview_link').addEventListener('click', function(event) {
+        event.preventDefault();
+        showDocumentPreview('vevaiwsi_apodoxis', 'Βεβαίωση Αποδοχής');
+    });
+    
+    document.getElementById('up_dilwsh_preview_link').addEventListener('click', function(event) {
+        event.preventDefault();
+        showDocumentPreview('up_dilwsh', 'Υπεύθυνη Δήλωση');
+    });
+    
+    document.getElementById('analytiki_vathmologia_preview_link').addEventListener('click', function(event) {
+        event.preventDefault();
+        showDocumentPreview('analytiki_vathmologia', 'Αναλυτική Βαθμολογία');
+    });
+    
+    // Για σκοπούς debugging - εμφάνιση στην κονσόλα των δεδομένων που χρησιμοποιούνται
+    console.log("Συνολικά δεδομένα για αντικατάσταση:", allData, vevaiwsiData, updilwshData);
+});
+
+// Συνάρτηση για τη δημιουργία προτύπων εγγράφων
+function createDocumentTemplates() {
+    // Βεβαίωση Αποδοχής - το template παραμένει το ίδιο
+    if (!localStorage.getItem('vevaiwsi_apodoxis')) {
+        const vevaiwsi = `
+            <div class="document-header">
+                <div class="document-title">ΒΕΒΑΙΩΣΗ ΑΠΟΔΟΧΗΣ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ</div>
+                <div class="document-subtitle">ΑΠΟΔΟΧΗ ΠΡΑΓΜΑΤΟΠΟΙΗΣΗΣ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ</div>
+                <div>ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΛΟΠΟΝΝΗΣΟΥ</div>
+                <div>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</div>
+            </div>
+            <div class="document-body">
+                <p>Ο/η κάτωθι υπογεγραμμένος/η {{repr}}, νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου Φορέα,
+                με επωνυμία: {{org}}, Διεύθυνση: {{addr}}, Αντικείμενο εργασιών: {{job_desc}},
+                βεβαιώνω ότι: </p>
+
+                <p>Αποδεχόμαστε το αίτημα του/της {{stud_name}} {{stud_surname}} φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων
+                του Πανεπιστημίου Πελοποννήσου,να πραγματοποιήσει την Πρακτική Άσκησή του/της,
+                στην Επιχείρησή μας/Φορέας μας και και αποδεχόμαστε τη συμμετοχή του/της στο χρηματοδοτούμενο μέσω ΕΣΠΑ πρόγραμμα
+                Πρακτικής Άσκησης του Πανεπιστημίου.</p>
+                
+                <p>Υπεύθυνος-Επόπτης της Επιχείρησης για την Πρακτική Άσκηση του φοιτητή/τριας, ορίζεται ο/η {{upeuthunos}}.
+                    Θέση: {{pos}}
+                    Επικοινωνία: {{tel}} {{email}}</p>
+            </div>
+            <div class="document-footer">
+                <div class="signature-area">
+                    <p>Ο εκπρόσωπος του Φορέα Απασχόλησης</p>
+                    <p>Ονοματεπώνυμο: {{repr_name}}</p>
+                    <p>Ιδιότητα: {{repr_job}}</p>
+                </div>
+                <div class="signature-area">
+                    <p>Υπογραφή/Σφραγίδα</p>
+                </div>
+            </div>
+        `;
+        localStorage.setItem('vevaiwsi_apodoxis', vevaiwsi);
+    }
+    
+    // Υπεύθυνη Δήλωση - το template παραμένει το ίδιο
+    if (!localStorage.getItem('up_dilwsh')) {
+        const upDilwsh = `
+            <div class="document-header">
+                <div class="document-title">ΥΠΕΥΘΥΝΗ ΔΗΛΩΣΗ ΦΟΙΤΗΤΗ</div>
+                <div>(Άρθρο 8 Ν.1599/1986)</div>
+                <p>Η ακρίβεια των στοιχείων που υποβάλλονται με αυτή τη δήλωση μπορεί να ελεγχθεί με βάση το αρχείο άλλων υπηρεσιών (άρθρο 8, παρ. 4 Ν. 1599/1986).</p>
+
+            </div>
+            <div class="document-body">
+                <p>Προς:Γραμματεία Τμήματος ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ Πανεπιστημίου Πελοποννήσου</p>
+                <p>Ονοματεπώνυμο: {{stud_name}} {{stud_surname}}</p>
+                <p>Όνομα και επώνυμο πατέρα: {{father_name}}</p>
+                <p>Όνομα και επώνυμο μητέρας: {{mother_name}}</p>
+                <p>Ημερομηνία γέννησης: {{birth_date}}</p>
+                <p>Τόπος γέννησης: {{birth_place}}</p>
+                <p>Αριθμός δελτίου ταυτότητας: {{id_number}}</p>
+                <p>Τηλ: {{phone}}</p>
+                <p>Τόπος κατοικίας: {{address}}</p>
+                <p>Οδός: {{street}}</p>
+                <p>Αριθμός: {{street_number}}</p>
+                <p>Τ.Κ: {{postal_code}}</p>
+                <p>Αρ. Τηλεομοιοτύπου: {{fax}}</p>
+                <p>Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail): {{email}}</p>
+
+                
+                <p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης. </p>
+                
+                <p>(2)Δεν εργάζομαι ως υπάλληλος του δημοσίου τομέα  (συμπεριλαμβάνονται και τα σώματα ασφαλείας), κατά την
+                περίοδο της πρακτικής άσκησης.</p>
+                
+                <p>(3)Δε βρίσκομαι στη διάρκεια της στρατιωτικής μου θητείας, κατά τη περίοδο της πρακτικής άσκησης.</p>
+                
+                <p>(4) Δε στοιχειοθετείται συγγένεια (Β' βαθμού και άνω, σε ευθεία γραμμή, πλάγια γραμμή και εξ' αγχιστείας) όπως και
+                συζυγική σχέση με το νόμιμο εκπρόσωπο της επιχείρησης. Επίσης, σε κάθε περίπτωση συγγένειας Β' βαθμού και
+                άνω όπως και συζυγικής σχέσης με άλλο πρόσωπο απασχολούμενο στον φορέα – επιχείρηση, το πρόσωπο αυτό
+                δεν μπορεί να ορισθεί ως επόπτης εκ μέρους του συνεργαζόμενου Φορέα.</p>                        
+            </div>
+            <div class="document-footer">
+                <div style="width: 100%; text-align: right;">
+                    <p>Ο/Η ΔΗΛΩΝ/ΟΥΣΑ</p>
+                    <p>{{stud_name}} {{stud_surname}}</p>
+                </div>
+            </div>
+            <div>
+                <p>(1) Αναγράφεται από τον ενδιαφερόμενο πολίτη ή Αρχή ή η Υπηρεσία του δημόσιου τομέα, που απευθύνεται η αίτηση.<br> </p>
+                <p>(2) Αναγράφεται ολογράφως. <br> </p>
+                <p>(3) «Όποιος εν γνώσει του δηλώνει ψευδή γεγονότα ή αρνείται ή αποκρύπτει τα αληθινά με έγγραφη υπεύθυνη δήλωση του άρθρου 8 
+                τιμωρείται με φυλάκιση τουλάχιστον τριών μηνών. Εάν ο υπαίτιος αυτών των πράξεων σκόπευε να προσπορίσει στον εαυτόν του ή σε
+                άλλον περιουσιακό όφελος βλάπτοντας τρίτον ή σκόπευε να βλάψει άλλον, τιμωρείται με κάθειρξη μέχρι 10 ετών <br> </p>
+                <p>(4) Σε περίπτωση ανεπάρκειας χώρου η δήλωση συνεχίζεται στην πίσω όψη της και υπογράφεται από τον δηλούντα ή την δηλούσα. <br> </p>
+            </div>
+        `;
+        localStorage.setItem('up_dilwsh', upDilwsh);
+    }
+    
+    // Αναλυτική Βαθμολογία - το template παραμένει το ίδιο
+    if (!localStorage.getItem('analytiki_vathmologia')) {
+        const analytiki = `
+            <div class="document-header">
+                <div class="document-title">ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</div>
+                <div>ΠΑΝΕΠΙΣΤΗΜΙΟ ΠΕΛΟΠΟΝΝΗΣΟΥ</div>
+                <div>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</div>
+            </div>
+            <div class="document-body">
+                <p><strong>Στοιχεία Φοιτητή</strong></p>
+                <p>Ονοματεπώνυμο: {{stud_name}} {{stud_surname}}</p>
+                <p>Αριθμός Μητρώου: {{stud_id}}</p>
+                <p>Έτος Εισαγωγής: 2021</p>
+                <p>Τρέχον Εξάμηνο: 8ο</p>
+                
+                <p><strong>Μαθήματα που έχουν ολοκληρωθεί επιτυχώς:</strong></p>
+                <p>1. Εισαγωγή στον Προγραμματισμό (8.5)</p>
+                <p>2. Μαθηματική Ανάλυση (7.0)</p>
+                <p>3. Ψηφιακά Συστήματα (9.0)</p>
+                <p>4. Βάσεις Δεδομένων (8.0)</p>
+                <p>5. Δίκτυα Υπολογιστών (7.5)</p>
+                <p>6. Λειτουργικά Συστήματα (8.0)</p>
+                <p>7. Αλγόριθμοι και Δομές Δεδομένων (7.5)</p>
+                <p>8. Αντικειμενοστρεφής Προγραμματισμός (9.0)</p>
+                <p>9. Τεχνητή Νοημοσύνη (8.5)</p>
+                <p>10. Ανάπτυξη Διαδικτυακών Εφαρμογών (9.5)</p>
+                
+                <p><strong>Μέσος Όρος Βαθμολογίας:</strong> 8.2</p>
+                <p><strong>Σύνολο Περασμένων Μαθημάτων:</strong> 32/40</p>
+                <p><strong>ECTS που έχουν συγκεντρωθεί:</strong> 192/240</p>
+            </div>
+            <div class="document-footer">
+                <div style="width: 100%; text-align: center;">
+                    <p>Η ΓΡΑΜΜΑΤΕΙΑ ΤΟΥ ΤΜΗΜΑΤΟΣ</p>
+                    <p>(Σφραγίδα - Υπογραφή)</p>
+                </div>
+            </div>
+        `;
+        localStorage.setItem('analytiki_vathmologia', analytiki);
+    }
+}
+
+// Συνάρτηση για την προσομοίωση υποβληθέντων εγγράφων
+function simulateSubmittedDocuments() {
+    // Προσομοίωση υποβληθείσας βεβαίωσης αποδοχής
+    document.getElementById("vevaiwsi_apodoxis_status").textContent = "✔️ Έχει υποβληθεί";
+    document.getElementById("vevaiwsi_apodoxis_status").classList.remove("not-submitted");
+    document.getElementById("vevaiwsi_apodoxis_status").classList.add("status");
+    
+    // Προσομοίωση υποβληθείσας υπεύθυνης δήλωσης
+    document.getElementById("up_dilwsh_status").textContent = "✔️ Έχει υποβληθεί";
+    document.getElementById("up_dilwsh_status").classList.remove("not-submitted");
+    document.getElementById("up_dilwsh_status").classList.add("status");
+    
+    // Προσομοίωση υποβληθείσας αναλυτικής βαθμολογίας
+    document.getElementById("analytiki_vathmologia_status").textContent = "✔️ Έχει υποβληθεί";
+    document.getElementById("analytiki_vathmologia_status").classList.remove("not-submitted");
+    document.getElementById("analytiki_vathmologia_status").classList.add("status");
+}
+
+// Συνάρτηση για την προβολή εγγράφου
+function showDocumentPreview(documentType, documentTitle) {
+    const modal = document.getElementById('documentModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const documentPreview = document.getElementById('documentPreview');
+    
+    modalTitle.textContent = `Προεπισκόπηση: ${documentTitle}`;
+    
+    // Λήψη του προτύπου εγγράφου
+    let template = localStorage.getItem(`${documentType}`);
+    
+    // Αντικατάσταση των placeholders με τα πραγματικά δεδομένα
+    if (template) {
+        // Εμφάνιση του αρχικού template για debugging
+        console.log("Αρχικό template:", template);
+        
+        // Αντικατάσταση όλων των placeholders
+        Object.keys(allData).forEach(key => {
+            // Ειδικός χειρισμός για κλειδιά με παύλες
+            const keyRegex = key.includes('-') ? 
+                new RegExp(`{{${key.replace(/-/g, '\\-')}}}`, 'g') : 
+                new RegExp(`{{${key}}}`, 'g');
+            
+            template = template.replace(keyRegex, allData[key] || '');
+            
+            // Εμφάνιση της αντικατάστασης για debugging
+            console.log(`Αντικατάσταση {{${key}}} -> ${allData[key] || ''}`);
+        });
+        
+        // Εμφάνιση του τελικού template για debugging
+        console.log("Τελικό template:", template);
+        
+        documentPreview.innerHTML = template;
+        modal.style.display = "block";
+    } else {
+        documentPreview.innerHTML = "<p>Το έγγραφο δεν είναι διαθέσιμο.</p>";
+        modal.style.display = "block";
+    }
+}
+
+// Συνάρτηση για το κατέβασμα της αίτησης
+function downloadApplication() {
+    if (studentData) {
+        const applicationBlob = new Blob([JSON.stringify(studentData, null, 2)], { type: 'application/json' });
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(applicationBlob);
+        downloadLink.download = 'application.json';
+        downloadLink.click();
+    } else {
+        alert('Δεν βρέθηκε καμία αίτηση.');
+    }
+}
+ </script>
+</body>
+</html> 

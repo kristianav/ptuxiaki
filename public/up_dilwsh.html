@@ -150,7 +150,7 @@
         <h3><strong>(Άρθρο 8 Ν. 1599/1986)</strong></h3>
         <p>Η ακρίβεια των στοιχείων που υποβάλλονται με αυτή τη δήλωση μπορεί να ελεγχθεί με βάση το αρχείο άλλων υπηρεσιών (άρθρο 8, παρ. 4 Ν. 1599/1986).</p>
 
-        <form id="updilwsh_form">
+        <form id="up_dilwsh_form>
             <div class="form-grid">
                 <div class="full-width">
                     <label for="recipient">ΠΡΟΣ(1):</label>
@@ -158,23 +158,23 @@
                 </div>
 
                 <div class="half-width">
-                    <label for="name">Ο-Η Όνομα:</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="stud_name">Ο-Η Όνομα:</label>
+                    <input type="text" id="stud_name" name="stud_name" required>
                 </div>
 
                 <div class="half-width">
-                    <label for="surname">Επώνυμο:</label>
-                    <input type="text" id="surname" name="surname" required>
+                    <label for="stud_surname">Επώνυμο:</label>
+                    <input type="text" id="stud_surname" name="stud_surname" required>
                 </div>
 
                 <div class="full-width">
-                    <label for="fathername">Όνομα και Επώνυμο Πατέρα:</label>
-                    <input type="text" id="fathername" name="fathername" required>
+                    <label for="stud_fname">Όνομα και Επώνυμο Πατέρα:</label>
+                    <input type="text" id="stud_fname" name="stud_fname" required>
                 </div>
 
                 <div class="full-width">
-                    <label for="mothername">Όνομα και Επώνυμο Μητέρας:</label>
-                    <input type="text" id="mothername" name="mothername" required>
+                    <label for="stud_mname">Όνομα και Επώνυμο Μητέρας:</label>
+                    <input type="text" id="stud_mname" name="stud_mname" required>
                 </div>
 
                 <div class="full-width">
@@ -193,28 +193,28 @@
                 </div>
 
                 <div class="half-width">
-                    <label for="phone">Τηλ:</label>
-                    <input type="text" id="phone" name="phone" required>
+                    <label for="stud_tel">Τηλ:</label>
+                    <input type="text" id="stud_tel" name="stud_tel" required>
                 </div>
 
                 <div class="half-width">
-                    <label for="city">Τόπος κατοικίας</label>
-                    <input type="text" id="city" name="city" required>
+                    <label for="stud_city">Τόπος κατοικίας</label>
+                    <input type="text" id="stud_city" name="stud_city" required>
                 </div>
 
                 <div class="half-width">
-                    <label for="address">Οδός:</label>
-                    <input type="text" id="address" name="address" required>
+                    <label for="stud_address">Οδός:</label>
+                    <input type="text" id="stud_address" name="stud_address" required>
                 </div>
 
                 <div class="half-width">
-                    <label for="number">Αριθ:</label>
-                    <input type="number" id="number" name="number" required>
+                    <label for="ad_number">Αριθ:</label>
+                    <input type="number" id="ad_number" name="ad_number" required>
                 </div>
 
                 <div class="half-width">
-                    <label for="postal_code">ΤΚ:</label>
-                    <input type="text" id="postal_code" name="postal_code" required>
+                    <label for="stud_zipcode">ΤΚ:</label>
+                    <input type="text" id="stud_zipcode" name="stud_zipcode" required>
                 </div>
 
                 <div class="half-width">
@@ -223,10 +223,9 @@
                 </div>
 
                 <div class="half-width">
-                    <label for="email">Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail)</label>
-                    <input type="text" id="email" name="email" required>
+                    <label for="stud_email">Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail)</label>
+                    <input type="text" id="stud_email" name="stud_email" required>
                 </div>
-            </div>
 
             <label><p>Με ατομική μου ευθύνη και γνωρίζοντας τις κυρώσεις (3), που προβλέπονται από της διατάξεις της παρ. 6 του άρθρου 22 του Ν. 1599/1986, δηλώνω ότι:</p></label>
             <p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης.</p>
@@ -247,8 +246,6 @@
                     <p>(υπογραφή)</p>
                 </div>
             </div>
-        </form>
-
 
         <p>(1) Αναγράφεται από τον ενδιαφερόμενο πολίτη ή Αρχή ή η Υπηρεσία του δημόσιου τομέα, που απευθύνεται η αίτηση.<br> </p>
         <p>(2) Αναγράφεται ολογράφως. <br> </p>
@@ -258,39 +255,72 @@
         <p>(4) Σε περίπτωση ανεπάρκειας χώρου η δήλωση συνεχίζεται στην πίσω όψη της και υπογράφεται από τον δηλούντα ή την δηλούσα. <br> </p>
 
         <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
+        </form>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('updilwsh_form');
-            const submitbutton = document.getElementById('submit_button');
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("up_dilwsh_form");
+            const submitButton = document.getElementById("submit_button");
 
-            if (form) {
-                submitbutton.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    console.log('Form submission triggered');
-                    const formData = {};
-                    const formElements = form.elements;
-                    for(let element of formElements) {
-                        if (element.name) {
-                            formData[element.name] = element.value;
-                        }
-                    }
-                    console.log('Form data:', formData);
+            submitButton.addEventListener("click", function(event) {
+                event.preventDefault();
 
-                    try{
-                        localStorage.setItem('submittedForm', JSON.stringify(formData));
-                        alert('Η δήλωση υποβλήθηκε επιτυχώς!');
-                        window.location.href = "form.html";
+                const requiredFields = form.querySelectorAll("[required]");
+                let allFieldsValid = true;
+
+                for (let field of requiredFields) {
+                    if (!field.value.trim()) {
+                        allFieldsValid = false;
+                        field.style.borderColor = "red";
+                    } else {
+                        field.style.borderColor = "#ced4da";
                     }
-                    catch(error) {
-                        alert('Σφάλμα κατά την υποβολή της δήλωσης.' +error.message);
+                }
+
+                if (!allFieldsValid) {
+                    alert("Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία");
+                    return;
+                }
+
+                const upDilwshData = {};
+                const formElements = form.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    if (formElements[i].name) {
+                        upDilwshData[formElements[i].name] = formElements[i].value;
                     }
-                });
-            } else {
-                console.log('Form not found.');
-            }
+                }
+
+                localStorage.setItem('up_dilwsh_data', JSON.stringify(upDilwshData));
+                localStorage.setItem('up_dilwsh_form_online_status', 'completed');
+                localStorage.setItem('up_dilwsh_file_status', 'submitted');
+
+                const wrapperHTML = document.querySelector(".container").outerHTML;
+                localStorage.setItem('up_dilwsh_html', wrapperHTML);
+
+                try {
+                    if (window.opener && !window.opener.closed) {
+                        window.opener.postMessage({
+                            type: 'formCompleted',
+                            formName: 'up_dilwsh',
+                            formData: formData
+                        }, '*');
+
+                        alert("Η Υπεύθυνη δήλωση υποβλήθηκε επιτυχώς!");
+                        setTimeout(() => window.close(), 1500);
+                    } else {
+                        alert("Η Υπεύθυνη δήλωση υποβλήθηκε επιτυχώς! Μπορείτε να επιστρέψετε στην κύρια φόρμα.");
+                    }
+                } catch (error) {
+                    console.error('Σφάλμα:', error);
+                    alert("Η Υπεύθυνη δήλωση υποβλήθηκε επιτυχώς! Παρακαλώ επιστρέψτε στην κύρια φόρμα.");
+                }
+
+                window.location.href = "form.html";
+            });
         });
     </script>
+        
 </body>
 </html>

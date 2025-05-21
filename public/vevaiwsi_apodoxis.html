@@ -84,7 +84,7 @@
 <body>
     <div class="container">
         <h1>Βεβαίωση Φορέα Απασχόλησης<br>Αποδοχής Πρακτικής Άσκησης</h1>
-        <form id="acceptance_form">
+        <form id="vevaiwsi_apodoxis">
             <label for="repr">Ο/Η κάτωθι υπογεγραμμένος/η:</label>
             <input type="text" id="repr" name="repr" required>
 
@@ -94,8 +94,8 @@
             <label for="addr">Διεύθυνση:</label>
             <input type="text" id="addr" name="addr" required>
 
-            <label for="job-desc">Αντικείμενο εργασιών:</label>
-            <input type="text" id="job-desc" name="job-desc" required>
+            <label for="job_desc">Αντικείμενο εργασιών:</label>
+            <input type="text" id="job_desc" name="job_desc" required>
 
             <p><strong>βεβαιώνω ότι:</strong></p>
 
@@ -126,11 +126,11 @@
             <input type="date" id="date" name="date" required>
 
             <p><strong>Ο Εκπρόσωπος του Φορέα Απασχόλησης</strong></p>
-            <label for="repr-name">Ονοματεπώνυμο:</label>
-            <input type="text" id="repr-name" name="repr-name" required>
+            <label for="rep_name">Ονοματεπώνυμο:</label>
+            <input type="text" id="rep_name" name="rep_name" required>
 
-            <label for="repr-job">Ιδιότητα:</label>
-            <input type="text" id="repr-job" name="repr-job" required>
+            <label for="rep_job">Ιδιότητα:</label>
+            <input type="text" id="rep_job" name="rep_job" required>
 
             <div class="signature">
                 <p><br>Υπογραφή/Σφραγίδα</br></p>
@@ -143,38 +143,73 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('acceptance_form');
-            const submitButton = document.getElementById('submit_button');
-
-            if (form) {
-                submitButton.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    console.log('Form submission triggered');
-                    
-                    const formData = {};
-                    const formElements = form.elements;
-                    
-                    for (let element of formElements) {
-                        if (element.name) {
-                            formData[element.name] = element.value;
-                        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("vevaiwsi_apodoxis");
+            const submitButton = document.getElementById("submit_button");
+    
+            submitButton.addEventListener("click", function(event) {
+                event.preventDefault();
+    
+                const requiredFields = form.querySelectorAll("[required]");
+                let allFieldsValid = true;
+    
+                for (let field of requiredFields) {
+                    if (!field.value.trim()) {
+                        allFieldsValid = false;
+                        field.style.borderColor = "red";
+                    } else {
+                        field.style.borderColor = "#ced4da";
                     }
-
-                    console.log('Form data:', formData);
-
-                    try {
-                        localStorage.setItem('acceptanceForm', JSON.stringify(formData));
-                        alert('Η αίτηση υποβλήθηκε επιτυχώς!');
-                        window.location.href = "form.html";
-                    } catch (error) {
-                        alert('Σφάλμα κατά την υποβολή της αίτησης: ' + error.message);
+                }
+    
+                if (!allFieldsValid) {
+                    alert("Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία");
+                    return;
+                }
+    
+                // Συλλογή δεδομένων φόρμας
+                const vevaiwsiData = {};
+                const formElements = form.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    if (formElements[i].name) {
+                        vevaiwsiData[formElements[i].name] = formElements[i].value;
                     }
-                });
-            } else {
-                console.log('Form not found.');
-            }
+                }
+    
+                // Αποθήκευση δεδομένων στο localStorage
+                localStorage.setItem('vevaiwsi_apodoxis_data', JSON.stringify(vevaiwsiData));
+    
+                // Αποθήκευση HTML περιεχομένου (π.χ. μόνο του wrapper container)
+                const wrapperHTML = document.querySelector(".container").outerHTML;
+                localStorage.setItem('vevaiwsi_apodoxis_form_html', wrapperHTML);
+    
+                // Ενημέρωση της κύριας σελίδας
+                try {
+                    if (window.opener && !window.opener.closed) {
+                        window.opener.postMessage({
+                            type: 'formCompleted',
+                            formName: 'vevaiwsi_apodoxis'
+                        }, '*');
+    
+                        alert("Η Βεβαίωση αποδοχής υποβλήθηκε επιτυχώς!");
+                        setTimeout(function () {
+                            window.close();
+                        }, 1500);
+                    } else {
+                        alert("Η Βεβαίωση αποδοχής υποβλήθηκε επιτυχώς! Μπορείτε να επιστρέψετε στην κύρια φόρμα.");
+                        localStorage.setItem('vevaiwsi_apodoxis_online_status', 'completed');
+                    }
+                } catch (error) {
+                    console.error('Σφάλμα:', error);
+                    alert("Η Βεβαίωση αποδοχής υποβλήθηκε επιτυχώς! Παρακαλώ επιστρέψτε στην κύρια φόρμα.");
+                    localStorage.setItem('vevaiwsi_apodoxis_online_status', 'completed');
+                }
+    
+                window.location.href = "form.html";
+            });
         });
     </script>
+    
+    
 </body>
 </html>
