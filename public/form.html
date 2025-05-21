@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html lang="el">
     <head>
-        <meta http-equiv="refresh" content="0; URL=login.html" />
+        <script>
+        // Έλεγχος αν ο χρήστης έχει ήδη δει το login
+        if (!localStorage.getItem('visitedLogin')) {
+        // Αν δεν έχει δει, αποθηκεύουμε ότι τώρα το βλέπει
+            localStorage.setItem('visitedLogin', 'true');
+        // Ανακατεύθυνση στο login.html
+            window.location.href = "login.html";
+        }
+  // Αν έχει ήδη δει το login, δεν κάνουμε τίποτα (μπορεί να συνεχίσει στο index.html ή form.html)
+</script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Αίτηση για Έγκριση Πρακτικής Άσκησης</title>
