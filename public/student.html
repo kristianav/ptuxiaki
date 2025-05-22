@@ -293,8 +293,8 @@
  <script>
 // Αρχικοποίηση δεδομένων φοιτητή
 let studentData = {};
-let vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsiData') || {});
-let updilwshData = JSON.parse(localStorage.getItem('updilwshData') || {});
+let vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data') || '{}');
+let updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data') || '{}');
 let allData = {};
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -303,24 +303,24 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("current-date").textContent = currentDate;
 
     // Ανάκτηση των δεδομένων από το localStorage
-    studentData = JSON.parse(localStorage.getItem('applicationForm')) || {};
+    studentData = JSON.parse(localStorage.getItem('aitisi_form_data')) || {};
     
     // Αρχικοποίηση των προκαθορισμένων τιμών αν δεν υπάρχουν
-    if (!localStorage.getItem('vevaiwsiData')) {
-        localStorage.setItem('vevaiwsiData', JSON.stringify(vevaiwsiValues));
+    if (!localStorage.getItem('vevaiwsi_apodoxis_data')) {
+        localStorage.setItem('vevaiwsi_apodoxis_data', JSON.stringify(vevaiwsiValues));
     }
-    
-    if (!localStorage.getItem('updilwshData')) {
-        localStorage.setItem('updilwshData', JSON.stringify(updilValues));
+
+    if (!localStorage.getItem('up_dilwsh_data')) {
+        localStorage.setItem('up_dilwsh_data', JSON.stringify(updilValues));
     }
 
     // Ανανέωση των τιμών από το localStorage
-    vevaiwsiValues = JSON.parse(localStorage.getItem('vevaiwsiData'));
-    updilValues = JSON.parse(localStorage.getItem('updilwshData'));
+    vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data'));
+    updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data'));
 
     // Συγχώνευση όλων των δεδομένων
-    allData = { ...studentData, ...vevaiwsiValues, ...updilValues };
-    
+    allData = { ...studentData, ...vevaiwsiData, ...updilwshData };
+
     // Γέμισμα των πεδίων με τα δεδομένα
     document.getElementById("stud_name").textContent = studentData.stud_name;
     document.getElementById("stud_surname").textContent = studentData.stud_surname;
@@ -388,14 +388,16 @@ function createDocumentTemplates() {
                 Πρακτικής Άσκησης του Πανεπιστημίου.</p>
                 
                 <p>Υπεύθυνος-Επόπτης της Επιχείρησης για την Πρακτική Άσκηση του φοιτητή/τριας, ορίζεται ο/η {{upeuthunos}}.
-                    Θέση: {{pos}}
-                    Επικοινωνία: {{tel}} {{email}}</p>
+                    </p>Θέση: {{pos}}</p>
+                    <p>Επικοινωνία:</p>
+                    <p>Τηλέφωνο: {{contact}}</p>
+                    <p>Email: {{email}}</p>
             </div>
             <div class="document-footer">
                 <div class="signature-area">
                     <p>Ο εκπρόσωπος του Φορέα Απασχόλησης</p>
-                    <p>Ονοματεπώνυμο: {{repr_name}}</p>
-                    <p>Ιδιότητα: {{repr_job}}</p>
+                    <p>Ονοματεπώνυμο: {{rep_name}}</p>
+                    <p>Ιδιότητα: {{rep_job}}</p>
                 </div>
                 <div class="signature-area">
                     <p>Υπογραφή/Σφραγίδα</p>
@@ -417,18 +419,17 @@ function createDocumentTemplates() {
             <div class="document-body">
                 <p>Προς:Γραμματεία Τμήματος ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ Πανεπιστημίου Πελοποννήσου</p>
                 <p>Ονοματεπώνυμο: {{stud_name}} {{stud_surname}}</p>
-                <p>Όνομα και επώνυμο πατέρα: {{father_name}}</p>
-                <p>Όνομα και επώνυμο μητέρας: {{mother_name}}</p>
-                <p>Ημερομηνία γέννησης: {{birth_date}}</p>
-                <p>Τόπος γέννησης: {{birth_place}}</p>
-                <p>Αριθμός δελτίου ταυτότητας: {{id_number}}</p>
-                <p>Τηλ: {{phone}}</p>
-                <p>Τόπος κατοικίας: {{address}}</p>
-                <p>Οδός: {{street}}</p>
-                <p>Αριθμός: {{street_number}}</p>
-                <p>Τ.Κ: {{postal_code}}</p>
+                <p>Όνομα και επώνυμο πατέρα: {{stud_fname}}</p>
+                <p>Όνομα και επώνυμο μητέρας: {{stud_mname}}</p>
+                <p>Ημερομηνία γέννησης: {{birthdate}}</p>
+                <p>Τόπος γέννησης: {{birthplace}}</p>
+                <p>Αριθμός δελτίου ταυτότητας: {{idnumber}}</p>
+                <p>Τηλ: {{stud_tel}}</p>
+                <p>Τόπος κατοικίας: {{stud_city}}</p>
+                <p>Οδός: {{stud_address}}</p>
+                <p>Τ.Κ: {{stud_zipcode}}</p>
                 <p>Αρ. Τηλεομοιοτύπου: {{fax}}</p>
-                <p>Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail): {{email}}</p>
+                <p>Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail): {{stud_email}}</p>
 
                 
                 <p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης. </p>
@@ -473,8 +474,7 @@ function createDocumentTemplates() {
                 <p><strong>Στοιχεία Φοιτητή</strong></p>
                 <p>Ονοματεπώνυμο: {{stud_name}} {{stud_surname}}</p>
                 <p>Αριθμός Μητρώου: {{stud_id}}</p>
-                <p>Έτος Εισαγωγής: 2021</p>
-                <p>Τρέχον Εξάμηνο: 8ο</p>
+                <p>Τρέχον Εξάμηνο: {{stud_sem}}</p>
                 
                 <p><strong>Μαθήματα που έχουν ολοκληρωθεί επιτυχώς:</strong></p>
                 <p>1. Εισαγωγή στον Προγραμματισμό (8.5)</p>
@@ -520,46 +520,27 @@ function simulateSubmittedDocuments() {
     document.getElementById("analytiki_vathmologia_status").classList.remove("not-submitted");
     document.getElementById("analytiki_vathmologia_status").classList.add("status");
 }
+function replacePlaceholders(template, data) {
+    return template.replace(/{{\s*(\w+)\s*}}/g, function(match, key) {
+        return data[key] !== undefined ? data[key] : '';
+    });
+}
 
 // Συνάρτηση για την προβολή εγγράφου
-function showDocumentPreview(documentType, documentTitle) {
+function showDocumentPreview(key, title) {
     const modal = document.getElementById('documentModal');
     const modalTitle = document.getElementById('modalTitle');
     const documentPreview = document.getElementById('documentPreview');
-    
-    modalTitle.textContent = `Προεπισκόπηση: ${documentTitle}`;
-    
-    // Λήψη του προτύπου εγγράφου
-    let template = localStorage.getItem(`${documentType}`);
-    
-    // Αντικατάσταση των placeholders με τα πραγματικά δεδομένα
-    if (template) {
-        // Εμφάνιση του αρχικού template για debugging
-        console.log("Αρχικό template:", template);
-        
-        // Αντικατάσταση όλων των placeholders
-        Object.keys(allData).forEach(key => {
-            // Ειδικός χειρισμός για κλειδιά με παύλες
-            const keyRegex = key.includes('-') ? 
-                new RegExp(`{{${key.replace(/-/g, '\\-')}}}`, 'g') : 
-                new RegExp(`{{${key}}}`, 'g');
-            
-            template = template.replace(keyRegex, allData[key] || '');
-            
-            // Εμφάνιση της αντικατάστασης για debugging
-            console.log(`Αντικατάσταση {{${key}}} -> ${allData[key] || ''}`);
-        });
-        
-        // Εμφάνιση του τελικού template για debugging
-        console.log("Τελικό template:", template);
-        
-        documentPreview.innerHTML = template;
-        modal.style.display = "block";
-    } else {
-        documentPreview.innerHTML = "<p>Το έγγραφο δεν είναι διαθέσιμο.</p>";
-        modal.style.display = "block";
-    }
+
+    const template = localStorage.getItem(key); // Παίρνει το raw HTML template
+    const filledDocument = replacePlaceholders(template, allData); // Αντικαθιστά όλα τα {{}} με τιμές
+
+    modalTitle.textContent = title;
+    documentPreview.innerHTML = filledDocument;
+
+    modal.style.display = "block";
 }
+
 
 // Συνάρτηση για το κατέβασμα της αίτησης
 function downloadApplication() {

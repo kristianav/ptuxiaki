@@ -369,10 +369,10 @@ button:hover {
 
                         <!-- Θέμα Έγκρισης -->
                         <h3>ΘΕΜΑ: Έγκριση Πρακτικής Άσκησης</h3>
-                        <p>ΣΠΑΡΤΗ: <input type="text" id="current-date" readonly></p>
+                        <p>ΣΠΑΡΤΗ: <input type="text" id="current_date" readonly></p>
                         <p><strong>ΕΠΙΤΡΟΠΗ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ:</strong></p>
                         <p>Εγκρίνεται η πραγματοποίηση της Π.Α. στη βάση των δεδομένων και των επισυναπτόμενων της αίτησης και ορίζονται:</p>
-                        <p>α. Ημερομηνία έναρξης Π.Α.: <input type="text" id="start-date" readonly></p>
+                        <p>α. Ημερομηνία έναρξης Π.Α.: <input type="text" id="start_date" readonly></p>
                         <p>β. Επόπτης Καθηγητής: <input type="text" id="supervisor" required></p>
                         <div class="approval-row">
                             <div class="signature">
@@ -428,12 +428,12 @@ button:hover {
                             <span id="status_anal_vathm" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
 
 
-                            <p><a href="vevaiwsi_apodoxis.html" class="attach-link">2. Βεβαίωση αποδοχής απασχόλησης από το φορέα:</a></p>
+                            <p><a href="vevaiwsi_apodoxis.html" class="attach-link" onclick="saveFormData()">2. Βεβαίωση αποδοχής απασχόλησης από το φορέα:</a></p>
                                 <label for="vevaiwsi_apodoxis_file" class="upload-file">Ανεβάστε αρχείο PDF:</label>
                                 <input type="file" id="vevaiwsi_apodoxis_file" name="vevaiwsi_apodoxis_file" accept=".pdf" onchange="updateFileStatus('vevaiwsi_apodoxis_file')">
                                 <span id="status_vevaiwsi_apodoxis_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
                                 
-                            <p><a href="up_dilwsh.html" class="attach-link">3. Υπεύθυνη Δήλωση:</a></p>
+                            <p><a href="up_dilwsh.html" class="attach-link" onclick="saveFormData()">3. Υπεύθυνη Δήλωση:</a></p>
                                 <label for="up_dilwsh_file" class="upload-file">Ανεβάστε αρχείο PDF:</label>
                                 <input type="file" id="up_dilwsh_file" name="up_dilwsh_file" accept=".pdf" onchange="updateFileStatus('up_dilwsh_file')">
                                 <span id="status_up_dilwsh_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
@@ -449,8 +449,8 @@ button:hover {
 document.addEventListener('DOMContentLoaded', function() {
     
     // Automatically fill dates
-    const currentDateField = document.getElementById("current-date");
-    const startDateField = document.getElementById("start-date");
+    const currentDateField = document.getElementById("current_date");
+    const startDateField = document.getElementById("start_date");
 
     // Today's date
     const today = new Date();
@@ -520,6 +520,40 @@ function updateFileStatus(inputId) {
     }
 }
 
+function saveFormData() {
+    const formFields = [
+        'stud_surname', 'stud_name', 'stud_fname', 'stud_mname',
+        'department', 'sxolh', 'university',
+        'stud_id', 'stud_afm', 'stud_sem',
+        'stud_address', 'stud_city', 'stud_zipcode', 'stud_tel', 'stud_email',
+        'emp_name', 'emp_addr', 'emp_phone', 'emp_email', 'emp_sup',
+        'supervisor', 'current_date', 'start_date'
+    ];
+
+    const formData = {};
+    for (const field of formFields) {
+        const element = document.getElementById(field);
+        if (element) {
+            formData[field] = element.value;
+        }
+    }
+
+    localStorage.setItem('aitisi_form_data', JSON.stringify(formData));
+}
+
+const savedData = localStorage.getItem('aitisi_form_data');
+if (savedData) {
+    const formData = JSON.parse(savedData);
+    for (const key in formData) {
+        const input = document.getElementById(key);
+        if (input) {
+            input.value = formData[key];
+        }
+    }
+}
+
+
+
 // Check if all required attachments are included
 function validateAttachments() {
     // Check for analytic grade report (required)
@@ -586,11 +620,7 @@ function submitFormToBackend() {
             return;
         }
     }
-    
-    // Έλεγχος για συνημμένα αρχεία
-    if (!validateAttachments()) {
-        return;
-    }
+
     
     // Δημιουργία FormData αντικειμένου για αποστολή δεδομένων και αρχείων
     const formData = new FormData();
@@ -608,8 +638,8 @@ function submitFormToBackend() {
     formData.append('sxolh', document.getElementById('sxolh').value);
     formData.append('university', document.getElementById('university').value);
     formData.append('supervisor', document.getElementById('supervisor').value);
-    formData.append('current-date', document.getElementById('current-date').value);
-    formData.append('start-date', document.getElementById('start-date').value);
+    formData.append('current_date', document.getElementById('current_date').value);
+    formData.append('start_date', document.getElementById('start_date').value);
     
     // Προσθήκη HTML περιεχομένου από τα textarea (αν υπάρχουν)
     const upDilwshText = document.getElementById('up_dilwsh_text');
@@ -637,33 +667,29 @@ function submitFormToBackend() {
     if (vevaiwsiFile) {
         formData.append('vevaiwsi_apodoxis_file', vevaiwsiFile);
     }
-    
-    // Αποστολή δεδομένων στο backend
-    fetch('/submit_form', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Η αίτηση υποβλήθηκε επιτυχώς!');
-            
-            // Ενημέρωση τοπικής αποθήκευσης
-            localStorage.setItem('anal_vathm_status', 'submitted');
-            localStorage.setItem('up_dilwsh_file_status', 'submitted');
-            localStorage.setItem('vevaiwsi_apodoxis_file_status', 'submitted');
-            
-            // Ανακατεύθυνση στη σελίδα φοιτητή
-            window.location.href = "student.html";
-        } else {
-            alert('Σφάλμα: ' + (data.error || 'Υπήρξε πρόβλημα κατά την υποβολή της αίτησης.'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Υπήρξε σφάλμα κατά την επικοινωνία με τον διακομιστή.');
-    });
 }
+    
+document.getElementById("submit_button").addEventListener("click", function(event) {
+  event.preventDefault();
+
+  const form = document.getElementById("application_id");
+  const formData = new FormData(form);
+  const data = {};
+
+  for (const [key, value] of formData.entries()) {
+    data[key] = value;
+  }
+
+  localStorage.setItem("aitisi_form_data", JSON.stringify(data));
+
+  // ✅ Μήνυμα επιτυχίας
+  alert("✅ Η αίτηση αποθηκεύτηκε επιτυχώς!");
+
+  // ⏩ Ανακατεύθυνση
+  window.location.href = "student.html";
+});
+
+
 
 // Set up message listener for popup windows
 function setupMessageListener() {
@@ -712,6 +738,7 @@ function setupMessageListener() {
             } 
         }
     });
+
 }
         </script>
     </body>

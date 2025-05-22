@@ -80,6 +80,23 @@
             margin: 0;
         }
     </style>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const savedData = localStorage.getItem('aitisi_form_data');
+    if (!savedData) return;
+
+    const formData = JSON.parse(savedData);
+
+    // Εδώ προσάρμοσε τα ID των input αν υπάρχουν πεδία που χρειάζεται να προ-συμπληρωθούν
+    for (const key in formData) {
+        const input = document.getElementById(key);
+        if (input) {
+            input.value = formData[key];
+        }
+    }
+});
+</script>
+
 </head>
 <body>
     <div class="container">
@@ -100,7 +117,16 @@
             <p><strong>βεβαιώνω ότι:</strong></p>
 
             <label for="stud_name">Αποδεχόμαστε το αίτημα του/της:</label>
-            <input type="text" id="stud_name" name="stud_name" required>
+            <div class="half-width-container">
+                <div>
+                    <label for="stud_name">Όνομα:</label>
+                    <input type="text" id="stud_name" name="stud_name" required>
+                </div>
+                <div>
+                    <label for="stud_surname">Επώνυμο:</label>
+                    <input type="text" id="stud_surname" name="stud_surname" required>
+                </div>
+            </div>
             <p>φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων του Πανεπιστημίου Πελοποννήσου να πραγματοποιήσει την
                 Πρακτική άσκησή του/της στην Επιχείρησή μας/Φορέα μας και αποδεχόμαστε τη συμμετοχή του/της στο
                 χρηματοδοτούμενο μέσω ΕΣΠΑ πρόγραμμα Πρακτικής Άσκησης του Πανεπιστημίου.</p>
