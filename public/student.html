@@ -346,6 +346,7 @@
 <a class="file-link" href="#" id="analytiki_vathmologia_preview_link">Προβολή Αναλυτικής Βαθμολογίας</a></p>
 </div>
 <button onclick="downloadApplication()">Κατεβάστε την αίτηση</button>
+<button id="editFormBtn">✏️ Επεξεργασία Αίτησης</button>
 </div>
 <!-- Modal για την προεπισκόπηση εγγράφων -->
 <div class="modal" id="documentModal">
@@ -394,8 +395,31 @@ document.addEventListener('DOMContentLoaded', function () {
           commentText.textContent = comment || "(Χωρίς σχόλιο)";
         }
 
+    const editBtn = document.getElementById("editFormBtn");
+
+    if (editBtn) {
+        editBtn.addEventListener("click", function () {
+            const studentId = localStorage.getItem("active_student_id");
+
+            if (!studentId) {
+                alert("Δεν βρέθηκε ενεργός φοιτητής.");
+                return;
+            }
+
+            const existingData = localStorage.getItem("student_" + studentId + "_data");
+            if (existingData) {
+                localStorage.setItem("temp_form_data_" + studentId, existingData);
+            }
+
+            // Προαιρετικά: επιβεβαίωση
+            // if (confirm("Είστε σίγουρος ότι θέλετε να επεξεργαστείτε την αίτηση;")) {
+                window.location.href = "form.html?edit=true";
+            // }
+        });
+    }
+
     // Ανάκτηση των δεδομένων από το localStorage
-    studentData = JSON.parse(localStorage.getItem('aitisi_form_data_' + studentId)) || {};
+studentData = JSON.parse(localStorage.getItem('student_' + studentId + '_data')) || {};
     
     // Αρχικοποίηση των προκαθορισμένων τιμών αν δεν υπάρχουν
     if (!localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId)) {
@@ -496,8 +520,8 @@ function createDocumentTemplates() {
                 <div>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</div>
             </div>
             <div class="document-body">
-                <p>Ο/η κάτωθι υπογεγραμμένος/η {{repr}}, νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου Φορέα,
-                με επωνυμία: {{org}}, Διεύθυνση: {{addr}}, Αντικείμενο εργασιών: {{job_desc}},
+                <p>Ο/η κάτωθι υπογεγραμμένος/η {{emp_sup}}, νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου Φορέα,
+                με επωνυμία: {{emp_name}}, Διεύθυνση: {{emp_addr}}, Αντικείμενο εργασιών: {{job_desc}},
                 βεβαιώνω ότι: </p>
 
                 <p>Αποδεχόμαστε το αίτημα του/της {{stud_name}} {{stud_surname}} φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων

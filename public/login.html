@@ -128,8 +128,12 @@
 
                     setTimeout(() => {
                         if (userType === "student") {
-                            localStorage.setItem("active_student_id", studentId);
-                            window.location.href = "form.html";
+                            const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
+                            if (hasSubmitted) {
+                                window.location.href = "student.html";
+                            } else {
+                                window.location.href = "studentForm.html";
+                            }
                         } else {
                             window.location.href = "admin.html";
                         }

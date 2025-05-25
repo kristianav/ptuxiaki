@@ -426,12 +426,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("application_id");
   const studentId = localStorage.getItem("active_student_id");
   const idInput = document.getElementById("stud_id");
+  const submitted = localStorage.getItem(`student_${studentId}_data`);
+
 
   // Αν υπάρχει ενεργός φοιτητής, κλειδώνει το πεδίο ΑΜ
   if (studentId && idInput) {
     idInput.value = studentId;
     idInput.readOnly = true;
   }
+
+// Επιτρέπουμε επεξεργασία μόνο αν ΔΕΝ έρχεται από edit
+const urlParams = new URLSearchParams(window.location.search);
+const isEdit = urlParams.get("edit");
+
+if (studentId && submitted && !isEdit) {
+  window.location.href = "student.html";
+}
+
 
   // Προσυμπλήρωση ημερομηνιών
   const today = new Date();
@@ -515,32 +526,37 @@ function saveFormData() {
 // Υποβολή και αποθήκευση των τελικών δεδομένων
 document.getElementById("submit_button").addEventListener("click", function (event) {
   event.preventDefault();
-  const form = document.getElementById("application_id");
-  const formData = new FormData(form);
   const data = {};
+  const studentId = localStorage.getItem("active_student_id");
 
-  for (const [key, value] of formData.entries()) {
-    data[key] = value;
-  }
+  // Συλλογή ΟΛΩΝ των input/textarea πεδίων, όχι μόνο αυτών με name
+  document.querySelectorAll("input, textarea").forEach(el => {
+    if (el.type !== "file") {
+      const key = el.name || el.id;
+      if (key) data[key] = el.value;
+    }
+  });
 
-  const studentId = localStorage.getItem("active_student_id") || data["stud_id"];
-  if (!studentId) {
+  if (!studentId && !data["stud_id"]) {
     alert("Δεν βρέθηκε Αριθμός Μητρώου.");
     return;
   }
+
+  const finalId = studentId || data["stud_id"];
   data["current_date"] = new Date().toISOString();
 
-  // Οριστική αποθήκευση
-  localStorage.setItem(`student_${studentId}_data`, JSON.stringify(data));
-  localStorage.setItem(`student_${studentId}_status`, "Pending");
-  localStorage.setItem(`student_${studentId}_comments`, "");
+  // Αποθήκευση των πλήρων δεδομένων
+  localStorage.setItem(`student_${finalId}_data`, JSON.stringify(data));
+  localStorage.setItem(`student_${finalId}_status`, "Pending");
+  localStorage.setItem(`student_${finalId}_comments`, "");
 
-  // Διαγραφή προσωρινών δεδομένων
-  localStorage.removeItem(`temp_form_data_${studentId}`);
+  // Καθαρισμός προσωρινών
+  localStorage.removeItem(`temp_form_data_${finalId}`);
 
   alert("✅ Η αίτηση υποβλήθηκε με επιτυχία!");
   window.location.href = "student.html";
 });
+
 </script>
 
 </body>
