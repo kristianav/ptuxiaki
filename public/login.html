@@ -1,140 +1,149 @@
+
 <!DOCTYPE html>
 <html lang="el">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Σύνδεση Φοιτητή</title>
-        <style>
-            body {
-                font-family: Arial, Helvetica, sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-                height: 100vh;
-                margin: 0;
-                background-color: #f0f0f0;
-            }
-            .header {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 20px;
-            }
-            .header img {
-                max-width: 250px;
-                height: auto;
-            }
-            .login-container {
-                background: white;
-                padding: 20px;
-                border-radius: 15px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                width: 300px;
-                height: auto;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-            }
-            .login-container h2 {
-                margin-bottom: 16px;
-            }
-            .login-container input {
-                width: 90%;
-                padding: 10px;
-                margin: 8px 0;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-            }
-            .login-container button {
-                width: 90%;
-                padding: 10px;
-                background-color: #110053;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
-            .login-container button:hover {
-                background-color: #ab0606;
-            }
-            .message {
-                text-align: center;
-                margin-top: 10px;
-                color: #ab0606;
-            }
-        </style>
-    <body>
-        <div class="login-container">
-            <div class="header">
-                <img src="papel.png" class="papel-logo">
-            </div>
-            <h2>Σύνδεση </h2>
-            <form id="loginform">
-                <select id="userType" required>
-                    <option value="student">Φοιτητής</option>
-                    <option value="secretary">Γραμματεία</option>
-                </select>
-                <input type="text" id="username" placeholder="Όνομα χρήστη" required />
-                <input type="password" id="password" placeholder="Κωδικός" required />
-                <button type="submit">Σύνδεση</button>
-            </form>
-            <div class="message" id="message"></div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Σύνδεση</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .login-container input, .login-container select {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-container button {
+            width: 90%;
+            padding: 10px;
+            background-color: #110053;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .login-container button:hover {
+            background-color: #ab0606;
+        }
+        .message {
+            text-align: center;
+            margin-top: 10px;
+            color: #ab0606;
+        }
+        .header img {
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        #studentIdContainer {
+            display: block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header">
+            <img src="papel.png" alt="Logo">
         </div>
-        <script>
-            document.getElementById("loginform").addEventListener("submit", function(e) {
-                e.preventDefault(); // Αποτρέπει το default submit της φόρμας
+        <h2>Σύνδεση</h2>
+        <form id="loginform">
+            <select id="userType" required>
+                <option value="student">Φοιτητής</option>
+                <option value="secretary">Γραμματεία</option>
+            </select>
 
-                const userType = document.getElementById("userType").value;
-                const username = document.getElementById("username").value.trim();
-                const password = document.getElementById("password").value.trim();
-            
-                // Βεβαιώσου ότι δεν υπάρχουν κενά πεδία
-                if (!username || !password) {
-                    const messageElement = document.getElementById("message");
+            <div id="studentIdContainer">
+                <input type="text" id="studentId" placeholder="Αριθμός Μητρώου (ΑΜ)" />
+            </div>
+
+            <input type="text" id="username" placeholder="Όνομα χρήστη" required />
+            <input type="password" id="password" placeholder="Κωδικός" required />
+            <button type="submit">Σύνδεση</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        const userTypeSelect = document.getElementById("userType");
+        const studentIdContainer = document.getElementById("studentIdContainer");
+
+        function toggleStudentIdField() {
+            studentIdContainer.style.display = userTypeSelect.value === "student" ? "block" : "none";
+        }
+
+        toggleStudentIdField(); // on load
+        userTypeSelect.addEventListener("change", toggleStudentIdField);
+
+        document.getElementById("loginform").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const userType = userTypeSelect.value;
+            const studentId = document.getElementById("studentId").value.trim();
+            const messageElement = document.getElementById("message");
+
+            if (!username || !password || (userType === "student" && !studentId)) {
+                messageElement.style.color = "red";
+                messageElement.textContent = "Συμπληρώστε όλα τα πεδία!";
+                return;
+            }
+
+            fetch('https://ptuxiaki.onrender.com/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, userType })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Σφάλμα σύνδεσης με τον server!");
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    messageElement.style.color = "green";
+                    messageElement.textContent = "Επιτυχής σύνδεση!";
+
+                    setTimeout(() => {
+                        if (userType === "student") {
+                            localStorage.setItem("active_student_id", studentId);
+                            window.location.href = "form.html";
+                        } else {
+                            window.location.href = "admin.html";
+                        }
+                    }, 1000);
+                } else {
                     messageElement.style.color = "red";
-                    messageElement.textContent = "Συμπληρώστε όλα τα πεδία!";
-                    return;
+                    messageElement.textContent = "Αποτυχία σύνδεσης.";
                 }
-    
-                fetch('https://ptuxiaki.onrender.com/login', {  
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username, password, userType}),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Σφάλμα σύνδεσης με τον server!");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const messageElement = document.getElementById("message");
-                    if (data.success) {
-                        messageElement.style.color = "green";
-                        messageElement.textContent = "Επιτυχής σύνδεση!";
-    
-                        // Redirect ανάλογα με τον τύπο χρήστη
-                        setTimeout(function() {
-                            if (userType === "student") {
-                                window.location.href = "form.html";
-                            } else if (userType === "secretary") {
-                                window.location.href = "admin.html";
-                            }
-                        }, 1000);
-                    } else {
-                        messageElement.style.color = "red";
-                        messageElement.textContent = "Αποτυχία σύνδεσης.";
-                    }
-                })
-                .catch(error => {
-                    const messageElement = document.getElementById("message");
-                    messageElement.style.color = "red";
-                    messageElement.textContent = "Σφάλμα: " + error.message;
-                    console.error("Error:", error);
-                });
+            })
+            .catch(error => {
+                messageElement.style.color = "red";
+                messageElement.textContent = "Σφάλμα: " + error.message;
             });
-        </script>
-        
-    </body>
+        });
+    </script>
+</body>
 </html>

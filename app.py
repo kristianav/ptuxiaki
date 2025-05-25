@@ -23,8 +23,7 @@ ALLOWED_EXTENSIONS = {'pdf', 'docx', 'jpg', 'jpeg', 'png'}
 users = {
     "student1": "password123",
     "student2": "mypassword",
-    "dssec1": "secpassword",
-    "dssec2": "secpass"
+    "dssec": "secpassword",
 }
 
 # Σύνδεση με βάση δεδομένων
@@ -147,10 +146,10 @@ def submit_form():
             data[key] = form_data[key]
         
         # Διόρθωση των ονομάτων κλειδιών που έχουν παύλα
-        if 'current-date' in data:
-            data['current_date'] = data.pop('current-date')
-        if 'start-date' in data:
-            data['start_date'] = data.pop('start-date')
+        if 'current_date' in data:
+            data['current_date'] = data.pop('current_date')
+        if 'start_date' in data:
+            data['start_date'] = data.pop('start_date')
         
         # Επεξεργασία και αποθήκευση αρχείων
         files = request.files
@@ -206,7 +205,7 @@ def get_applications():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT id, stud_surname, stud_name, stud_id, emp_name, submission_date, status, secretary_comments
+            SELECT id, stud_surname, stud_name, stud_id, emp_name, submission_date, status, secretary_comments, current_date
             FROM students
             ORDER BY submission_date DESC
         ''')
@@ -223,7 +222,8 @@ def get_applications():
                 'emp_name': row['emp_name'],
                 'submission_date': row['submission_date'],
                 'status': row['status'],
-                'secretary_comments': row['secretary_comments']
+                'secretary_comments': row['secretary_comments'],
+                'current_date': row['current_date']
             })
         
         return jsonify({"success": True, "applications": applications})

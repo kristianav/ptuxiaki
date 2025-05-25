@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
+
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Διαχείριση Αιτήσεων</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Διαχείριση Αιτήσεων</title>
+<style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f2f4f8;
@@ -117,94 +120,119 @@
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <div class="header">
-      <img src="unofpel.png" class="logo" alt="Πανεπιστήμιο">
-      <div class="school-info">
-        <p>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</p>
-        <p>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</p>
-      </div>
-      <a href="login.html" class="logout-btn">Αποσύνδεση</a>
-    </div>
-
-    <h1>Διαχείριση Αιτήσεων</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>ΑΑ</th>
-          <th>Ονοματεπώνυμο</th>
-          <th>Ημ/νία</th>
-          <th>Κατάσταση</th>
-          <th>Σχόλια</th>
-          <th>Αρχεία</th>
-        </tr>
-      </thead>
-      <tbody id="application-body"></tbody>
-    </table>
-  </div>
-
-  <div id="form-viewer" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeFormViewer()">&times;</span>
-      <div id="form-content" style="max-height: 60vh; overflow-y: auto;"></div>
-    </div>
-  </div>
+<div class="main-container">
+<div class="header">
+<img alt="Πανεπιστήμιο" class="logo" src="unofpel.png"/>
+<div class="school-info">
+<p>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</p>
+<p>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</p>
+</div>
+<a class="logout-btn" href="login.html">Αποσύνδεση</a>
+</div>
+<h1>Διαχείριση Αιτήσεων</h1>
+<table>
+<thead>
+<tr>
+<th>ΑΑ</th>
+<th>Ονοματεπώνυμο</th>
+<th>Ημ/νία</th>
+<th>Κατάσταση</th>
+<th>Σχόλια</th>
+<th>Αρχεία</th>
+</tr>
+</thead>
+<tbody id="application-body"></tbody>
+</table>
+</div>
+<div class="modal" id="form-viewer">
+<div class="modal-content">
+<span class="close" onclick="closeFormViewer()">×</span>
+<div id="form-content" style="max-height: 60vh; overflow-y: auto;"></div>
+</div>
+</div>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  loadApplications();
-});
-
 function loadApplications() {
-  const aitisi = JSON.parse(localStorage.getItem('aitisi_form_data'));
-  const status = localStorage.getItem('application_status') || 'Pending';
-  const comments = localStorage.getItem('secretary_comments') || '';
-
   const tableBody = document.getElementById('application-body');
   tableBody.innerHTML = '';
 
-  if (aitisi) {
+  const studentIds = new Set();
+
+  // Βρες όλους τους μοναδικούς studentId από όλα τα keys
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith("student_") && key.endsWith("_data")) {
+      studentIds.add(key.split("_")[1]);
+    } else if (key.startsWith("up_dilwsh_data_")) {
+      studentIds.add(key.replace("up_dilwsh_data_", ""));
+    } else if (key.startsWith("vevaiwsi_apodoxis_data_")) {
+      studentIds.add(key.replace("vevaiwsi_apodoxis_data_", ""));
+    }
+  }
+
+  let index = 1;
+  const processedIds = new Set(); // Για αποφυγή διπλών εμφανίσεων
+
+  for (const studentId of studentIds) {
+    if (processedIds.has(studentId)) continue;
+
+    const allEntries = [];
+    const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || "null");
+    const upDilwshData = JSON.parse(localStorage.getItem(`up_dilwsh_data_${studentId}`) || "null");
+    const vevaiwsiData = JSON.parse(localStorage.getItem(`vevaiwsi_apodoxis_data_${studentId}`) || "null");
+
+    if (studentData) allEntries.push({ data: studentData });
+    if (upDilwshData) allEntries.push({ data: upDilwshData });
+    if (vevaiwsiData) allEntries.push({ data: vevaiwsiData });
+
+    if (allEntries.length === 0) continue;
+
+    // Ταξινόμηση από παλιότερη προς νεότερη για να πάρουμε την τελευταία
+    allEntries.sort((a, b) => new Date(a.data.current_date || 0) - new Date(b.data.current_date || 0));
+    const latestEntry = allEntries[allEntries.length - 1].data;
+
+    const name = latestEntry.stud_name || '-';
+    const surname = latestEntry.stud_surname || '-';
+
+    if (name === "-" && surname === "-") continue;
+
+    const dateRaw = latestEntry.current_date;
+    const date = dateRaw ? new Date(dateRaw).toLocaleString('el-GR') : '-';
+
+    const status = localStorage.getItem(`student_${studentId}_status`) || 'Pending';
+    const comments = localStorage.getItem(`student_${studentId}_comments`) || '';
+
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>1</td>
-      <td>${aitisi.stud_name} ${aitisi.stud_surname}</td>
-      <td>${aitisi['current-date']}</td>
+      <td>${index++}</td>
+      <td>${name} ${surname}</td>
+      <td>${date}</td>
       <td>
-        <select id="status-select" onchange="updateStatus(this)" style="padding: 6px 10px; border-radius: 6px; font-weight: bold; border: none; color: white;">
-          <option value="Pending">Εκκρεμεί</option>
-          <option value="Approved">Εγκεκριμένη</option>
-          <option value="Rejected">Απορριφθείσα</option>
+        <select id="status_${studentId}" onchange="updateStatus('${studentId}')" style="padding: 6px 10px; border-radius: 6px; font-weight: bold; border: none; color: white;">
+          <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Εκκρεμεί</option>
+          <option value="Approved" ${status === 'Approved' ? 'selected' : ''}>Εγκεκριμένη</option>
+          <option value="Rejected" ${status === 'Rejected' ? 'selected' : ''}>Απορριφθείσα</option>
         </select>
       </td>
       <td>
-        <textarea id="comment-box" placeholder="Σχόλια..." rows="3" style="width: 95%; padding: 6px; border-radius: 5px; font-size: 13px;"></textarea>
-        <button id="save-btn" class="btn" style="margin-top: 5px; background: #28a745; color: white; display: none;" onclick="saveStatus()">💾 Αποθήκευση</button>
+        <textarea id="comment_${studentId}" rows="3" style="width: 95%; padding: 6px; border-radius: 5px; font-size: 13px;">${comments}</textarea>
+        <button class="btn" style="margin-top: 5px; background: #28a745; color: white;" onclick="saveStatus('${studentId}')">💾 Αποθήκευση</button>
       </td>
       <td>
-        <button class="form-button" onclick="viewForm('dilwsh')">Υπεύθυνη Δήλωση</button>
-        <button class="form-button" onclick="viewForm('vevaiwsh')">Βεβαίωση Αποδοχής</button>
+        <span>ΥΔ: ${localStorage.getItem(`up_dilwsh_html_${studentId}`) ? '✔️' : '❌'}</span><br/>
+        <span>Βεβ: ${localStorage.getItem(`vevaiwsi_apodoxis_html_${studentId}`) ? '✔️' : '❌'}</span><br/>
+        <button class="form-button" onclick="viewForm('${studentId}', 'up_dilwsh')">Προβολή ΥΔ</button>
+        <button class="form-button" onclick="viewForm('${studentId}', 'vevaiwsi_apodoxis')">Προβολή Βεβαίωσης</button>
       </td>
     `;
     tableBody.appendChild(row);
-
-    const select = document.getElementById('status-select');
-    select.value = status;
-    updateStatus(select);
-
-    const textarea = document.getElementById('comment-box');
-    const saveBtn = document.getElementById('save-btn');
-    textarea.value = comments;
-    saveBtn.style.display = 'none';
-
-    textarea.addEventListener('input', () => {
-      saveBtn.style.display = textarea.value !== comments ? 'inline-block' : 'none';
-    });
+    updateStatus(studentId);
+    processedIds.add(studentId);
   }
 }
 
-function updateStatus(selectEl) {
+function updateStatus(studentId) {
+  const selectEl = document.getElementById('status_' + studentId);
   const value = selectEl.value;
-  localStorage.setItem('application_status', value);
-
   let bgColor = '#ffc107'; // Εκκρεμεί
   if (value === 'Approved') bgColor = '#28a745';
   else if (value === 'Rejected') bgColor = '#dc3545';
@@ -213,46 +241,46 @@ function updateStatus(selectEl) {
   selectEl.style.color = '#fff';
 }
 
-function saveStatus() {
-  const status = document.getElementById('status-select').value;
-  const comments = document.getElementById('comment-box').value;
-  localStorage.setItem('application_status', status);
-  localStorage.setItem('secretary_comments', comments);
-  document.getElementById('save-btn').style.display = 'none';
+function saveStatus(studentId) {
+  const status = document.getElementById('status_' + studentId).value;
+  const comments = document.getElementById('comment_' + studentId).value;
+  localStorage.setItem(`student_${studentId}_status`, status);
+  localStorage.setItem(`student_${studentId}_comments`, comments);
   alert("Η κατάσταση και τα σχόλια αποθηκεύτηκαν.");
 }
 
-function viewForm(type) {
+function viewForm(studentId, type) {
   let template = '';
-  let data = {};
+  const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || "{}");
+  const upDilwshData = JSON.parse(localStorage.getItem(`up_dilwsh_data_${studentId}`) || "{}");
+  const vevaiwsiData = JSON.parse(localStorage.getItem(`vevaiwsi_apodoxis_data_${studentId}`) || "{}");
 
-  if (type === 'dilwsh') {
-    template = localStorage.getItem('up_dilwsh') || 'Δεν έχει υποβληθεί δήλωση.';
-    data = JSON.parse(localStorage.getItem('up_dilwsh_data')) || {};
-  } else if (type === 'vevaiwsh') {
-    template = localStorage.getItem('vevaiwsi_apodoxis') || 'Δεν έχει υποβληθεί βεβαίωση.';
-    data = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data')) || {};
-  } else if (type === 'aitisi') {
-    const aitisiData = JSON.parse(localStorage.getItem('aitisi_form_data')) || {};
-    let html = '<h3>Κύρια Αίτηση</h3><ul>';
-    for (const key in aitisiData) {
-      html += `<li><strong>${key}:</strong> ${aitisiData[key]}</li>`;
-    }
-    html += '</ul>';
-    document.getElementById('form-content').innerHTML = html;
-    document.getElementById('form-viewer').style.display = 'flex';
-    return;
+  if (type === 'up_dilwsh') {
+    template = localStorage.getItem('up_dilwsh') || '<p>Δεν υπάρχει πρότυπο ΥΔ.</p>';
+  } else if (type === 'vevaiwsi_apodoxis') {
+    template = localStorage.getItem('vevaiwsi_apodoxis') || '<p>Δεν υπάρχει πρότυπο Βεβαίωσης.</p>';
   }
 
-  const filled = template.replace(/{{\s*(\w+)\s*}}/g, (match, key) => data[key] || '');
-  document.getElementById('form-content').innerHTML = `<div class="document-preview">${filled}</div>`;
-  document.getElementById('form-viewer').style.display = 'flex';
+  const mergedData = { ...studentData, ...upDilwshData, ...vevaiwsiData };
+
+  const filled = template.replace(/{{\s*(\w+)\s*}}/g, (match, key) => mergedData[key] || `[${key}]`);
+  document.getElementById("form-content").innerHTML = '<div class="document-preview">' + filled + '</div>';
+  document.getElementById("form-viewer").style.display = "flex";
 }
 
 function closeFormViewer() {
-  document.getElementById('form-viewer').style.display = 'none';
+  document.getElementById("form-viewer").style.display = "none";
 }
+
+document.addEventListener('DOMContentLoaded', loadApplications);
 </script>
 
+
+<div id="form-viewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+<div style="background:white; padding:20px; border-radius:10px; max-width:800px; max-height:90%; overflow:auto;">
+<button onclick="closeFormViewer()" style="float:right; font-size:16px;">❌ Κλείσιμο</button>
+<div class="document-preview" id="form-content" style="margin-top:20px;"></div>
+</div>
+</div>
 </body>
 </html>

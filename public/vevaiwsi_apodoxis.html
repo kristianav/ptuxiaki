@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
+
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Βεβαίωση Φορέα Απασχόλησης - Αποδοχή Πρακτικής Άσκησης</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Βεβαίωση Φορέα Απασχόλησης - Αποδοχή Πρακτικής Άσκησης</title>
+<style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
@@ -80,9 +83,15 @@
             margin: 0;
         }
     </style>
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    const savedData = localStorage.getItem('aitisi_form_data');
+const templateElement = document.getElementById("document_template");
+  if (templateElement) {
+    const html = templateElement.innerHTML;
+    localStorage.setItem("template_vevaiwsi_apodoxis", html);
+  }
+const studentId = localStorage.getItem('active_student_id');
+const savedData = localStorage.getItem(`aitisi_form_data_${studentId}`) || localStorage.getItem(`temp_form_data_${studentId}`);
     if (!savedData) return;
 
     const formData = JSON.parse(savedData);
@@ -96,79 +105,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-
 </head>
 <body>
-    <div class="container">
-        <h1>Βεβαίωση Φορέα Απασχόλησης<br>Αποδοχής Πρακτικής Άσκησης</h1>
-        <form id="vevaiwsi_apodoxis">
-            <label for="repr">Ο/Η κάτωθι υπογεγραμμένος/η:</label>
-            <input type="text" id="repr" name="repr" required>
-
-            <label for="org">νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου φορέα με επωνυμία:</label>
-            <input type="text" id="org" name="org" required>
-
-            <label for="addr">Διεύθυνση:</label>
-            <input type="text" id="addr" name="addr" required>
-
-            <label for="job_desc">Αντικείμενο εργασιών:</label>
-            <input type="text" id="job_desc" name="job_desc" required>
-
-            <p><strong>βεβαιώνω ότι:</strong></p>
-
-            <label for="stud_name">Αποδεχόμαστε το αίτημα του/της:</label>
-            <div class="half-width-container">
-                <div>
-                    <label for="stud_name">Όνομα:</label>
-                    <input type="text" id="stud_name" name="stud_name" required>
-                </div>
-                <div>
-                    <label for="stud_surname">Επώνυμο:</label>
-                    <input type="text" id="stud_surname" name="stud_surname" required>
-                </div>
-            </div>
-            <p>φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων του Πανεπιστημίου Πελοποννήσου να πραγματοποιήσει την
+<div id="document_template" style="display:none">
+  Ο φοιτητής {{ stud_name }} {{ stud_surname }} με ΑΜ {{ stud_id }} έχει γίνει αποδεκτός στην πρακτική άσκηση.
+</div>
+<div class="container">
+<h1>Βεβαίωση Φορέα Απασχόλησης<br/>Αποδοχής Πρακτικής Άσκησης</h1>
+<form id="vevaiwsi_apodoxis">
+<label for="emp_sup">Ο/Η κάτωθι υπογεγραμμένος/η:</label>
+<input id="emp_sup" name="emp_sup" required="" type="text"/>
+<label for="emp_name">νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου φορέα με επωνυμία:</label>
+<input id="emp_name" name="emp_name" required="" type="text"/>
+<label for="emp_addr">Διεύθυνση:</label>
+<input id="emp_addr" name="emp_addr" required="" type="text"/>
+<label for="job_desc">Αντικείμενο εργασιών:</label>
+<input id="job_desc" name="job_desc" required="" type="text"/>
+<p><strong>βεβαιώνω ότι:</strong></p>
+<label for="stud_name">Αποδεχόμαστε το αίτημα του/της:</label>
+<div class="half-width-container">
+<div>
+<label for="stud_name">Όνομα:</label>
+<input id="stud_name" name="stud_name" required="" type="text"/>
+</div>
+<div>
+<label for="stud_surname">Επώνυμο:</label>
+<input id="stud_surname" name="stud_surname" required="" type="text"/>
+</div>
+</div>
+<p>φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων του Πανεπιστημίου Πελοποννήσου να πραγματοποιήσει την
                 Πρακτική άσκησή του/της στην Επιχείρησή μας/Φορέα μας και αποδεχόμαστε τη συμμετοχή του/της στο
                 χρηματοδοτούμενο μέσω ΕΣΠΑ πρόγραμμα Πρακτικής Άσκησης του Πανεπιστημίου.</p>
-
-            <label for="upeuthunos"><strong>Υπεύθυνος-Επόπτης</strong> της Επιχείρησης για την Πρακτική Άσκηση του φοιτητή/τριας, ορίζεται ο/η:</label>
-            <input type="text" id="upeuthunos" name="upeuthunos" required>
-
-            <label for="pos">Θέση:</label>
-            <input type="text" id="pos" name="pos" required>
-
-            <div class="half-width-container">
-                <div>
-                    <label for="contact">Τηλέφωνο Επικοινωνίας:</label>
-                    <input type="tel" id="contact" name="contact" required>
-                </div>
-                <div>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-            </div>
-
-            <label for="date">Ημερομηνία:</label>
-            <input type="date" id="date" name="date" required>
-
-            <p><strong>Ο Εκπρόσωπος του Φορέα Απασχόλησης</strong></p>
-            <label for="rep_name">Ονοματεπώνυμο:</label>
-            <input type="text" id="rep_name" name="rep_name" required>
-
-            <label for="rep_job">Ιδιότητα:</label>
-            <input type="text" id="rep_job" name="rep_job" required>
-
-            <div class="signature">
-                <p><br>Υπογραφή/Σφραγίδα</br></p>
-                <p><br>____________________</br></p>
-            </div>
-            <p><br></br></p>
-
-            <button type="button" id="submit_button">Υποβολή Αίτησης</button>
-        </form>
-    </div>
-
-    <script>
+<label for="upeuthunos"><strong>Υπεύθυνος-Επόπτης</strong> της Επιχείρησης για την Πρακτική Άσκηση του φοιτητή/τριας, ορίζεται ο/η:</label>
+<input id="upeuthunos" name="upeuthunos" required="" type="text"/>
+<label for="pos">Θέση:</label>
+<input id="pos" name="pos" required="" type="text"/>
+<div class="half-width-container">
+<div>
+<label for="contact">Τηλέφωνο Επικοινωνίας:</label>
+<input id="contact" name="contact" required="" type="tel"/>
+</div>
+<div>
+<label for="email">Email:</label>
+<input id="email" name="email" required="" type="email"/>
+</div>
+</div>
+<label for="date">Ημερομηνία:</label>
+<input id="date" name="date" required="" type="date"/>
+<p><strong>Ο Εκπρόσωπος του Φορέα Απασχόλησης</strong></p>
+<label for="rep_name">Ονοματεπώνυμο:</label>
+<input id="rep_name" name="rep_name" required="" type="text"/>
+<label for="rep_job">Ιδιότητα:</label>
+<input id="rep_job" name="rep_job" required="" type="text"/>
+<div class="signature">
+<p><br/>Υπογραφή/Σφραγίδα</p>
+<p><br/>____________________</p>
+</div>
+<p><br/></p>
+<button id="submit_button" type="button">Υποβολή Αίτησης</button>
+</form>
+</div>
+<script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("vevaiwsi_apodoxis");
             const submitButton = document.getElementById("submit_button");
@@ -203,11 +200,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
     
                 // Αποθήκευση δεδομένων στο localStorage
-                localStorage.setItem('vevaiwsi_apodoxis_data', JSON.stringify(vevaiwsiData));
+                
     
-                // Αποθήκευση HTML περιεχομένου (π.χ. μόνο του wrapper container)
-                const wrapperHTML = document.querySelector(".container").outerHTML;
-                localStorage.setItem('vevaiwsi_apodoxis_form_html', wrapperHTML);
+const studentId = localStorage.getItem("active_student_id");
+if (studentId) {
+  const wrapperHTML = document.documentElement.outerHTML;
+  localStorage.setItem(`vevaiwsi_apodoxis_data_${studentId}`, JSON.stringify(vevaiwsiData));
+  localStorage.setItem(`vevaiwsi_apodoxis_html_${studentId}`, wrapperHTML);
+}
+
+
     
                 // Ενημέρωση της κύριας σελίδας
                 try {
@@ -235,7 +237,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     </script>
-    
-    
 </body>
 </html>

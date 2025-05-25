@@ -1,11 +1,13 @@
+
 <!DOCTYPE html>
+
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Κατάσταση Αίτησης</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Κατάσταση Αίτησης</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fb;
@@ -227,74 +229,141 @@
                 min-height: 300px;
             }
         }
+
+    .admin-status-box {
+      background-color: #f9fafc;
+      border: 1px solid #d6e0ea;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .admin-status-box h3 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .admin-status-label {
+      display: inline-block;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 16px;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-pending {
+      background-color: #f39c12;
+    }
+
+    .status-approved {
+      background-color: #27ae60;
+    }
+
+    .status-rejected {
+      background-color: #c0392b;
+    }
+
+    .resubmit-btn {
+      margin-top: 20px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    #admin-comment-section {
+      margin-top: 15px;
+      background-color: #fff8e1;
+      border-left: 4px solid #f39c12;
+      padding: 10px 15px;
+      border-radius: 6px;
+      text-align: left;
+    }
+
+    #admin-comment-section p {
+      margin: 0;
+      font-size: 15px;
+    }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="header">
-            <img src="unofpel.png" class="university-logo">
-            <div class="university-info">
-                <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
-                <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
-            </div>
-            <a href="login.html" class="logout-btn">Αποσύνδεση</a>
-        </div>     
+<div class="main-container">
+<div class="header">
+<img class="university-logo" src="unofpel.png"/>
+<div class="university-info">
+<p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
+<p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
+</div>
+<a class="logout-btn" href="login.html">Αποσύνδεση</a>
+</div>
 
-        <h2>Κατάσταση Αίτησης Πρακτικής Άσκησης</h2>
-        <form id="applicationForm"></form>
-
-        <div class="status-container">
-            <h3>Στοιχεία Φοιτητή:</h3>
-            <p><strong>Όνομα:</strong> <span id="stud_name"></span></p>
-            <p><strong>Επώνυμο:</strong> <span id="stud_surname"></span></p>
-            <p><strong>Αριθμός Μητρώου:</strong> <span id="stud_id"></span></p>
-            <p><strong>Ημερομηνία Υποβολής:</strong> <span id="current-date"></span></p>
-        </div>
-
-        <div class="status-container">
-            <h3>Κατάσταση Εγγράφων:</h3>
-            <div class="file-status">
-                <i class="fas fa-file-alt"></i> 
-                <span><strong>Βεβαίωση Αποδοχής:</strong> <span id="vevaiwsi_apodoxis_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
-            </div>
-            <div class="file-status">
-                <i class="fas fa-file-signature"></i> 
-                <span><strong>Υπεύθυνη Δήλωση:</strong> <span id="up_dilwsh_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
-            </div>
-            <div class="file-status">
-                <i class="fas fa-file-alt"></i> 
-                <span><strong>Αναλυτική Βαθμολογία:</strong> <span id="analytiki_vathmologia_status" class="not-submitted">❌ Δεν έχει υποβληθεί</span></span>
-            </div>
-        </div>
-
-        <div class="file-links">
-            <h3>Αρχεία:</h3>
-            <p><strong>Βεβαίωση Αποδοχής:</strong> <a id="vevaiwsi_apodoxis_link" class="file-link" href="#" target="_blank"></a>
-                <a id="vevaiwsi_apodoxis_preview_link" href="#" class="file-link">Προβολή Βεβαίωσης Αποδοχής</a></p>
-            <p><strong>Υπεύθυνη Δήλωση:</strong> <a id="up_dilwsh_link" class="file-link" href="#" target="_blank"></a>
-                <a id="up_dilwsh_preview_link" href="#" class="file-link">Προβολή Υπεύθυνης Δήλωσης</a></p>
-            <p><strong>Αναλυτική Βαθμολογία:</strong> <a id="analytiki_vathmologia_link" class="file-link" href="#" target="_blank"></a>
-                <a id="analytiki_vathmologia_preview_link" href="#" class="file-link">Προβολή Αναλυτικής Βαθμολογίας</a></p>
-        </div>
-        <button onclick="downloadApplication()">Κατεβάστε την αίτηση</button>
+    <div id="admin-box" class="admin-status-box" style="display:none;">
+      <h3>Κατάσταση Αίτησης:</h3>
+      <p><strong>Κατάσταση:</strong> <span id="admin-status"></span></p>
+      <div id="admin-comment-section" style="display:none;">
+        <p><strong>Σχόλιο Γραμματείας:</strong> <span id="admin-comment"></span></p>
+        <button class="resubmit-btn" onclick="window.location.href='form.html'">🔁 Επανυποβολή Αίτησης</button>
+      </div>
     </div>
+    <form id="applicationForm"></form>
+<div class="status-container">
+<h3>Στοιχεία Φοιτητή:</h3>
+<p><strong>Όνομα:</strong> <span id="stud_name"></span></p>
+<p><strong>Επώνυμο:</strong> <span id="stud_surname"></span></p>
+<p><strong>Αριθμός Μητρώου:</strong> <span id="stud_id"></span></p>
+<p><strong>Ημερομηνία Υποβολής:</strong> <span id="current-date"></span></p>
+</div>
+<div class="status-container">
+<h3>Κατάσταση Εγγράφων:</h3>
+<div class="file-status">
+<i class="fas fa-file-alt"></i>
+<span><strong>Βεβαίωση Αποδοχής:</strong> <span class="not-submitted" id="vevaiwsi_apodoxis_status">❌ Δεν έχει υποβληθεί</span></span>
+</div>
+<div class="file-status">
+<i class="fas fa-file-signature"></i>
+<span><strong>Υπεύθυνη Δήλωση:</strong> <span class="not-submitted" id="up_dilwsh_status">❌ Δεν έχει υποβληθεί</span></span>
+</div>
+<div class="file-status">
+<i class="fas fa-file-alt"></i>
+<span><strong>Αναλυτική Βαθμολογία:</strong> <span class="not-submitted" id="analytiki_vathmologia_status">❌ Δεν έχει υποβληθεί</span></span>
+</div>
+</div>
+<div class="file-links">
+<h3>Αρχεία:</h3>
+<p><strong>Βεβαίωση Αποδοχής:</strong> <a class="file-link" href="#" id="vevaiwsi_apodoxis_link" target="_blank"></a>
+<a class="file-link" href="#" id="vevaiwsi_apodoxis_preview_link">Προβολή Βεβαίωσης Αποδοχής</a></p>
+<p><strong>Υπεύθυνη Δήλωση:</strong> <a class="file-link" href="#" id="up_dilwsh_link" target="_blank"></a>
+<a class="file-link" href="#" id="up_dilwsh_preview_link">Προβολή Υπεύθυνης Δήλωσης</a></p>
+<p><strong>Αναλυτική Βαθμολογία:</strong> <a class="file-link" href="#" id="analytiki_vathmologia_link" target="_blank"></a>
+<a class="file-link" href="#" id="analytiki_vathmologia_preview_link">Προβολή Αναλυτικής Βαθμολογίας</a></p>
+</div>
+<button onclick="downloadApplication()">Κατεβάστε την αίτηση</button>
+</div>
+<!-- Modal για την προεπισκόπηση εγγράφων -->
+<div class="modal" id="documentModal">
+<div class="modal-content">
+<span class="close-modal">×</span>
+<h3 id="modalTitle">Προεπισκόπηση Εγγράφου</h3>
+<div class="document-preview" id="documentPreview">
+<!-- Εδώ θα εμφανίζεται το περιεχόμενο του εγγράφου -->
+</div>
+</div>
+</div>
+<script>
+const studentId = localStorage.getItem('active_student_id');
 
-    <!-- Modal για την προεπισκόπηση εγγράφων -->
-    <div id="documentModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3 id="modalTitle">Προεπισκόπηση Εγγράφου</h3>
-            <div id="documentPreview" class="document-preview">
-                <!-- Εδώ θα εμφανίζεται το περιεχόμενο του εγγράφου -->
-            </div>
-        </div>
-    </div>
-
- <script>
 // Αρχικοποίηση δεδομένων φοιτητή
 let studentData = {};
-let vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data') || '{}');
-let updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data') || '{}');
+let vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId) || '{}');
+let updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data_' + studentId) || '{}');
 let allData = {};
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -302,21 +371,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentDate = new Date().toLocaleDateString('el-GR');
     document.getElementById("current-date").textContent = currentDate;
 
+        const status = localStorage.getItem(`student_${studentId}_status`) || "Pending";
+        const comment = localStorage.getItem(`student_${studentId}_comments`) || "";
+
+        const statusBox = document.getElementById("admin-box");
+        const statusText = document.getElementById("admin-status");
+        const commentSection = document.getElementById("admin-comment-section");
+        const commentText = document.getElementById("admin-comment");
+
+        statusBox.style.display = "block";
+
+        if (status === "Pending") {
+          statusText.textContent = "Εκκρεμεί";
+          statusText.classList.add("status-pending");
+        } else if (status === "Approved") {
+          statusText.textContent = "Εγκεκριμένη";
+          statusText.classList.add("status-approved");
+        } else if (status === "Rejected") {
+          statusText.textContent = "Απορριφθείσα";
+          statusText.classList.add("status-rejected");
+          commentSection.style.display = "block";
+          commentText.textContent = comment || "(Χωρίς σχόλιο)";
+        }
+
     // Ανάκτηση των δεδομένων από το localStorage
-    studentData = JSON.parse(localStorage.getItem('aitisi_form_data')) || {};
+    studentData = JSON.parse(localStorage.getItem('aitisi_form_data_' + studentId)) || {};
     
     // Αρχικοποίηση των προκαθορισμένων τιμών αν δεν υπάρχουν
-    if (!localStorage.getItem('vevaiwsi_apodoxis_data')) {
-        localStorage.setItem('vevaiwsi_apodoxis_data', JSON.stringify(vevaiwsiValues));
+    if (!localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId)) {
+        localStorage.setItem('vevaiwsi_apodoxis_data_' + studentId, JSON.stringify(vevaiwsiValues));
     }
 
-    if (!localStorage.getItem('up_dilwsh_data')) {
-        localStorage.setItem('up_dilwsh_data', JSON.stringify(updilValues));
+    if (!localStorage.getItem('up_dilwsh_data_' + studentId)) {
+        localStorage.setItem('up_dilwsh_data_' + studentId, JSON.stringify(updilValues));
     }
 
     // Ανανέωση των τιμών από το localStorage
-    vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data'));
-    updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data'));
+    vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId));
+    updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data_' + studentId));
 
     // Συγχώνευση όλων των δεδομένων
     allData = { ...studentData, ...vevaiwsiData, ...updilwshData };
@@ -329,8 +421,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // Δημιουργία προτύπων εγγράφων αν δεν υπάρχουν
     createDocumentTemplates();
 
-    // Προσομοίωση υποβληθέντων εγγράφων
-    simulateSubmittedDocuments();
+    
+function updateDocumentStatus(key, statusId, linkId, previewId) {
+    const html = localStorage.getItem(`${key}_html_${studentId}`);
+    const statusSpan = document.getElementById(statusId);
+    const link = document.getElementById(linkId);
+    const preview = document.getElementById(previewId);
+
+    if (html) {
+        statusSpan.textContent = "✔️ Έχει υποβληθεί";
+        statusSpan.classList.remove("not-submitted");
+        statusSpan.classList.add("status");
+
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+
+        preview.href = "javascript:void(0)";
+        preview.onclick = function(e) {
+            e.preventDefault();
+            showDocumentPreview(key, statusSpan.parentElement.textContent.trim());
+        };
+    }
+}
+updateDocumentStatus("vevaiwsi_apodoxis", "vevaiwsi_apodoxis_status", "vevaiwsi_apodoxis_link", "vevaiwsi_apodoxis_preview_link");
+updateDocumentStatus("up_dilwsh", "up_dilwsh_status", "up_dilwsh_link", "up_dilwsh_preview_link");
+updateDocumentStatus("analytiki_vathmologia", "analytiki_vathmologia_status", "analytiki_vathmologia_link", "analytiki_vathmologia_preview_link");
+
+    
 
     // Προσθήκη event listeners για το modal
     const modal = document.getElementById('documentModal');
@@ -528,12 +646,25 @@ function replacePlaceholders(template, data) {
 
 // Συνάρτηση για την προβολή εγγράφου
 function showDocumentPreview(key, title) {
+
+    const mapping = {
+        org: vevaiwsiData.emp_name,
+        addr: vevaiwsiData.emp_addr,
+        repr: vevaiwsiData.emp_sup,
+        fax: updilwshData.FAX,
+        birthdate: updilwshData.birthdate,
+        birthplace: updilwshData.birthplace,
+        idnumber: updilwshData.idnumber
+    };
+
+    const mappedData = { ...studentData, ...vevaiwsiData, ...updilwshData, ...mapping };
+
     const modal = document.getElementById('documentModal');
     const modalTitle = document.getElementById('modalTitle');
     const documentPreview = document.getElementById('documentPreview');
 
     const template = localStorage.getItem(key); // Παίρνει το raw HTML template
-    const filledDocument = replacePlaceholders(template, allData); // Αντικαθιστά όλα τα {{}} με τιμές
+    const filledDocument = replacePlaceholders(template, mappedData); // Αντικαθιστά όλα τα {{}} με τιμές
 
     modalTitle.textContent = title;
     documentPreview.innerHTML = filledDocument;

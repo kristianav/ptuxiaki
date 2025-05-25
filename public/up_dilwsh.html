@@ -1,10 +1,13 @@
+
+
 <!DOCTYPE html>
+
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Υπεύθυνη Δήλωση Ν. 1599/86</title>
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Υπεύθυνη Δήλωση Ν. 1599/86</title>
+<style>
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
@@ -140,9 +143,15 @@
         }
 
     </style>
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    const savedData = localStorage.getItem('aitisi_form_data');
+const templateElement = document.getElementById("document_template");
+  if (templateElement) {
+    const html = templateElement.innerHTML;
+    localStorage.setItem("template_up_dilwsh", html);
+  }
+   const studentId = localStorage.getItem('active_student_id');
+   const savedData = localStorage.getItem(`aitisi_form_data_${studentId}`) || localStorage.getItem(`temp_form_data_${studentId}`);
     if (!savedData) return;
 
     const formData = JSON.parse(savedData);
@@ -156,131 +165,116 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img src="0.png" class="up_dilwsh-logo">
-        </div>
-        <h2><strong>Υπεύθυνη Δήλωση</strong></h2>
-        <h3><strong>(Άρθρο 8 Ν. 1599/1986)</strong></h3>
-        <p>Η ακρίβεια των στοιχείων που υποβάλλονται με αυτή τη δήλωση μπορεί να ελεγχθεί με βάση το αρχείο άλλων υπηρεσιών (άρθρο 8, παρ. 4 Ν. 1599/1986).</p>
-
-        <form id="up_dilwsh_form">
-            <div class="form-grid">
-                <div class="full-width">
-                    <label for="recipient">ΠΡΟΣ(1):</label>
-                    <input type="text" id="recipient" name="recipient" value="Γραμματεία Τμήματος ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ Πανεπιστημίου Πελοποννήσου" readonly>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_name">Ο-Η Όνομα:</label>
-                    <input type="text" id="stud_name" name="stud_name" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_surname">Επώνυμο:</label>
-                    <input type="text" id="stud_surname" name="stud_surname" required>
-                </div>
-
-                <div class="full-width">
-                    <label for="stud_fname">Όνομα και Επώνυμο Πατέρα:</label>
-                    <input type="text" id="stud_fname" name="stud_fname" required>
-                </div>
-
-                <div class="full-width">
-                    <label for="stud_mname">Όνομα και Επώνυμο Μητέρας:</label>
-                    <input type="text" id="stud_mname" name="stud_mname" required>
-                </div>
-
-                <div class="full-width">
-                    <label for="birthdate">Ημερομηνία γέννησης(2):</label>
-                    <input type="date" id="birthdate" name="birthdate" required>
-                </div>
-
-                <div class="full-width">
-                    <label for="birthplace">Τόπος Γέννησης:</label>
-                    <input type="text" id="birthplace" name="birthplace" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="idnumber">Αριθμός Δελτίου Ταυτότητας:</label>
-                    <input type="text" id="idnumber" name="idnumber" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_tel">Τηλ:</label>
-                    <input type="text" id="stud_tel" name="stud_tel" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_city">Τόπος κατοικίας</label>
-                    <input type="text" id="stud_city" name="stud_city" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_address">Οδός:</label>
-                    <input type="text" id="stud_address" name="stud_address" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="ad_number">Αριθ:</label>
-                    <input type="number" id="ad_number" name="ad_number" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_zipcode">ΤΚ:</label>
-                    <input type="text" id="stud_zipcode" name="stud_zipcode" required>
-                </div>
-
-                <div class="half-width">
-                    <label for="FAX">Αρ. Τηλεομοιοτύπου(Fax)</label>
-                    <input type="text" id="FAX" name="FAX">
-                </div>
-
-                <div class="half-width">
-                    <label for="stud_email">Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail)</label>
-                    <input type="text" id="stud_email" name="stud_email" required>
-                </div>
-
-            <div class="full-width">
-            <label><p>Με ατομική μου ευθύνη και γνωρίζοντας τις κυρώσεις (3), που προβλέπονται από της διατάξεις της παρ. 6 του άρθρου 22 του Ν. 1599/1986, δηλώνω ότι:</p></label>
-            <p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης.</p>
-            <p>(2)Δεν εργάζομαι ως υπάλληλος του δημοσίου τομέα  (συμπεριλαμβάνονται και τα σώματα ασφαλείας), κατά την
+<div id="document_template" style="display:none">
+  Ο φοιτητής {{ stud_name }} {{ stud_surname }} με ΑΜ {{ stud_id }} και email {{ stud_email }} υποβάλλει υπεύθυνη δήλωση.
+</div>
+<div class="container">
+<div class="header">
+<img class="up_dilwsh-logo" src="0.png"/>
+</div>
+<h2><strong>Υπεύθυνη Δήλωση</strong></h2>
+<h3><strong>(Άρθρο 8 Ν. 1599/1986)</strong></h3>
+<p>Η ακρίβεια των στοιχείων που υποβάλλονται με αυτή τη δήλωση μπορεί να ελεγχθεί με βάση το αρχείο άλλων υπηρεσιών (άρθρο 8, παρ. 4 Ν. 1599/1986).</p>
+<form id="up_dilwsh_form">
+<div class="form-grid">
+<div class="full-width">
+<label for="recipient">ΠΡΟΣ(1):</label>
+<input id="recipient" name="recipient" readonly="" type="text" value="Γραμματεία Τμήματος ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ Πανεπιστημίου Πελοποννήσου"/>
+</div>
+<div class="half-width">
+<label for="stud_name">Ο-Η Όνομα:</label>
+<input id="stud_name" name="stud_name" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="stud_surname">Επώνυμο:</label>
+<input id="stud_surname" name="stud_surname" required="" type="text"/>
+</div>
+<div class="full-width">
+<label for="stud_fname">Όνομα και Επώνυμο Πατέρα:</label>
+<input id="stud_fname" name="stud_fname" required="" type="text"/>
+</div>
+<div class="full-width">
+<label for="stud_mname">Όνομα και Επώνυμο Μητέρας:</label>
+<input id="stud_mname" name="stud_mname" required="" type="text"/>
+</div>
+<div class="full-width">
+<label for="birthdate">Ημερομηνία γέννησης(2):</label>
+<input id="birthdate" name="birthdate" required="" type="date"/>
+</div>
+<div class="full-width">
+<label for="birthplace">Τόπος Γέννησης:</label>
+<input id="birthplace" name="birthplace" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="idnumber">Αριθμός Δελτίου Ταυτότητας:</label>
+<input id="idnumber" name="idnumber" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="stud_tel">Τηλ:</label>
+<input id="stud_tel" name="stud_tel" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="stud_city">Τόπος κατοικίας</label>
+<input id="stud_city" name="stud_city" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="stud_address">Οδός:</label>
+<input id="stud_address" name="stud_address" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="ad_number">Αριθ:</label>
+<input id="ad_number" name="ad_number" required="" type="number"/>
+</div>
+<div class="half-width">
+<label for="stud_zipcode">ΤΚ:</label>
+<input id="stud_zipcode" name="stud_zipcode" required="" type="text"/>
+</div>
+<div class="half-width">
+<label for="FAX">Αρ. Τηλεομοιοτύπου(Fax)</label>
+<input id="FAX" name="FAX" type="text"/>
+</div>
+<div class="half-width">
+<label for="stud_email">Δ/νση Ηλεκτρ.Ταχυδρομείου(E-mail)</label>
+<input id="stud_email" name="stud_email" required="" type="text"/>
+</div>
+<div class="full-width">
+<label><p>Με ατομική μου ευθύνη και γνωρίζοντας τις κυρώσεις (3), που προβλέπονται από της διατάξεις της παρ. 6 του άρθρου 22 του Ν. 1599/1986, δηλώνω ότι:</p></label>
+<p>(1)Δεν απασχολούμαι με εξαρτημένη σχέση εργασίας πλήρους ωραρίου, κατά τη περίοδο της πρακτικής άσκησης.</p>
+<p>(2)Δεν εργάζομαι ως υπάλληλος του δημοσίου τομέα  (συμπεριλαμβάνονται και τα σώματα ασφαλείας), κατά την
                 περίοδο της πρακτικής άσκησης.</p>
-            <p>(3)Δε βρίσκομαι στη διάρκεια της στρατιωτικής μου θητείας, κατά τη περίοδο της πρακτικής άσκησης.</p>
-            <p>(4) Δε στοιχειοθετείται συγγένεια (Β’ βαθμού και άνω, σε ευθεία γραμμή, πλάγια γραμμή και εξ’ αγχιστείας) όπως και
+<p>(3)Δε βρίσκομαι στη διάρκεια της στρατιωτικής μου θητείας, κατά τη περίοδο της πρακτικής άσκησης.</p>
+<p>(4) Δε στοιχειοθετείται συγγένεια (Β’ βαθμού και άνω, σε ευθεία γραμμή, πλάγια γραμμή και εξ’ αγχιστείας) όπως και
                 συζυγική σχέση με το νόμιμο εκπρόσωπο της επιχείρησης. Επίσης, σε κάθε περίπτωση συγγένειας Β’ βαθμού και
                 άνω όπως και συζυγικής σχέσης με άλλο πρόσωπο απασχολούμενο στον φορέα – επιχείρηση, το πρόσωπο αυτό
                 δεν μπορεί να ορισθεί ως επόπτης εκ μέρους του συνεργαζόμενου Φορέα.</p>
-
-            <div class="signature">
-                <div class="margin-right">
-                    <label for="date">Ημερομηνία:</label>
-                    <input type="date" id="date" name="date" placeholder=".../../20...">
-
-                    <label for="name">Ο-Η Δηλών/ούσα</label>
-                    <p>(υπογραφή)</p>
-                </div>
-            </div>
-                <p>(1) Αναγράφεται από τον ενδιαφερόμενο πολίτη ή Αρχή ή η Υπηρεσία του δημόσιου τομέα, που απευθύνεται η αίτηση.<br> </p>
-                <p>(2) Αναγράφεται ολογράφως. <br> </p>
-                <p>(3) «Όποιος εν γνώσει του δηλώνει ψευδή γεγονότα ή αρνείται ή αποκρύπτει τα αληθινά με έγγραφη υπεύθυνη δήλωση του άρθρου 8 
+<div class="signature">
+<div class="margin-right">
+<label for="date">Ημερομηνία:</label>
+<input id="date" name="date" placeholder=".../../20..." type="date"/>
+<label for="name">Ο-Η Δηλών/ούσα</label>
+<p>(υπογραφή)</p>
+</div>
+</div>
+<p>(1) Αναγράφεται από τον ενδιαφερόμενο πολίτη ή Αρχή ή η Υπηρεσία του δημόσιου τομέα, που απευθύνεται η αίτηση.<br/> </p>
+<p>(2) Αναγράφεται ολογράφως. <br/> </p>
+<p>(3) «Όποιος εν γνώσει του δηλώνει ψευδή γεγονότα ή αρνείται ή αποκρύπτει τα αληθινά με έγγραφη υπεύθυνη δήλωση του άρθρου 8 
                 τιμωρείται με φυλάκιση τουλάχιστον τριών μηνών. Εάν ο υπαίτιος αυτών των πράξεων σκόπευε να προσπορίσει στον εαυτόν του ή σε
-                άλλον περιουσιακό όφελος βλάπτοντας τρίτον ή σκόπευε να βλάψει άλλον, τιμωρείται με κάθειρξη μέχρι 10 ετών <br> </p>
-                <p>(4) Σε περίπτωση ανεπάρκειας χώρου η δήλωση συνεχίζεται στην πίσω όψη της και υπογράφεται από τον δηλούντα ή την δηλούσα. <br> </p>
-            </div>
-        <div class="full-width">
-            <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
-        </div>
-        </div>
-    </div>
-
-    <script>
+                άλλον περιουσιακό όφελος βλάπτοντας τρίτον ή σκόπευε να βλάψει άλλον, τιμωρείται με κάθειρξη μέχρι 10 ετών <br/> </p>
+<p>(4) Σε περίπτωση ανεπάρκειας χώρου η δήλωση συνεχίζεται στην πίσω όψη της και υπογράφεται από τον δηλούντα ή την δηλούσα. <br/> </p>
+</div>
+<div class="full-width">
+<button id="submit_button" type="button">Υποβολή Δήλωσης</button>
+</div>
+</div>
+</form></div>
+<script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("up_dilwsh_form");
             const submitButton = document.getElementById("submit_button");
+            const studentId = localStorage.getItem("active_student_id");
+
 
             submitButton.addEventListener("click", function(event) {
                 event.preventDefault();
@@ -309,13 +303,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         upDilwshData[formElements[i].name] = formElements[i].value;
                     }
                 }
+                upDilwshData["current_date"] = new Date().toISOString();
 
-                localStorage.setItem('up_dilwsh_data', JSON.stringify(upDilwshData));
-                localStorage.setItem('up_dilwsh_form_online_status', 'completed');
-                localStorage.setItem('up_dilwsh_file_status', 'submitted');
 
-                const wrapperHTML = document.querySelector(".container").outerHTML;
-                localStorage.setItem('up_dilwsh_html', wrapperHTML);
+localStorage.setItem(`up_dilwsh_data_${studentId}`, JSON.stringify(upDilwshData));
+localStorage.setItem(`up_dilwsh_form_online_status_${studentId}`, 'completed');
+localStorage.setItem(`up_dilwsh_file_status_${studentId}`, 'submitted');
+
+
+if (studentId) {
+  const wrapperHTML = document.documentElement.outerHTML;
+  localStorage.setItem(`up_dilwsh_html_${studentId}`, wrapperHTML);
+}
+
 
                 try {
                     if (window.opener && !window.opener.closed) {
@@ -338,6 +338,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     </script>
-        
 </body>
 </html>

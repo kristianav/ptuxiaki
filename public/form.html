@@ -1,7 +1,10 @@
+
+
 <!DOCTYPE html>
+
 <html lang="el">
-    <head>
-        <script>
+<head>
+<script>
         // Έλεγχος αν ο χρήστης έχει ήδη δει το login
         if (!localStorage.getItem('visitedLogin')) {
         // Αν δεν έχει δει, αποθηκεύουμε ότι τώρα το βλέπει
@@ -11,10 +14,10 @@
         }
   // Αν έχει ήδη δει το login, δεν κάνουμε τίποτα (μπορεί να συνεχίσει στο index.html ή form.html)
 </script>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Αίτηση για Έγκριση Πρακτικής Άσκησης</title>
-        <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Αίτηση για Έγκριση Πρακτικής Άσκησης</title>
+<style>
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fb;
@@ -293,385 +296,225 @@ button:hover {
 }
 
         </style>
-    </head>
-    <body>
-        <div class="main-container">
-            <div class="header">
-                <img src="unofpel.png" class="university-logo">
-                <div class="university-info">
-                    <p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
-                    <p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
-                </div>
-                <a href="login.html" class="logout-btn">Αποσύνδεση</a>
-            </div>
-            <h2>Αίτηση Έγκρισης Πρακτικής Άσκησης</h2>
-            <form id= "application_id" method="POST" action="/submit_form" enctype="multipart/form-data">
-                <div class="form-container">
-                    <!-- Στοιχεία Φοιτητή-->
-                    <div class="student-container">
-                        <h3>ΑΙΤΗΣΗ</h3>
-                        <fieldset>
-                            <legend>Στοιχεία Φοιτητή</legend>
-                            <label for="stud_surname">Επώνυμο:</label>
-                            <input type="text" id="stud_surname" name="stud_surname" required>
+</head>
+<body>
+<div class="main-container">
+<div class="header">
+<img class="university-logo" src="unofpel.png"/>
+<div class="university-info">
+<p><strong>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</strong></p>
+<p><strong>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</strong></p>
+</div>
+<a class="logout-btn" href="login.html">Αποσύνδεση</a>
+</div>
+<h2>Αίτηση Έγκρισης Πρακτικής Άσκησης</h2>
+<form action="/submit_form" enctype="multipart/form-data" id="application_id" method="POST">
+<div class="form-container">
+<!-- Στοιχεία Φοιτητή-->
+<div class="student-container">
+<h3>ΑΙΤΗΣΗ</h3>
+<fieldset>
+<legend>Στοιχεία Φοιτητή</legend>
+<label for="stud_surname">Επώνυμο:</label>
+<input id="stud_surname" name="stud_surname" required="" type="text"/>
+<label for="stud_name">Όνομα:</label>
+<input id="stud_name" name="stud_name" required="" type="text"/>
+<label for="stud_fname">Όνομα Πατρός:</label>
+<input id="stud_fname" name="stud_fname" required="" type="text"/>
+<label for="stud_mname">Όνομα Μητρός:</label>
+<input id="stud_mname" name="stud_mname" required="" type="text"/>
+<label for="department">Τμήμα:</label>
+<input id="department" name="department" readonly="" type="text" value="Ψηφιακών Συστημάτων"/>
+<label for="sxolh">Σχολή:</label>
+<input id="sxolh" name="sxolh" readonly="" type="text" value="Οικονομίας και Τεχνολογίας"/>
+<label for="university">Πανεπιστήμιο:</label>
+<input id="university" name="university" readonly="" type="text" value="Πανεπιστήμιο Πελοποννήσου"/>
+<label for="stud_id">Αριθμός Μητρώου:</label>
+<input id="stud_id" name="stud_id" required="" type="text"/>
+<label for="stud_afm">ΑΦΜ:</label>
+<input id="stud_afm" name="stud_afm" pattern="\d{9}" required="" title="Ο ΑΦΜ αποτελείται από 9 ψηφία" type="text"/>
+<label for="stud_sem">Εξάμηνο Σπουδών:</label>
+<input id="stud_sem" name="stud_sem" required="" type="text"/>
+<label for="stud_address"><strong>Διεύθυνση:</strong></label>
+<input id="stud_address" name="stud_address" required="" type="text"/>
+<label for="stud_city">Πόλη:</label>
+<input id="stud_city" name="stud_city" required="" type="text"/>
+<label for="stud_zipcode">Ταχ. Κώδικας:</label>
+<input id="stud_zipcode" name="stud_zipcode" required="" type="text"/>
+<label for="stud_tel">Τηλ.:</label>
+<input id="stud_tel" name="stud_tel" pattern="\d{10}" required="" title="Ο αριθμός τηλεφώνου αποτελείται από 10 ψηφία" type="text"/>
+<label for="stud_email">Email:</label>
+<input id="stud_email" name="stud_email" required="" type="email"/>
+<div id="up_dilwsh_text_container" style="display: none;">
+<label for="up_dilwsh_text">Υπεύθυνη Δήλωση:</label>
+<textarea id="up_dilwsh_text" name="up_dilwsh_text"></textarea>
+</div>
+<div id="vevaiwsi_apodoxis_text_container" style="display: none;">
+<label for="vevaiwsi_apodoxis_text">Βεβαίωση αποδοχής:</label>
+<textarea id="vevaiwsi_apodoxis_text" name="vevaiwsi_apodoxis_text"></textarea>
+</div>
+<!-- Θέμα Έγκρισης -->
+<h3>ΘΕΜΑ: Έγκριση Πρακτικής Άσκησης</h3>
+<p>ΣΠΑΡΤΗ: <input id="current_date" readonly="" type="text"/></p>
+<p><strong>ΕΠΙΤΡΟΠΗ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ:</strong></p>
+<p>Εγκρίνεται η πραγματοποίηση της Π.Α. στη βάση των δεδομένων και των επισυναπτόμενων της αίτησης και ορίζονται:</p>
+<p>α. Ημερομηνία έναρξης Π.Α.: <input id="start_date" readonly="" type="text"/></p>
+<p>β. Επόπτης Καθηγητής: <input id="supervisor" required="" type="text"/></p>
+<div class="approval-row">
+<div class="signature">
+<p>Ο Πρόεδρος</p>
+<p>____________________</p>
+</div>
+<div class="signature">
+<p>Τα μέλη</p>
+<p>____________________</p>
+</div>
+</div>
+</fieldset>
+</div>
+<!-- Στοιχεία Φορέα -->
+<div class="employer-container">
+<h3>Προς: Επιτροπή Πρακτικής Άσκησης</h3>
+<p><strong>Παρακαλώ όπως εγκρίνετε την πραγματοποίηση της πρακτικής μου άσκησης στην υπηρεσία / επιχείρηση με τα παρακάτω στοιχεία:</strong></p>
+<fieldset>
+<legend>Στοιχεία Φορέα</legend>
+<label for="emp_name">Όνομα Φορέα</label>
+<input id="emp_name" name="emp_name" required="" type="text"/>
+<label for="emp_addr">Διεύθυνση Φορέα</label>
+<input id="emp_addr" name="emp_addr" required="" type="text"/>
+<label for="emp_phone">Τηλέφωνο Φορέα</label>
+<input id="emp_phone" name="emp_phone" required="" type="text"/>
+<label for="emp_email">Ηλ. Διεύθυνση Φορέα</label>
+<input id="emp_email" name="emp_email" required="" type="email"/>
+<label for="emp_sup">Επόπτης Φορέα</label>
+<input id="emp_sup" name="emp_sup" required="" type="text"/>
+<!-- Δήλωση Φοιτητή -->
+<label>Δηλώνω υπεύθυνα ότι:</label>
+<p>α) δεν επιθυμώ να συμμετάσχω στο χρηματοδοτούμενο μέσω ΕΣΠΑ Πρόγραμμα Π.Α. και</p>
+<p>β) εντός ενός μηνός από την λήξη της πρακτικής μου άσκησης, οφείλω να καταθέσω στη Γραμματεία του Τμήματος με δική μου ευθύνη Έκθεση Πεπραγμένων, αντίγραφο κατάστασης απόδοσης ενσήμων (από τον Ε.Φ.Κ.Α. πρώην Ι.Κ.Α.) για την πιστοποίηση της ασφάλισης του/της φοιτητή/τριας κατά το διάστημα της πρακτικής άσκησης, καθώς και βεβαίωση περάτωσης της πρακτικής άσκησης από τον Φορέα.</p>
+<div class="approval-row">
+<div class="signature">
+<p><strong>Ο/Η Αιτών/ούσα</strong></p>
+<p>____________________</p>
+<p>Υπογραφή</p>
+</div>
+</div>
+<div class="attachments">
+<p><strong>Συνημμένα:</strong></p>
+<p>1. Βεβαίωση ότι πληρώ τις προϋποθέσεις έναρξης Πρακτικής Άσκησης ή Αναλυτική Βαθμολογία από τη Γραμματεία του Τμήματος.</p>
+<label class="upload-file" for="anal_vathm">Ανεβάστε αρχείο PDF:</label>
+<input accept=".pdf" id="anal_vathm" name="anal_vathm" onchange="updateFileStatus('anal_vathm')" type="file"/>
+<span id="status_anal_vathm" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
+<p><a class="attach-link" href="vevaiwsi_apodoxis.html" onclick="saveFormData()">2. Βεβαίωση αποδοχής απασχόλησης από το φορέα:</a></p>
+<label class="upload-file" for="vevaiwsi_apodoxis_file">Ανεβάστε αρχείο PDF:</label>
+<input accept=".pdf" id="vevaiwsi_apodoxis_file" name="vevaiwsi_apodoxis_file" onchange="updateFileStatus('vevaiwsi_apodoxis_file')" type="file"/>
+<span id="status_vevaiwsi_apodoxis_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
+<p><a class="attach-link" href="up_dilwsh.html" onclick="saveFormData()">3. Υπεύθυνη Δήλωση:</a></p>
+<label class="upload-file" for="up_dilwsh_file">Ανεβάστε αρχείο PDF:</label>
+<input accept=".pdf" id="up_dilwsh_file" name="up_dilwsh_file" onchange="updateFileStatus('up_dilwsh_file')" type="file"/>
+<span id="status_up_dilwsh_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
+</div>
+</fieldset>
+</div>
+</div>
+<button id="submit_button" type="button">Υποβολή Δήλωσης</button>
+</form>
+</div>
+<script>
+// Αποθήκευση προσωρινών δεδομένων όταν αλλάζει κάτι στη φόρμα
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("application_id");
+  const studentId = localStorage.getItem("active_student_id");
+  const idInput = document.getElementById("stud_id");
 
-                            <label for="stud_name">Όνομα:</label>
-                            <input type="text" id="stud_name" name="stud_name" required>
+  // Αν υπάρχει ενεργός φοιτητής, κλειδώνει το πεδίο ΑΜ
+  if (studentId && idInput) {
+    idInput.value = studentId;
+    idInput.readOnly = true;
+  }
 
-                            <label for="stud_fname">Όνομα Πατρός:</label>
-                            <input type="text" id="stud_fname" name="stud_fname" required>
+  // Προσυμπλήρωση ημερομηνιών
+  const today = new Date();
+  const todayFormatted = today.toLocaleDateString("el-GR");
+  const currentDateInput = document.getElementById("current_date");
+  if (currentDateInput && !currentDateInput.value) {
+    currentDateInput.value = todayFormatted;
+  }
 
-                            <label for="stud_mname">Όνομα Μητρός:</label>
-                            <input type="text" id="stud_mname" name="stud_mname" required>
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() + 7);
+  const startFormatted = startDate.toLocaleDateString("el-GR");
+  const startDateInput = document.getElementById("start_date");
+  if (startDateInput && !startDateInput.value) {
+    startDateInput.value = startFormatted;
+  }
 
-                            <label for="department">Τμήμα:</label>
-                            <input type="text" id="department" name="department" value="Ψηφιακών Συστημάτων" readonly>
-
-                            <label for="sxolh">Σχολή:</label>
-                            <input type="text" id="sxolh" name="sxolh" value="Οικονομίας και Τεχνολογίας" readonly>
-
-                            <label for="university">Πανεπιστήμιο:</label>
-                            <input type="text" id="university" name="university" value="Πανεπιστήμιο Πελοποννήσου" readonly>
-
-                            <label for="stud_id">Αριθμός Μητρώου:</label>
-                            <input type="text" id="stud_id" name="stud_id" required>
-
-                            <label for="stud_afm">ΑΦΜ:</label>
-                            <input type="text" id="stud_afm" name="stud_afm" required pattern="\d{9}" title="Ο ΑΦΜ αποτελείται από 9 ψηφία">
-
-                            <label for="stud_sem">Εξάμηνο Σπουδών:</label>
-                            <input type="text" id="stud_sem" name="stud_sem" required>
-
-                            <label for="stud_address"><strong>Διεύθυνση:</strong></label>
-                            <input type="text" id="stud_address" name="stud_address" required>
-                        
-                            <label for="stud_city">Πόλη:</label>
-                            <input type="text" id="stud_city" name="stud_city" required>
-                        
-                            <label for="stud_zipcode">Ταχ. Κώδικας:</label>
-                            <input type="text" id="stud_zipcode" name="stud_zipcode" required>
-                        
-                            <label for="stud_tel">Τηλ.:</label>
-                            <input type="text" id="stud_tel" name="stud_tel" required pattern="\d{10}" title="Ο αριθμός τηλεφώνου αποτελείται από 10 ψηφία">
-                        
-                            <label for="stud_email">Email:</label>
-                            <input type="email" id="stud_email" name="stud_email" required>
-
-                            <div id="up_dilwsh_text_container" style="display: none;">
-                                <label for="up_dilwsh_text">Υπεύθυνη Δήλωση:</label>
-                                <textarea name="up_dilwsh_text" id="up_dilwsh_text"></textarea>
-                            </div>
-
-                            <div id="vevaiwsi_apodoxis_text_container" style="display: none;">
-                                <label for="vevaiwsi_apodoxis_text">Βεβαίωση αποδοχής:</label>
-                                <textarea name="vevaiwsi_apodoxis_text" id="vevaiwsi_apodoxis_text"></textarea>
-                            </div>
-
-                        <!-- Θέμα Έγκρισης -->
-                        <h3>ΘΕΜΑ: Έγκριση Πρακτικής Άσκησης</h3>
-                        <p>ΣΠΑΡΤΗ: <input type="text" id="current_date" readonly></p>
-                        <p><strong>ΕΠΙΤΡΟΠΗ ΠΡΑΚΤΙΚΗΣ ΑΣΚΗΣΗΣ:</strong></p>
-                        <p>Εγκρίνεται η πραγματοποίηση της Π.Α. στη βάση των δεδομένων και των επισυναπτόμενων της αίτησης και ορίζονται:</p>
-                        <p>α. Ημερομηνία έναρξης Π.Α.: <input type="text" id="start_date" readonly></p>
-                        <p>β. Επόπτης Καθηγητής: <input type="text" id="supervisor" required></p>
-                        <div class="approval-row">
-                            <div class="signature">
-                                <p>Ο Πρόεδρος</p>
-                                <p>____________________</p>
-                            </div>
-                            <div class="signature">
-                                <p>Τα μέλη</p>
-                                <p>____________________</p>
-                            </div>
-                        </div>
-                        </fieldset> 
-                    </div>
-
-                <!-- Στοιχεία Φορέα -->
-                <div class="employer-container">
-                    <h3>Προς: Επιτροπή Πρακτικής Άσκησης</h3>
-                    <p><strong>Παρακαλώ όπως εγκρίνετε την πραγματοποίηση της πρακτικής μου άσκησης στην υπηρεσία / επιχείρηση με τα παρακάτω στοιχεία:</strong></p>
-                    <fieldset>
-                        <legend>Στοιχεία Φορέα</legend>
-                        <label for="emp_name">Όνομα Φορέα</label>
-                        <input type="text" id="emp_name" name="emp_name" required>
-
-                        <label for="emp_addr">Διεύθυνση Φορέα</label>
-                        <input type="text" id="emp_addr" name="emp_addr" required>
-
-                        <label for="emp_phone">Τηλέφωνο Φορέα</label>
-                        <input type="text" id="emp_phone" name="emp_phone" required>
-
-                        <label for="emp_email">Ηλ. Διεύθυνση Φορέα</label>
-                        <input type="email" id="emp_email" name="emp_email" required>
-
-                        <label for="emp_sup">Επόπτης Φορέα</label>
-                        <input type="text" id="emp_sup" name="emp_sup" required>
-
-                    <!-- Δήλωση Φοιτητή -->
-                        <label>Δηλώνω υπεύθυνα ότι:</label>
-                        <p>α) δεν επιθυμώ να συμμετάσχω στο χρηματοδοτούμενο μέσω ΕΣΠΑ Πρόγραμμα Π.Α. και</p>
-                        <p>β) εντός ενός μηνός από την λήξη της πρακτικής μου άσκησης, οφείλω να καταθέσω στη Γραμματεία του Τμήματος με δική μου ευθύνη Έκθεση Πεπραγμένων, αντίγραφο κατάστασης απόδοσης ενσήμων (από τον Ε.Φ.Κ.Α. πρώην Ι.Κ.Α.) για την πιστοποίηση της ασφάλισης του/της φοιτητή/τριας κατά το διάστημα της πρακτικής άσκησης, καθώς και βεβαίωση περάτωσης της πρακτικής άσκησης από τον Φορέα.</p>
-                        <div class="approval-row">
-                            <div class="signature">
-                                <p><strong>Ο/Η Αιτών/ούσα</strong></p>
-                                <p>____________________</p>
-                                <p>Υπογραφή</p>
-                            </div>
-                        </div>
-
-                        <div class="attachments">
-                            <p><strong>Συνημμένα:</strong></p>
-                            <p>1. Βεβαίωση ότι πληρώ τις προϋποθέσεις έναρξης Πρακτικής Άσκησης ή Αναλυτική Βαθμολογία από τη Γραμματεία του Τμήματος.</p>
-                            <label for="anal_vathm" class="upload-file">Ανεβάστε αρχείο PDF:</label>
-                            <input type="file" id="anal_vathm" name="anal_vathm" accept=".pdf" onchange="updateFileStatus('anal_vathm')">
-                            <span id="status_anal_vathm" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
-
-
-                            <p><a href="vevaiwsi_apodoxis.html" class="attach-link" onclick="saveFormData()">2. Βεβαίωση αποδοχής απασχόλησης από το φορέα:</a></p>
-                                <label for="vevaiwsi_apodoxis_file" class="upload-file">Ανεβάστε αρχείο PDF:</label>
-                                <input type="file" id="vevaiwsi_apodoxis_file" name="vevaiwsi_apodoxis_file" accept=".pdf" onchange="updateFileStatus('vevaiwsi_apodoxis_file')">
-                                <span id="status_vevaiwsi_apodoxis_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
-                                
-                            <p><a href="up_dilwsh.html" class="attach-link" onclick="saveFormData()">3. Υπεύθυνη Δήλωση:</a></p>
-                                <label for="up_dilwsh_file" class="upload-file">Ανεβάστε αρχείο PDF:</label>
-                                <input type="file" id="up_dilwsh_file" name="up_dilwsh_file" accept=".pdf" onchange="updateFileStatus('up_dilwsh_file')">
-                                <span id="status_up_dilwsh_file" style="margin-left: 10px; font-weight: bold; color: red;">❌ Δεν έχει υποβληθεί</span>
-                        </div>
-                    </fieldset>
-                </div>
-            </div>
-            <button type="button" id="submit_button">Υποβολή Δήλωσης</button>
-            </form>
-        </div>
-
-      <script>
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Automatically fill dates
-    const currentDateField = document.getElementById("current_date");
-    const startDateField = document.getElementById("start_date");
-
-    // Today's date
-    const today = new Date();
-    const todayFormatted = today.toLocaleDateString("el-GR");
-    currentDateField.value = todayFormatted;
-
-    // Start date - one week later
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-    const nextWeekFormatted = nextWeek.toLocaleDateString("el-GR");
-    startDateField.value = nextWeekFormatted;
-    
-    // Load file statuses from localStorage
-    updateFileStatusFromStorage();
-    
-    // Submit button handler
-    const submitButton = document.getElementById('submit_button');
-    if (submitButton) {
-        submitButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            
-            // Συλλογή δεδομένων φόρμας και αποστολή στο backend
-            submitFormToBackend();
-        });
+  const inputs = ["anal_vathm", "vevaiwsi_apodoxis_file", "up_dilwsh_file"];
+  inputs.forEach(id => {
+    const htmlKey = id.includes("anal") ? "analytiki_vathmologia_html" : id.includes("vevaiwsi") ? "vevaiwsi_apodoxis_html" : "up_dilwsh_html";
+    const htmlExists = localStorage.getItem(`${htmlKey}_${studentId}`);
+    const fileUploaded = localStorage.getItem(`${id}_submitted_${studentId}`);
+    const statusSpan = document.getElementById(`status_${id}`);
+    if (statusSpan) {
+      if (htmlExists || fileUploaded === "true") {
+        statusSpan.textContent = "✔️ Έχει υποβληθεί";
+        statusSpan.style.color = "green";
+      } else {
+        statusSpan.textContent = "❌ Δεν έχει υποβληθεί";
+        statusSpan.style.color = "red";
+      }
     }
-    
-    // Handle messages from popup windows
-    setupMessageListener();
-});
+  });
 
-// Update file status displays based on localStorage
-function updateFileStatusFromStorage() {
-    const fileStatusMap = {
-        'anal_vathm': 'anal_vathm_status',
-        'up_dilwsh_file': 'up_dilwsh_file_status',
-        'vevaiwsi_apodoxis_file': 'vevaiwsi_apodoxis_file_status'
-    };
-    
-    for (const [fileId, storageKey] of Object.entries(fileStatusMap)) {
-        const status = localStorage.getItem(storageKey);
-        const statusElement = document.getElementById('status_' + fileId);
-        
-        if (status === "submitted" && statusElement) {
-            statusElement.textContent = "✅ Έχει υποβληθεί";
-            statusElement.style.color = "green";
-            
-            // Hide file input if already submitted
-            const fileInput = document.getElementById(fileId);
-            const fileLabel = document.querySelector(`label[for='${fileId}']`);
-            if (fileInput) fileInput.style.display = "none";
-            if (fileLabel) fileLabel.style.display = "none";
-        }
+  // Αποθήκευση αλλαγών σε πεδία
+  form.addEventListener("input", () => {
+    const formData = new FormData(form);
+    const tempData = {};
+    for (const [key, value] of formData.entries()) {
+      tempData[key] = value;
     }
-}
-
-// Update file status on upload
-function updateFileStatus(inputId) {
-    const fileInput = document.getElementById(inputId);
-    const statusElement = document.getElementById('status_' + inputId);
-    
-    if (fileInput.files.length > 0) {
-        statusElement.textContent = "✅ Έτοιμο για υποβολή";
-        statusElement.style.color = "blue";
-    } else {
-        statusElement.textContent = "❌ Δεν έχει υποβληθεί";
-        statusElement.style.color = "red";
+    if (studentId) {
+      localStorage.setItem(`temp_form_data_${studentId}`, JSON.stringify(tempData));
     }
-}
+  });
 
-function saveFormData() {
-    const formFields = [
-        'stud_surname', 'stud_name', 'stud_fname', 'stud_mname',
-        'department', 'sxolh', 'university',
-        'stud_id', 'stud_afm', 'stud_sem',
-        'stud_address', 'stud_city', 'stud_zipcode', 'stud_tel', 'stud_email',
-        'emp_name', 'emp_addr', 'emp_phone', 'emp_email', 'emp_sup',
-        'supervisor', 'current_date', 'start_date'
-    ];
-
-    const formData = {};
-    for (const field of formFields) {
-        const element = document.getElementById(field);
-        if (element) {
-            formData[field] = element.value;
-        }
-    }
-
-    localStorage.setItem('aitisi_form_data', JSON.stringify(formData));
-}
-
-const savedData = localStorage.getItem('aitisi_form_data');
-if (savedData) {
-    const formData = JSON.parse(savedData);
-    for (const key in formData) {
+  // Ανάκτηση προσωρινών δεδομένων αν υπάρχουν
+  if (studentId) {
+    const saved = localStorage.getItem(`temp_form_data_${studentId}`);
+    if (saved) {
+      const data = JSON.parse(saved);
+      for (const key in data) {
         const input = document.getElementById(key);
-        if (input) {
-            input.value = formData[key];
+        if (input && input.type !== "file") {
+          input.value = data[key];
         }
+      }
     }
+  }
+});
+</script>
+
+<script>
+// Συνάρτηση για αποθήκευση προσωρινών δεδομένων πριν τη μετάβαση σε άλλη φόρμα
+function saveFormData() {
+  const form = document.getElementById("application_id");
+  const studentId = localStorage.getItem("active_student_id");
+  if (!form || !studentId) return;
+
+  const formData = new FormData(form);
+  const data = {};
+  for (const [key, value] of formData.entries()) {
+    data[key] = value;
+  }
+
+  localStorage.setItem(`temp_form_data_${studentId}`, JSON.stringify(data));
 }
+</script>
 
-
-
-// Check if all required attachments are included
-function validateAttachments() {
-    // Check for analytic grade report (required)
-    const analVathmFile = document.getElementById('anal_vathm').files.length > 0;
-    const analVathmStatus = localStorage.getItem('anal_vathm_status') === 'submitted';
-    
-    if (!analVathmFile && !analVathmStatus) {
-        alert('Παρακαλώ ανεβάστε την Αναλυτική Βαθμολογία σας!');
-        return false;
-    }
-    
-    // Check for responsible declaration
-    if (!isUpDilwshCompleted()) {
-        alert('Παρακαλώ συμπληρώστε την Υπεύθυνη Δήλωση με έναν από τους διαθέσιμους τρόπους!');
-        return false;
-    }
-    
-    // Check for acceptance certificate
-    if (!isVevaiwsiApodoxisCompleted()) {
-        alert('Παρακαλώ συμπληρώστε τη Βεβαίωση Αποδοχής με έναν από τους διαθέσιμους τρόπους!');
-        return false;
-    }
-    
-    return true;
-}
-
-// Check if responsible declaration is complete
-function isUpDilwshCompleted() {
-    const upDilwshFile = document.getElementById('up_dilwsh_file').files.length > 0;
-    const upDilwshText = document.getElementById('up_dilwsh_text') && 
-                         document.getElementById('up_dilwsh_text').value.trim() !== '';
-    const upDilwshStatus = localStorage.getItem('up_dilwsh_online_status') === 'completed' ||
-                          localStorage.getItem('up_dilwsh_file_status') === 'submitted';
-    
-    return upDilwshFile || upDilwshText || upDilwshStatus;
-}
-
-// Check if acceptance certificate is complete
-function isVevaiwsiApodoxisCompleted() {
-    const vevaiwsiFile = document.getElementById('vevaiwsi_apodoxis_file').files.length > 0;
-    const vevaiwsiText = document.getElementById('vevaiwsi_apodoxis_text') && 
-                        document.getElementById('vevaiwsi_apodoxis_text').value.trim() !== '';
-    const vevaiwsiStatus = localStorage.getItem('vevaiwsi_apodoxis_online_status') === 'completed' ||
-                          localStorage.getItem('vevaiwsi_apodoxis_file_status') === 'submitted';
-    
-    return vevaiwsiFile || vevaiwsiText || vevaiwsiStatus;
-}
-
-// Συλλογή δεδομένων φόρμας και αποστολή στο backend
-function submitFormToBackend() {
-    // Έλεγχος για υποχρεωτικά πεδία
-    const requiredFields = [
-        'stud_surname', 'stud_name', 'stud_fname', 'stud_mname', 
-        'stud_id', 'stud_afm', 'stud_sem', 'stud_address', 
-        'stud_city', 'stud_zipcode', 'stud_tel', 'stud_email',
-        'emp_name', 'emp_addr', 'emp_phone', 'emp_email', 'emp_sup'
-    ];
-    
-    for (const field of requiredFields) {
-        const element = document.getElementById(field);
-        if (element && !element.value.trim()) {
-            alert(`Παρακαλώ συμπληρώστε το πεδίο: ${element.previousElementSibling.textContent.replace(':', '')}`);
-            element.focus();
-            return;
-        }
-    }
-
-    
-    // Δημιουργία FormData αντικειμένου για αποστολή δεδομένων και αρχείων
-    const formData = new FormData();
-    
-    // Προσθήκη όλων των πεδίων της φόρμας
-    for (const field of requiredFields) {
-        const element = document.getElementById(field);
-        if (element) {
-            formData.append(field, element.value.trim());
-        }
-    }
-    
-    // Προσθήκη επιπλέον πεδίων
-    formData.append('department', document.getElementById('department').value);
-    formData.append('sxolh', document.getElementById('sxolh').value);
-    formData.append('university', document.getElementById('university').value);
-    formData.append('supervisor', document.getElementById('supervisor').value);
-    formData.append('current_date', document.getElementById('current_date').value);
-    formData.append('start_date', document.getElementById('start_date').value);
-    
-    // Προσθήκη HTML περιεχομένου από τα textarea (αν υπάρχουν)
-    const upDilwshText = document.getElementById('up_dilwsh_text');
-    if (upDilwshText) {
-        formData.append('up_dilwsh_html', upDilwshText.value);
-    }
-    
-    const vevaiwsiText = document.getElementById('vevaiwsi_apodoxis_text');
-    if (vevaiwsiText) {
-        formData.append('vevaiwsi_apodoxis_html', vevaiwsiText.value);
-    }
-    
-    // Προσθήκη αρχείων
-    const analVathmFile = document.getElementById('anal_vathm').files[0];
-    if (analVathmFile) {
-        formData.append('anal_vathm', analVathmFile);
-    }
-    
-    const upDilwshFile = document.getElementById('up_dilwsh_file').files[0];
-    if (upDilwshFile) {
-        formData.append('up_dilwsh_file', upDilwshFile);
-    }
-    
-    const vevaiwsiFile = document.getElementById('vevaiwsi_apodoxis_file').files[0];
-    if (vevaiwsiFile) {
-        formData.append('vevaiwsi_apodoxis_file', vevaiwsiFile);
-    }
-}
-    
-document.getElementById("submit_button").addEventListener("click", function(event) {
+<script>
+// Υποβολή και αποθήκευση των τελικών δεδομένων
+document.getElementById("submit_button").addEventListener("click", function (event) {
   event.preventDefault();
-
   const form = document.getElementById("application_id");
   const formData = new FormData(form);
   const data = {};
@@ -680,66 +523,25 @@ document.getElementById("submit_button").addEventListener("click", function(even
     data[key] = value;
   }
 
-  localStorage.setItem("aitisi_form_data", JSON.stringify(data));
+  const studentId = localStorage.getItem("active_student_id") || data["stud_id"];
+  if (!studentId) {
+    alert("Δεν βρέθηκε Αριθμός Μητρώου.");
+    return;
+  }
+  data["current_date"] = new Date().toISOString();
 
-  // ✅ Μήνυμα επιτυχίας
-  alert("✅ Η αίτηση αποθηκεύτηκε επιτυχώς!");
+  // Οριστική αποθήκευση
+  localStorage.setItem(`student_${studentId}_data`, JSON.stringify(data));
+  localStorage.setItem(`student_${studentId}_status`, "Pending");
+  localStorage.setItem(`student_${studentId}_comments`, "");
 
-  // ⏩ Ανακατεύθυνση
+  // Διαγραφή προσωρινών δεδομένων
+  localStorage.removeItem(`temp_form_data_${studentId}`);
+
+  alert("✅ Η αίτηση υποβλήθηκε με επιτυχία!");
   window.location.href = "student.html";
 });
+</script>
 
-
-
-// Set up message listener for popup windows
-function setupMessageListener() {
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'formCompleted') {
-            if (event.data.formName === 'up_dilwsh') {
-                localStorage.setItem('up_dilwsh_online_status', 'completed');
-                localStorage.setItem('up_dilwsh_file_status', 'submitted');
-
-                // Save form data if available
-                if (event.data.formData) {
-                    localStorage.setItem('up_dilwsh_data', JSON.stringify(event.data.formData));
-                }
-
-                // Update UI
-                const statusElement = document.getElementById('status_up_dilwsh_file');
-                if(statusElement) {
-                    statusElement.textContent = "✅ Έχει υποβληθεί";
-                    statusElement.style.color = "green";
-                }
-                
-                // Hide file input
-                const fileInput = document.getElementById('up_dilwsh_file');
-                const fileLabel = document.querySelector("label[for='up_dilwsh_file']");
-                if(fileInput) fileInput.style.display = "none";
-                if(fileLabel) fileLabel.style.display = "none";
-                
-            }
-            
-            if (event.data.formName === 'vevaiwsi_apodoxis') {
-                localStorage.setItem('vevaiwsi_apodoxis_online_status', 'completed');
-                localStorage.setItem('vevaiwsi_apodoxis_file_status', 'submitted');
-
-                // Update UI
-                const statusElement = document.getElementById('status_vevaiwsi_apodoxis_file');
-                if(statusElement) {
-                    statusElement.textContent = "✅ Έχει υποβληθεί";
-                    statusElement.style.color = "green";
-                }
-                
-                // Hide file input
-                const fileInput = document.getElementById('vevaiwsi_apodoxis_file');
-                const fileLabel = document.querySelector("label[for='vevaiwsi_apodoxis_file']");
-                if(fileInput) fileInput.style.display = "none";
-                if(fileLabel) fileLabel.style.display = "none";
-            } 
-        }
-    });
-
-}
-        </script>
-    </body>
+</body>
 </html>
