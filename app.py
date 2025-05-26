@@ -86,6 +86,20 @@ def init_db():
         secretary_comments TEXT,
         submission_date TEXT
     )''')
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        role TEXT CHECK(role IN ('student', 'secretary')) NOT NULL,
+        student_id TEXT UNIQUE,
+        stud_name TEXT,
+        stud_surname TEXT,
+        stud_fname TEXT
+    )
+''')
+
     
     conn.commit()
     conn.close()
@@ -122,12 +136,41 @@ def login():
     data = request.json
     username = data.get('username')
     password = data.get('password')
+    student_id = data.get('studentId')  # ο ΑΜ που έγραψε ο φοιτητής
 
     if username in users and users[username] == password:
         user_role = "secretary" if username.startswith("dssec") else "student"
-        return jsonify({"success": True, "role": user_role})
+
+        if user_role == "student":
+            # Αν ο φοιτητής δεν έδωσε ΑΜ
+            if not student_id:
+                return jsonify({"success": False, "error": "Λείπει ο ΑΜ"}), 400
+
+            # Σύνδεση στη βάση για έλεγχο του ΑΜ
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute('SELECT * FROM students WHERE stud_id = ?', (student_id,))
+            row = cursor.fetchone()
+            conn.close()
+
+            if not row:
+                return jsonify({"success": False, "error": "Ο ΑΜ δεν βρέθηκε στη βάση"}), 404
+            
+            # Έλεγχος ότι ο stud_id αντιστοιχεί σε αυτόν τον χρήστη
+            # Π.χ. student1 πρέπει να έχει stud_id = "20210001"
+            correct_id = None
+            if username == "student1":
+                correct_id = "20210001"
+            elif username == "student2":
+                correct_id = "20210002"
+
+            if student_id != correct_id:
+                return jsonify({"success": False, "error": "Ο ΑΜ δεν αντιστοιχεί στον χρήστη"}), 403
+
+        return jsonify({"success": True, "role": user_role, "student_id": student_id})
     else:
-        return jsonify({"success": False})
+        return jsonify({"success": False, "error": "Λανθασμένα στοιχεία σύνδεσης"}), 401
+
 
 # Υποβολή Φόρμας
 @app.route('/submit_form', methods=['POST'])
