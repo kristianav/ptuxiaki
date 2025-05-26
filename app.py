@@ -109,7 +109,7 @@ def save_file(file):
 
 @app.route('/')
 def index():
-    return send_from_directory('public', 'form.html')
+    return send_from_directory('public', 'login.html')
 
 # Στατικά αρχεία
 @app.route('/<path:filename>')
