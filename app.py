@@ -134,9 +134,9 @@ def login():
             # Έλεγχος αν ο student_id αντιστοιχεί στον σωστό χρήστη
             correct_id = None
             if username == "student1":
-                correct_id = "20210001"
+                correct_id = "12345678"
             elif username == "student2":
-                correct_id = "20210002"
+                correct_id = "87654321"
 
             if student_id != correct_id:
                 return jsonify({"success": False, "error": "Ο ΑΜ δεν αντιστοιχεί στον χρήστη"}), 403
@@ -292,6 +292,8 @@ def update_application_status(application_id):
         return jsonify({"success": True, "message": "Η κατάσταση της αίτησης ενημερώθηκε με επιτυχία"})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+    
+    
 
 # Εκτέλεση της εφαρμογής
 if __name__ == '__main__':
