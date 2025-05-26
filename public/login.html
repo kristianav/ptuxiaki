@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -94,63 +93,65 @@
             studentIdContainer.style.display = userTypeSelect.value === "student" ? "block" : "none";
         }
 
-        toggleStudentIdField(); // on load
+        toggleStudentIdField();
         userTypeSelect.addEventListener("change", toggleStudentIdField);
 
-document.getElementById("loginform").addEventListener("submit", function(e) {
-    e.preventDefault();
+        document.getElementById("loginform").addEventListener("submit", function(e) {
+            e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const userType = userTypeSelect.value;
-    const studentId = document.getElementById("studentId").value.trim();
-    const messageElement = document.getElementById("message");
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const userType = userTypeSelect.value;
+            const studentId = document.getElementById("studentId").value.trim();
+            const messageElement = document.getElementById("message");
 
-    if (!username || !password || (userType === "student" && !studentId)) {
-        messageElement.style.color = "red";
-        messageElement.textContent = "Συμπληρώστε όλα τα πεδία!";
-        return;
-    }
+            if (!username || !password || (userType === "student" && !studentId)) {
+                messageElement.style.color = "red";
+                messageElement.textContent = "Συμπληρώστε όλα τα πεδία!";
+                return;
+            }
 
-    fetch('https://ptuxiaki.onrender.com/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, userType, studentId })
-    })
-    .then(response => {
-        if (!response.ok) throw new Error("Σφάλμα σύνδεσης με τον server!");
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            messageElement.style.color = "green";
-            messageElement.textContent = "Επιτυχής σύνδεση!";
+            const payload = {
+                username: username,
+                password: password
+            };
+            if (userType === "student") {
+                payload.studentId = studentId;
+            }
 
-            setTimeout(() => {
-                if (userType === "student") {
-                    // ✅ Καταχώρηση του ενεργού φοιτητή
-                    localStorage.setItem("active_student_id", studentId);
-
-                    const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
-                    if (hasSubmitted) {
-                        window.location.href = "student.html";
-                    } else {
-                        window.location.href = "form.html";
-                    }
+            fetch('https://ptuxiaki.onrender.com/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    messageElement.style.color = "green";
+                    messageElement.textContent = "Επιτυχής σύνδεση!";
+                    setTimeout(() => {
+                        if (userType === "student") {
+                            localStorage.setItem("active_student_id", studentId);
+                            const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
+                            if (hasSubmitted) {
+                                window.location.href = "student.html";
+                            } else {
+                                window.location.href = "form.html";
+                            }
+                        } else {
+                            window.location.href = "admin.html";
+                        }
+                    }, 1000);
                 } else {
-                    window.location.href = "admin.html";
+                    messageElement.style.color = "red";
+                    messageElement.textContent = "Αποτυχία σύνδεσης: " + (data.error || "Άγνωστο σφάλμα.");
                 }
-            }, 1000);
-        } else {
-            messageElement.style.color = "red";
-            messageElement.textContent = "Αποτυχία σύνδεσης.";
-        }
-    })
-    .catch(error => {
-        messageElement.style.color = "red";
-        messageElement.textContent = "Σφάλμα: " + error.message;
-    });
-});
+            })
+            .catch(error => {
+                messageElement.style.color = "red";
+                messageElement.textContent = "Σφάλμα: " + error.message;
+            });
+        });
     </script>
 </body>
 </html>
