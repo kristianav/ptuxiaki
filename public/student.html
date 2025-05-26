@@ -310,7 +310,7 @@
       <p><strong>Κατάσταση:</strong> <span id="admin-status"></span></p>
       <div id="admin-comment-section" style="display:none;">
         <p><strong>Σχόλιο Γραμματείας:</strong> <span id="admin-comment"></span></p>
-        <button class="resubmit-btn" onclick="window.location.href='form.html'">🔁 Επανυποβολή Αίτησης</button>
+<button class="resubmit-btn" onclick="resubmitApplication()">🔁 Επανυποβολή Αίτησης</button>
       </div>
     </div>
     <form id="applicationForm"></form>
@@ -695,6 +695,30 @@ function showDocumentPreview(key, title) {
 
     modal.style.display = "block";
 }
+
+
+function resubmitApplication() {
+  const studentId = localStorage.getItem("active_student_id");
+  if (!studentId) {
+    alert("Δεν εντοπίστηκε ενεργός φοιτητής.");
+    return;
+  }
+
+  // Διαγραφή όλων των προηγούμενων δεδομένων της αίτησης
+  localStorage.removeItem(`student_${studentId}_data`);
+  localStorage.removeItem(`up_dilwsh_data_${studentId}`);
+  localStorage.removeItem(`vevaiwsi_apodoxis_data_${studentId}`);
+  localStorage.removeItem(`up_dilwsh_html_${studentId}`);
+  localStorage.removeItem(`vevaiwsi_apodoxis_html_${studentId}`);
+  localStorage.removeItem(`student_${studentId}_status`);
+  localStorage.removeItem(`student_${studentId}_comments`);
+  localStorage.removeItem(`temp_form_data_${studentId}`);
+  localStorage.removeItem(`aitisi_form_data_${studentId}`);
+
+  // Μεταφορά στο form.html για νέα συμπλήρωση
+  window.location.href = "form.html";
+}
+
 
 
 // Συνάρτηση για το κατέβασμα της αίτησης

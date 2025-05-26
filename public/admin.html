@@ -1,7 +1,4 @@
-
-
 <!DOCTYPE html>
-
 <html lang="el">
 <head>
 <meta charset="utf-8"/>
@@ -76,40 +73,6 @@
       border: none;
       outline: none;
     }
-    #form-viewer {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
-      max-width: 800px;
-      position: relative;
-    }
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 22px;
-      color: #999;
-      cursor: pointer;
-    }
-    textarea {
-      width: 95%;
-      padding: 6px;
-      border-radius: 5px;
-      font-size: 13px;
-    }
     .btn {
       padding: 6px 10px;
       border: none;
@@ -117,7 +80,36 @@
       font-weight: bold;
       cursor: pointer;
     }
-  </style>
+    .modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+</style>
 </head>
 <body>
 <div class="main-container">
@@ -130,6 +122,7 @@
 <a class="logout-btn" href="login.html">Αποσύνδεση</a>
 </div>
 <h1>Διαχείριση Αιτήσεων</h1>
+<button onclick="deleteAllApplications()" style="background-color: #c0392b; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-size: 15px; margin-bottom: 20px;">🗑️ Διαγραφή Όλων των Αιτήσεων</button>
 <table>
 <thead>
 <tr>
@@ -154,10 +147,8 @@
 function loadApplications() {
   const tableBody = document.getElementById('application-body');
   tableBody.innerHTML = '';
-
   const studentIds = new Set();
 
-  // Βρες όλους τους μοναδικούς studentId από όλα τα keys
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key.startsWith("student_") && key.endsWith("_data")) {
@@ -170,7 +161,7 @@ function loadApplications() {
   }
 
   let index = 1;
-  const processedIds = new Set(); // Για αποφυγή διπλών εμφανίσεων
+  const processedIds = new Set();
 
   for (const studentId of studentIds) {
     if (processedIds.has(studentId)) continue;
@@ -186,13 +177,11 @@ function loadApplications() {
 
     if (allEntries.length === 0) continue;
 
-    // Ταξινόμηση από παλιότερη προς νεότερη για να πάρουμε την τελευταία
     allEntries.sort((a, b) => new Date(a.data.current_date || 0) - new Date(b.data.current_date || 0));
     const latestEntry = allEntries[allEntries.length - 1].data;
 
     const name = latestEntry.stud_name || '-';
     const surname = latestEntry.stud_surname || '-';
-
     if (name === "-" && surname === "-") continue;
 
     const dateRaw = latestEntry.current_date;
@@ -207,15 +196,15 @@ function loadApplications() {
       <td>${name} ${surname}</td>
       <td>${date}</td>
       <td>
-        <select id="status_${studentId}" onchange="updateStatus('${studentId}')" style="padding: 6px 10px; border-radius: 6px; font-weight: bold; border: none; color: white;">
+        <select id="status_${studentId}" onchange="updateStatus('${studentId}')">
           <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Εκκρεμεί</option>
           <option value="Approved" ${status === 'Approved' ? 'selected' : ''}>Εγκεκριμένη</option>
           <option value="Rejected" ${status === 'Rejected' ? 'selected' : ''}>Απορριφθείσα</option>
         </select>
       </td>
       <td>
-        <textarea id="comment_${studentId}" rows="3" style="width: 95%; padding: 6px; border-radius: 5px; font-size: 13px;">${comments}</textarea>
-        <button class="btn" style="margin-top: 5px; background: #28a745; color: white;" onclick="saveStatus('${studentId}')">💾 Αποθήκευση</button>
+        <textarea id="comment_${studentId}" rows="3">${comments}</textarea>
+        <button class="btn" style="background: #28a745; color: white;" onclick="saveStatus('${studentId}')">💾 Αποθήκευση</button>
       </td>
       <td>
         <span>ΥΔ: ${localStorage.getItem(`up_dilwsh_html_${studentId}`) ? '✔️' : '❌'}</span><br/>
@@ -233,7 +222,7 @@ function loadApplications() {
 function updateStatus(studentId) {
   const selectEl = document.getElementById('status_' + studentId);
   const value = selectEl.value;
-  let bgColor = '#ffc107'; // Εκκρεμεί
+  let bgColor = '#ffc107';
   if (value === 'Approved') bgColor = '#28a745';
   else if (value === 'Rejected') bgColor = '#dc3545';
 
@@ -262,25 +251,66 @@ function viewForm(studentId, type) {
   }
 
   const mergedData = { ...studentData, ...upDilwshData, ...vevaiwsiData };
-
   const filled = template.replace(/{{\s*(\w+)\s*}}/g, (match, key) => mergedData[key] || `[${key}]`);
+
   document.getElementById("form-content").innerHTML = '<div class="document-preview">' + filled + '</div>';
   document.getElementById("form-viewer").style.display = "flex";
+}
+
+function showDocumentPreview(key, title) {
+  const studentId = localStorage.getItem('active_student_id');
+  const studentData = JSON.parse(localStorage.getItem('student_' + studentId + '_data') || '{}');
+  const vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId) || '{}');
+  const updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data_' + studentId) || '{}');
+
+  const merged = {
+    ...studentData,
+    ...vevaiwsiData,
+    ...updilwshData
+  };
+
+  // Εναλλακτικά aliases (αν υπάρχουν στο template)
+  merged.org = vevaiwsiData.emp_name;
+  merged.addr = vevaiwsiData.emp_addr;
+  merged.repr = vevaiwsiData.emp_sup;
+
+  const template = localStorage.getItem(key);
+  const filled = template.replace(/{{\\s*(\\w+)\\s*}}/g, (match, key) => merged[key] || `[${key}]`);
+
+  const modal = document.getElementById('documentModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const documentPreview = document.getElementById('documentPreview');
+
+  modalTitle.textContent = title;
+  documentPreview.innerHTML = filled;
+  modal.style.display = 'block';
 }
 
 function closeFormViewer() {
   document.getElementById("form-viewer").style.display = "none";
 }
 
+function deleteAllApplications() {
+  if (confirm("Είσαι σίγουρος ότι θέλεις να διαγράψεις ΟΛΕΣ τις αιτήσεις;")) {
+    const keysToDelete = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (
+        key.startsWith("student_") ||
+        key.startsWith("up_dilwsh_") ||
+        key.startsWith("vevaiwsi_apodoxis_") ||
+        key.startsWith("temp_form_data_")
+      ) {
+        keysToDelete.push(key);
+      }
+    }
+    keysToDelete.forEach(key => localStorage.removeItem(key));
+    alert("🗑️ Όλες οι αιτήσεις διαγράφηκαν!");
+    loadApplications();
+  }
+}
+
 document.addEventListener('DOMContentLoaded', loadApplications);
 </script>
-
-
-<div id="form-viewer" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
-<div style="background:white; padding:20px; border-radius:10px; max-width:800px; max-height:90%; overflow:auto;">
-<button onclick="closeFormViewer()" style="float:right; font-size:16px;">❌ Κλείσιμο</button>
-<div class="document-preview" id="form-content" style="margin-top:20px;"></div>
-</div>
-</div>
 </body>
 </html>

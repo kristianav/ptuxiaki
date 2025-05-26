@@ -485,7 +485,8 @@ if (studentId && submitted && !isEdit) {
       tempData[key] = value;
     }
     if (studentId) {
-      localStorage.setItem(`temp_form_data_${studentId}`, JSON.stringify(tempData));
+localStorage.setItem(`temp_form_data_${studentId}`, JSON.stringify(tempData));
+localStorage.setItem(`aitisi_form_data_${studentId}`, JSON.stringify(tempData));
     }
   });
 
@@ -551,7 +552,8 @@ document.getElementById("submit_button").addEventListener("click", function (eve
   localStorage.setItem(`student_${finalId}_comments`, "");
 
   // Καθαρισμός προσωρινών
-  localStorage.removeItem(`temp_form_data_${finalId}`);
+localStorage.removeItem(`temp_form_data_${finalId}`);
+localStorage.removeItem(`aitisi_form_data_${finalId}`);
 
   alert("✅ Η αίτηση υποβλήθηκε με επιτυχία!");
   window.location.href = "student.html";
