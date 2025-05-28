@@ -545,6 +545,54 @@ function saveFormData() {
 <script>
 // Υποβολή και αποθήκευση των τελικών δεδομένων
 document.getElementById("submit_button").addEventListener("click", function (event) {
+
+      const requiredFields = [
+    "stud_surname", "stud_name", "stud_fname", "stud_mname",
+    "stud_afm", "stud_sem", "stud_address", "stud_city", 
+    "stud_zipcode", "stud_tel", "stud_email", "supervisor",
+    "emp_name", "emp_addr", "emp_phone", "emp_email", "emp_sup"
+  ];
+
+  let valid = true;
+  for (const id of requiredFields) {
+    const input = document.getElementById(id);
+    if (!input || input.value.trim() === "") {
+      alert(`Το πεδίο "${input?.previousElementSibling?.textContent || id}" είναι υποχρεωτικό.`);
+      input?.focus();
+      valid = false;
+      break;
+    }
+  }
+
+  // Έλεγχος Εξαμήνου
+  const semester = parseInt(document.getElementById("stud_sem").value.trim());
+  if (isNaN(semester) || semester < 6) {
+    alert("Το εξάμηνο πρέπει να είναι τουλάχιστον 6ο.");
+    document.getElementById("stud_sem").focus();
+    return;
+  }
+
+  // Έλεγχος εγγράφων
+  const fileChecks = [
+    { id: "anal_vathm", name: "Αναλυτική Βαθμολογία" },
+    { id: "vevaiwsi_apodoxis_file", name: "Βεβαίωση Αποδοχής" },
+    { id: "up_dilwsh_file", name: "Υπεύθυνη Δήλωση" }
+  ];
+
+  for (const file of fileChecks) {
+    const input = document.getElementById(file.id);
+    const uploaded = localStorage.getItem(`${file.id}_submitted_${studentId}`) === "true";
+    const htmlStored = localStorage.getItem(`${file.id.includes("anal") ? "analytiki_vathmologia_html" : file.id.includes("vevaiwsi") ? "vevaiwsi_apodoxis_html" : "up_dilwsh_html"}_${studentId}`);
+    
+    if (!input.files.length && !uploaded && !htmlStored) {
+      alert(`Δεν έχετε ανεβάσει το αρχείο: ${file.name}`);
+      input.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+  }
+
+
+
   event.preventDefault();
   const data = {};
   const studentId = localStorage.getItem("active_student_id");
@@ -576,7 +624,19 @@ localStorage.removeItem(`aitisi_form_data_${finalId}`);
 
   alert("✅ Η αίτηση υποβλήθηκε με επιτυχία!");
   window.location.href = "student.html";
+
+
+
+  const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
+logs.push({
+    action: "Υποβλήθηκε",
+    by: "Φοιτητής",
+    date: new Date().toLocaleString("el-GR")
 });
+localStorage.setItem(`student_${studentId}_log`, JSON.stringify(logs)); 
+});
+
+
 
 </script>
 

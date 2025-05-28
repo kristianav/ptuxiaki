@@ -134,6 +134,12 @@
 <th>Αρχεία</th>
 </tr>
 </thead>
+
+<div class="status-container">
+  <h3>Ιστορικό Αίτησης:</h3>
+  <ul id="log-history"></ul>
+</div>
+
 <tbody id="application-body"></tbody>
 </table>
 </div>
@@ -236,6 +242,18 @@ function saveStatus(studentId) {
   localStorage.setItem(`student_${studentId}_status`, status);
   localStorage.setItem(`student_${studentId}_comments`, comments);
   alert("Η κατάσταση και τα σχόλια αποθηκεύτηκαν.");
+
+
+const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
+logs.push({
+    action: status === "Approved" ? "Εγκρίθηκε" : "Απορρίφθηκε",
+    by: "Γραμματεία",
+    comment: comments,
+    date: new Date().toLocaleString("el-GR")
+});
+localStorage.setItem(`student_${studentId}_log`, JSON.stringify(logs));
+
+
 }
 
 function viewForm(studentId, type) {
@@ -288,6 +306,19 @@ function showDocumentPreview(key, title) {
 
 function closeFormViewer() {
   document.getElementById("form-viewer").style.display = "none";
+
+
+  const logList = document.getElementById("log-history");
+logList.innerHTML = "";
+
+const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
+
+logs.forEach(entry => {
+  const li = document.createElement("li");
+  li.textContent = `${entry.date} — ${entry.by}: ${entry.action}` + (entry.comment ? ` (${entry.comment})` : "");
+  logList.appendChild(li);
+});
+
 }
 
 function deleteAllApplications() {
