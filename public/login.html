@@ -129,9 +129,15 @@
                 if (data.success) {
                     messageElement.style.color = "green";
                     messageElement.textContent = "Επιτυχής σύνδεση!";
+
+
                     setTimeout(() => {
                         if (userType === "student") {
                             localStorage.setItem("active_student_id", studentId);
+                            localStorage.setItem("stud_name", data.stud_name || "");
+                            localStorage.setItem("stud_surname", data.stud_surname || "");
+                            localStorage.setItem("stud_fname", data.stud_fname || "");
+
                             const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
                             if (hasSubmitted) {
                                 window.location.href = "student.html";

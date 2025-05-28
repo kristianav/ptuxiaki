@@ -26,6 +26,21 @@ users = {
     "dssec": "secpassword",
 }
 
+# Προφίλ φοιτητών με βασικά στοιχεία
+student_profiles = {
+    "12345678": {
+        "stud_name": "ΚΩΝΣΤΑΝΤΙΝΟΣ",
+        "stud_surname": "ΠΑΠΑΔΟΠΟΥΛΟΣ",
+        "stud_fname": "ΧΡΗΣΤΟΣ"
+    },
+    "87654321": {
+        "stud_name": "ΕΛΕΑΝΝΑ",
+        "stud_surname": "ΠΑΠΑΓΕΩΡΓΙΟΥ",
+        "stud_fname": "ΚΥΡΙΑΚΟΣ"
+    }
+}
+
+
 # Σύνδεση με βάση δεδομένων
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -131,7 +146,7 @@ def login():
             if not student_id:
                 return jsonify({"success": False, "error": "Λείπει ο ΑΜ"}), 400
 
-            # Έλεγχος αν ο student_id αντιστοιχεί στον σωστό χρήστη
+            # Έλεγχος αντιστοίχισης username <-> ΑΜ
             correct_id = None
             if username == "student1":
                 correct_id = "12345678"
@@ -141,9 +156,24 @@ def login():
             if student_id != correct_id:
                 return jsonify({"success": False, "error": "Ο ΑΜ δεν αντιστοιχεί στον χρήστη"}), 403
 
-        return jsonify({"success": True, "role": user_role, "student_id": student_id})
+            # Πάρε τα στοιχεία φοιτητή από τα profiles
+            profile = student_profiles.get(student_id, {})
+            print("Login profile data:", profile)  # Για έλεγχο στη κονσόλα
+
+
+            return jsonify({
+                "success": True,
+                "role": user_role,
+                "student_id": student_id,
+                "stud_name": profile.get("stud_name", ""),
+                "stud_surname": profile.get("stud_surname", ""),
+                "stud_fname": profile.get("stud_fname", "")
+            })
+
+        return jsonify({"success": True, "role": user_role})
 
     return jsonify({"success": False, "error": "Λανθασμένα στοιχεία σύνδεσης"}), 401
+
 
 
 # Υποβολή Φόρμας

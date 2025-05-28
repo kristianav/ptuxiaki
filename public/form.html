@@ -503,6 +503,24 @@ localStorage.setItem(`aitisi_form_data_${studentId}`, JSON.stringify(tempData));
         }
       }
     }
+
+        // Προσυμπλήρωση στοιχείων φοιτητή από localStorage
+const storedName = localStorage.getItem("stud_name");
+const storedSurname = localStorage.getItem("stud_surname");
+const storedFname = localStorage.getItem("stud_fname");
+
+if (storedName) {
+  const nameInput = document.getElementById("stud_name");
+  if (nameInput) nameInput.value = storedName;
+}
+if (storedSurname) {
+  const surnameInput = document.getElementById("stud_surname");
+  if (surnameInput) surnameInput.value = storedSurname;
+}
+if (storedFname) {
+  const fnameInput = document.getElementById("stud_fname");
+  if (fnameInput) fnameInput.value = storedFname;
+}
   }
 });
 </script>
