@@ -204,7 +204,7 @@ function loadApplications() {
       <td>
         <select id="status_${studentId}" onchange="updateStatus('${studentId}')">
           <option value="Pending" ${status === 'Pending' ? 'selected' : ''}>Εκκρεμεί</option>
-          <option value="Approved" ${status === 'Approved' ? 'selected' : ''}>Εγκεκριμένη</option>
+          <option value="ApprovedByAdmin" ${status === 'ApprovedByAdmin' ? 'selected' : ''}>Εγκεκριμένη</option>
           <option value="Rejected" ${status === 'Rejected' ? 'selected' : ''}>Απορριφθείσα</option>
         </select>
       </td>
@@ -246,7 +246,7 @@ function saveStatus(studentId) {
 
 const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
 logs.push({
-    action: status === "Approved" ? "Εγκρίθηκε" : "Απορρίφθηκε",
+    action: status === "ApprovedByAdmin" ? "Εγκρίθηκε από Γραμματεία" : "Απορρίφθηκε από Γραμματεία",
     by: "Γραμματεία",
     comment: comments,
     date: new Date().toLocaleString("el-GR")

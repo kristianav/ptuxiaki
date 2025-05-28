@@ -4,17 +4,155 @@
   <meta charset="UTF-8">
   <title>Πίνακας Επιτροπής</title>
   <style>
-    body { font-family: Arial; background: #f2f2f2; margin: 0; padding: 20px; }
-    h2 { text-align: center; }
-    .card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .actions button { margin-right: 10px; }
-    .status { font-weight: bold; }
-    .vote-line { font-size: 0.9em; color: #555; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f4f8;
+      margin: 0;
+      padding: 0;
+    }
+    .main-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      height: 70px;
+    }
+    .school-info {
+      text-align: right;
+    }
+    .school-info p {
+      margin: 0;
+      font-weight: bold;
+    }
+    .logout-btn {
+      background: #6c757d;
+      color: white;
+      padding: 6px 14px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    h2 { text-align: center; color: #333; }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .actions button {
+      margin-right: 10px;
+      padding: 6px 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .actions button:first-child { background: #28a745; color: white; }
+    .actions button:nth-child(2) { background: #dc3545; color: white; }
+    .actions button:last-child { background: #007bff; color: white; }
+    .status {
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .vote-line {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 10px;
+    }
+    .print-btn {
+      background: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 700px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+    .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+    }
+    .section-title {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    #modalContent p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+    #modalContent p strong {
+      color: #333;
+      display: inline-block;
+      width: 180px;
+    }
   </style>
 </head>
 <body>
-  <h2>Αιτήσεις για αξιολόγηση</h2>
-  <div id="applications"></div>
+  <div class="main-container">
+    <div class="header">
+      <img class="logo" src="unofpel.png" alt="Πανεπιστήμιο">
+      <div class="school-info">
+        <p>ΣΧΟΛΗ ΟΙΚΟΝΟΜΙΑΣ ΚΑΙ ΤΕΧΝΟΛΟΓΙΑΣ</p>
+        <p>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</p>
+      </div>
+      <a class="logout-btn" href="login.html">Αποσύνδεση</a>
+    </div>
+
+    <h2>Αιτήσεις προς αξιολόγηση από Επιτροπή</h2>
+    <button class="print-btn" onclick="window.print()">🖨 Εκτύπωση Πίνακα</button>
+    <div id="applications"></div>
+  </div>
+
+  <div id="detailsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('detailsModal').style.display='none'">×</span>
+      <h3>Λεπτομέρειες Αίτησης</h3>
+      <div id="modalContent"></div>
+    </div>
+  </div>
 
   <script>
     const memberId = localStorage.getItem("member_id");
@@ -26,51 +164,114 @@
     }
 
     function fetchApplications() {
-      fetch('/applications')
-        .then(res => res.json())
-        .then(data => {
-          const container = document.getElementById('applications');
-          container.innerHTML = '';
+      const container = document.getElementById("applications");
+      container.innerHTML = "";
 
-          data.applications
-            .filter(app => app.status === "ApprovedByAdmin")
-            .forEach(app => {
-              const voteKey = `votes_${app.id}`;
-              const votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
+      const studentIds = new Set();
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("student_") && key.endsWith("_data")) {
+          const id = key.split("_")[1];
+          const status = localStorage.getItem(`student_${id}_status`);
+          if (status === "ApprovedByAdmin") {
+            studentIds.add(id);
+          }
+        }
+      }
 
-              const currentVote = votes[memberId] || "";
+      for (const studentId of studentIds) {
+        const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || '{}');
+        const stud_name = studentData.stud_name || "";
+        const stud_surname = studentData.stud_surname || "";
+        const emp_name = studentData.emp_name || "";
 
-              const approveCount = Object.values(votes).filter(v => v === "approve").length;
-              const rejectCount = Object.values(votes).filter(v => v === "reject").length;
+        const voteKey = `votes_${studentId}`;
+        const votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
+        const currentVote = votes[memberId] || "";
 
-              let finalStatus = "Σε Αναμονή";
-              if (approveCount >= 2) finalStatus = "Εγκρίθηκε από Επιτροπή";
-              else if (rejectCount >= 2) finalStatus = "Απορρίφθηκε από Επιτροπή";
+        const approveCount = Object.values(votes).filter(v => v === "approve").length;
+        const rejectCount = Object.values(votes).filter(v => v === "reject").length;
 
-              const div = document.createElement('div');
-              div.className = 'card';
-              div.innerHTML = `
-                <p><strong>${app.stud_surname} ${app.stud_name}</strong> - ${app.stud_id}</p>
-                <p>Φορέας: ${app.emp_name}</p>
-                <p>Κατάσταση: <span class="status">${finalStatus}</span></p>
-                <div class="vote-line">Η ψήφος σας: <strong>${currentVote || "Καμία"}</strong></div>
-                <div class="actions">
-                  <button onclick="vote(${app.id}, 'approve')">Έγκριση</button>
-                  <button onclick="vote(${app.id}, 'reject')">Απόρριψη</button>
-                </div>
-              `;
-              container.appendChild(div);
-            });
-        });
+        let finalStatus = "Σε Αναμονή";
+        if (approveCount >= 2) finalStatus = "Εγκρίθηκε από Επιτροπή";
+        else if (rejectCount >= 2) finalStatus = "Απορρίφθηκε από Επιτροπή";
+
+        const memberVotes = Object.entries(votes).map(([k, v]) => `${k}: ${v === "approve" ? "Έγκριση" : v === "reject" ? "Απόρριψη" : "Καμία"}`).join("<br>");
+
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+          <p><strong>${stud_surname} ${stud_name}</strong> - ${studentId}</p>
+          <p>Φορέας: ${emp_name}</p>
+          <p>Κατάσταση: <span class="status">${finalStatus}</span></p>
+          <div class="vote-line">Η ψήφος σας: <strong>${currentVote || "Καμία"}</strong></div>
+          <div class="vote-line"><em>Ψήφοι Επιτροπής:</em><br>${memberVotes}</div>
+          <div class="actions">
+            <button onclick="vote('${studentId}', 'approve')">Έγκριση</button>
+            <button onclick="vote('${studentId}', 'reject')">Απόρριψη</button>
+            <button onclick="viewDetails('${studentId}')">Προβολή Αίτησης</button>
+          </div>
+        `;
+        container.appendChild(div);
+      }
     }
 
-    function vote(appId, decision) {
-      const voteKey = `votes_${appId}`;
+    function vote(studentId, decision) {
+      const voteKey = `votes_${studentId}`;
       const votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
       votes[memberId] = decision;
       localStorage.setItem(voteKey, JSON.stringify(votes));
+
+      const approveCount = Object.values(votes).filter(v => v === "approve").length;
+      const rejectCount = Object.values(votes).filter(v => v === "reject").length;
+
+      if (approveCount >= 2) {
+        localStorage.setItem(`student_${studentId}_status`, "ApprovedByCommittee");
+      } else if (rejectCount >= 2) {
+        localStorage.setItem(`student_${studentId}_status`, "RejectedByCommittee");
+      }
+
       fetchApplications();
     }
+
+      function viewDetails(studentId) {
+        const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || '{}');
+        const upData = JSON.parse(localStorage.getItem(`up_dilwsh_data_${studentId}`) || '{}');
+        const vevData = JSON.parse(localStorage.getItem(`vevaiwsi_apodoxis_data_${studentId}`) || '{}');
+
+        const excludeKeys = ["stud_name", "stud_fname", "stud_surname", "stud_mname", "stud_id", "stud_afm"];
+
+        const labels = {
+          emp_name: "Όνομα Φορέα",
+          emp_address: "Διεύθυνση Φορέα",
+          emp_email: "Email Φορέα",
+          emp_tel: "Τηλέφωνο Φορέα",
+          up_dilwsh_text: "Κείμενο Δήλωσης",
+          vevaiwsi_apodoxis_text: "Κείμενο Βεβαίωσης",
+          practice_subject: "Αντικείμενο Πρακτικής",
+          start_date: "Ημερομηνία Έναρξης",
+          end_date: "Ημερομηνία Λήξης"
+        };
+
+        function renderData(data, sectionTitle) {
+          let html = `<div class='section-title'>${sectionTitle}</div>`;
+          for (const [k, v] of Object.entries(data)) {
+            if (!v || excludeKeys.includes(k)) continue;
+            const label = labels[k] || k.replaceAll("_", " ");
+            html += `<p><strong>${label}:</strong> ${v}</p>`;
+          }
+          return html;
+        }
+
+        let content = "";
+        content += renderData(studentData, "Στοιχεία Φοιτητή");
+        content += renderData(upData, "Φορέας Πρακτικής");
+        content += renderData(vevData, "Βεβαίωση Αποδοχής");
+
+        document.getElementById("modalContent").innerHTML = content || '<p>Δεν υπάρχουν στοιχεία προς προβολή.</p>';
+        document.getElementById("detailsModal").style.display = "block";
+      }
+
 
     fetchApplications();
   </script>
