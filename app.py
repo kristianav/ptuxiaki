@@ -24,6 +24,9 @@ users = {
     "student1": "password123",
     "student2": "mypassword",
     "dssec": "secpassword",
+    "melos1": "melos12",
+    "melos2": "melos22",
+    "melos3": "melos32",
 }
 
 # Προφίλ φοιτητών με βασικά στοιχεία
@@ -140,7 +143,12 @@ def login():
     student_id = data.get('studentId')
 
     if username in users and users[username] == password:
-        user_role = "secretary" if username.startswith("dssec") else "student"
+        if username.startswith("dssec"):
+            user_role = "secretary"
+        elif username.startswith("melos"):
+            user_role = "epitroph"
+        else:
+            user_role = "student"
 
         if user_role == "student":
             if not student_id:
@@ -169,6 +177,13 @@ def login():
                 "stud_surname": profile.get("stud_surname", ""),
                 "stud_fname": profile.get("stud_fname", "")
             })
+
+        elif user_role == "epitroph":
+            return jsonify({
+                "success": True,
+                "role": user_role,
+                "member_id": username
+        })
 
         return jsonify({"success": True, "role": user_role})
 

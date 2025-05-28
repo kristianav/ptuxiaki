@@ -72,6 +72,7 @@
             <select id="userType" required>
                 <option value="student">Φοιτητής</option>
                 <option value="secretary">Γραμματεία</option>
+                <option value="epitroph">Μέλος επιτροπής</option>
             </select>
 
             <div id="studentIdContainer">
@@ -131,23 +132,30 @@
                     messageElement.textContent = "Επιτυχής σύνδεση!";
 
 
-                    setTimeout(() => {
-                        if (userType === "student") {
-                            localStorage.setItem("active_student_id", studentId);
-                            localStorage.setItem("stud_name", data.stud_name || "");
-                            localStorage.setItem("stud_surname", data.stud_surname || "");
-                            localStorage.setItem("stud_fname", data.stud_fname || "");
+setTimeout(() => {
+  if (data.role === "student") {
+    localStorage.setItem("active_student_id", studentId);
+    localStorage.setItem("stud_name", data.stud_name || "");
+    localStorage.setItem("stud_surname", data.stud_surname || "");
+    localStorage.setItem("stud_fname", data.stud_fname || "");
 
-                            const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
-                            if (hasSubmitted) {
-                                window.location.href = "student.html";
-                            } else {
-                                window.location.href = "form.html";
-                            }
-                        } else {
-                            window.location.href = "admin.html";
-                        }
-                    }, 1000);
+    const hasSubmitted = localStorage.getItem(`student_${studentId}_data`);
+    if (hasSubmitted) {
+      window.location.href = "student.html";
+    } else {
+      window.location.href = "form.html";
+    }
+
+  } else if (data.role === "secretary") {
+    window.location.href = "admin.html";
+
+  } else if (data.role === "epitroph") {
+    localStorage.setItem("member_id", data.member_id);
+    localStorage.setItem("role", "epitroph");
+    window.location.href = "epitroph.html";
+  }
+}, 1000);
+
                 } else {
                     messageElement.style.color = "red";
                     messageElement.textContent = "Αποτυχία σύνδεσης: " + (data.error || "Άγνωστο σφάλμα.");

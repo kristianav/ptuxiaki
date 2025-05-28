@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <title>Πίνακας Επιτροπής</title>
+  <style>
+    body { font-family: Arial; background: #f2f2f2; margin: 0; padding: 20px; }
+    h2 { text-align: center; }
+    .card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .actions button { margin-right: 10px; }
+    .status { font-weight: bold; }
+    .vote-line { font-size: 0.9em; color: #555; }
+  </style>
+</head>
+<body>
+  <h2>Αιτήσεις για αξιολόγηση</h2>
+  <div id="applications"></div>
+
+  <script>
+    const memberId = localStorage.getItem("member_id");
+    const role = localStorage.getItem("role");
+
+    if (role !== "epitroph") {
+      alert("Δεν έχετε δικαίωμα πρόσβασης σε αυτή τη σελίδα.");
+      window.location.href = "login.html";
+    }
+
+    function fetchApplications() {
+      fetch('/applications')
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById('applications');
+          container.innerHTML = '';
+
+          data.applications
+            .filter(app => app.status === "ApprovedByAdmin")
+            .forEach(app => {
+              const voteKey = `votes_${app.id}`;
+              const votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
+
+              const currentVote = votes[memberId] || "";
+
+              const approveCount = Object.values(votes).filter(v => v === "approve").length;
+              const rejectCount = Object.values(votes).filter(v => v === "reject").length;
+
+              let finalStatus = "Σε Αναμονή";
+              if (approveCount >= 2) finalStatus = "Εγκρίθηκε από Επιτροπή";
+              else if (rejectCount >= 2) finalStatus = "Απορρίφθηκε από Επιτροπή";
+
+              const div = document.createElement('div');
+              div.className = 'card';
+              div.innerHTML = `
+                <p><strong>${app.stud_surname} ${app.stud_name}</strong> - ${app.stud_id}</p>
+                <p>Φορέας: ${app.emp_name}</p>
+                <p>Κατάσταση: <span class="status">${finalStatus}</span></p>
+                <div class="vote-line">Η ψήφος σας: <strong>${currentVote || "Καμία"}</strong></div>
+                <div class="actions">
+                  <button onclick="vote(${app.id}, 'approve')">Έγκριση</button>
+                  <button onclick="vote(${app.id}, 'reject')">Απόρριψη</button>
+                </div>
+              `;
+              container.appendChild(div);
+            });
+        });
+    }
+
+    function vote(appId, decision) {
+      const voteKey = `votes_${appId}`;
+      const votes = JSON.parse(localStorage.getItem(voteKey) || '{}');
+      votes[memberId] = decision;
+      localStorage.setItem(voteKey, JSON.stringify(votes));
+      fetchApplications();
+    }
+
+    fetchApplications();
+  </script>
+</body>
+</html>

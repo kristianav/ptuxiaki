@@ -4,6 +4,7 @@
 
 <html lang="el">
 <head>
+<!--- <script nonce="0y2v9dZQIgru0iTb" type="text/javascript" src="//self.adblockultimate.net/manager.js?tm=1748423882&amp;lg=true" guid="{F3FC6E0F-7CE5-4484-8A13-7524CBA7CAEB}" inwhitelist="false" status="true" autohide="true"></script> -------->
 <script>
         // Έλεγχος αν ο χρήστης έχει ήδη δει το login
         if (!localStorage.getItem('visitedLogin')) {
@@ -545,6 +546,8 @@ function saveFormData() {
 <script>
 // Υποβολή και αποθήκευση των τελικών δεδομένων
 document.getElementById("submit_button").addEventListener("click", function (event) {
+  event.preventDefault();
+    const studentId = localStorage.getItem("active_student_id");
 
       const requiredFields = [
     "stud_surname", "stud_name", "stud_fname", "stud_mname",
@@ -560,7 +563,7 @@ document.getElementById("submit_button").addEventListener("click", function (eve
       alert(`Το πεδίο "${input?.previousElementSibling?.textContent || id}" είναι υποχρεωτικό.`);
       input?.focus();
       valid = false;
-      break;
+      return;
     }
   }
 
@@ -591,12 +594,7 @@ document.getElementById("submit_button").addEventListener("click", function (eve
     }
   }
 
-
-
-  event.preventDefault();
   const data = {};
-  const studentId = localStorage.getItem("active_student_id");
-
   // Συλλογή ΟΛΩΝ των input/textarea πεδίων, όχι μόνο αυτών με name
   document.querySelectorAll("input, textarea").forEach(el => {
     if (el.type !== "file") {
