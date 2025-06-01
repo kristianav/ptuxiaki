@@ -163,6 +163,14 @@
       window.location.href = "login.html";
     }
 
+
+    const melhepitrophs = {
+        melos1: "ΠΑΠΑΔΗΜΗΤΡΙΟΥ ΕΥΑΓΓΕΛΟΣ",
+        melos2: "ΚΑΡΑΓΙΑΝΝΗΣ ΚΩΝΣΤΑΝΤΙΝΟΣ",
+        melos3: "ΚΩΝΣΤΑΝΤΙΝΟΥ ΟΥΡΑΝΙΑ",
+    }
+
+
     function fetchApplications() {
       const container = document.getElementById("applications");
       container.innerHTML = "";
@@ -173,7 +181,7 @@
         if (key.startsWith("student_") && key.endsWith("_data")) {
           const id = key.split("_")[1];
           const status = localStorage.getItem(`student_${id}_status`);
-          if (status === "ApprovedByAdmin") {
+        if (["ApprovedByAdmin", "ApprovedByCommittee", "RejectedByCommittee"].includes(status)) {
             studentIds.add(id);
           }
         }
@@ -196,7 +204,12 @@
         if (approveCount >= 2) finalStatus = "Εγκρίθηκε από Επιτροπή";
         else if (rejectCount >= 2) finalStatus = "Απορρίφθηκε από Επιτροπή";
 
-        const memberVotes = Object.entries(votes).map(([k, v]) => `${k}: ${v === "approve" ? "Έγκριση" : v === "reject" ? "Απόρριψη" : "Καμία"}`).join("<br>");
+        const memberVotes = Object.entries(votes)
+            .map(([k, v]) => {
+                const name = melhepitrophs[k] || k;
+                const label = v === "approve" ? "Έγκριση" : v === "reject" ? "Απόρριψη" : "Καμία";
+                return `${name}: ${label}`;
+            }).join("<br>");
 
         const div = document.createElement("div");
         div.className = "card";
@@ -234,44 +247,55 @@
       fetchApplications();
     }
 
-      function viewDetails(studentId) {
-        const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || '{}');
-        const upData = JSON.parse(localStorage.getItem(`up_dilwsh_data_${studentId}`) || '{}');
-        const vevData = JSON.parse(localStorage.getItem(`vevaiwsi_apodoxis_data_${studentId}`) || '{}');
+    function viewDetails(studentId) {
+      const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || '{}');
 
-        const excludeKeys = ["stud_name", "stud_fname", "stud_surname", "stud_mname", "stud_id", "stud_afm"];
+      const excludeKeys = ["department", "sxolh", "university", "stud_city", "stud_address", "stud_zipcode",
+        "current_date", "start_date", "supervisor"
+        ];
 
-        const labels = {
-          emp_name: "Όνομα Φορέα",
-          emp_address: "Διεύθυνση Φορέα",
-          emp_email: "Email Φορέα",
-          emp_tel: "Τηλέφωνο Φορέα",
-          up_dilwsh_text: "Κείμενο Δήλωσης",
-          vevaiwsi_apodoxis_text: "Κείμενο Βεβαίωσης",
-          practice_subject: "Αντικείμενο Πρακτικής",
-          start_date: "Ημερομηνία Έναρξης",
-          end_date: "Ημερομηνία Λήξης"
-        };
-
-        function renderData(data, sectionTitle) {
-          let html = `<div class='section-title'>${sectionTitle}</div>`;
-          for (const [k, v] of Object.entries(data)) {
-            if (!v || excludeKeys.includes(k)) continue;
-            const label = labels[k] || k.replaceAll("_", " ");
-            html += `<p><strong>${label}:</strong> ${v}</p>`;
-          }
-          return html;
+        const dedomena = {
+        "stud_id": "Αριθμός Μητρώου Φοιτητή",
+        "full_name": "Ονοματεπώνυμο Φοιτητή",
+        "stud_fname": "Πατρώνυμο Φοιτητή",
+        "stud_afm": "ΑΦΜ Φοιτητή",
+        "stud_sem": "Εξάμηνο Φοιτητή",
+        "stud_phone": "Τηλέφωνο Φοιτητή",
+        "stud_email": "Email Φοιτητή",
+        "emp_name": "Όνομα Φορέα",
+        "emp_address": "Διεύθυνση Φορέα",
+        "emp_phone": "Τηλέφωνο Φορέα",
+        "emp_email": "Email Φορέα",
+        "emp_sup": "Επόπτης Φορέα"
         }
 
-        let content = "";
-        content += renderData(studentData, "Στοιχεία Φοιτητή");
-        content += renderData(upData, "Φορέας Πρακτικής");
-        content += renderData(vevData, "Βεβαίωση Αποδοχής");
+        const displayKeys = Object.keys(dedomena);
 
-        document.getElementById("modalContent").innerHTML = content || '<p>Δεν υπάρχουν στοιχεία προς προβολή.</p>';
-        document.getElementById("detailsModal").style.display = "block";
+        const allData = {
+            stud_id: studentData.stud_id || "",
+            full_name: `${studentData.stud_surname || ""} ${studentData.stud_name || ""}`,
+            stud_fname: studentData.stud_fname || "",
+            stud_afm: studentData.stud_afm || "",
+            stud_sem: studentData.stud_sem || "",
+            stud_phone: studentData.stud_phone || "",
+            stud_email: studentData.stud_email || "",
+            emp_name: studentData.emp_name || "",
+            emp_address: studentData.emp_address || "",
+            emp_phone: studentData.emp_phone || "",
+            emp_email: studentData.emp_email || "",
+            emp_sup: studentData.emp_sup || "",
+        };
+      let content = "<div class='section-title'>Βασικά στοιχεία φοιτητή-φορέα</div>";
+      for (const k of displayKeys) {
+        const v = allData[k];
+        if (v && v.trim() !== "") {
+            content += `<p><strong>${dedomena[k]}:</strong> ${v}</p>`;
+        }
       }
 
+      document.getElementById("modalContent").innerHTML = content || '<p>Δεν υπάρχουν στοιχεία προς προβολή.</p>';
+      document.getElementById("detailsModal").style.display = "block";
+    }
 
     fetchApplications();
   </script>

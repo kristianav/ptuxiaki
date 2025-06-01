@@ -307,12 +307,17 @@
 
     <div id="admin-box" class="admin-status-box" style="display:none;">
       <h3>Κατάσταση Αίτησης:</h3>
-      <p><strong>Κατάσταση:</strong> <span id="admin-status"></span></p>
+      <p><strong>Κατάσταση:</strong> <span id="application-status"></span></p>
       <div id="admin-comment-section" style="display:none;">
         <p><strong>Σχόλιο Γραμματείας:</strong> <span id="admin-comment"></span></p>
 <button class="resubmit-btn" onclick="resubmitApplication()">🔁 Επανυποβολή Αίτησης</button>
       </div>
     </div>
+    <div id="epitroph-comment-box" style="display:none; margin-top: 10px; background-color: #fff8e1; border-left: 4px solid #f39c12; padding: 10px; border-radius: 6px;">
+  <p><strong>Σχόλιο Επιτροπής:</strong> <span id="epitroph-comment-text"></span></p>
+</div>
+
+
     <form id="applicationForm"></form>
 <div class="status-container">
 <h3>Στοιχεία Φοιτητή:</h3>
@@ -381,12 +386,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const commentText = document.getElementById("admin-comment");
 
         statusBox.style.display = "block";
-
         if (status === "Pending") {
           statusText.textContent = "Εκκρεμεί";
           statusText.classList.add("status-pending");
-        } else if (status === "Approved") {
-          statusText.textContent = "Εγκεκριμένη";
+        } else if (status === "ApprovedByAdmin") {
+          statusText.textContent = "Εγκεκριμένη από τη Γραμματεία";
           statusText.classList.add("status-approved");
         } else if (status === "Rejected") {
           statusText.textContent = "Απορριφθείσα";
@@ -396,6 +400,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
     const editBtn = document.getElementById("editFormBtn");
+
+const generalStatus = localStorage.getItem(`student_${studentId}_status`) || "Pending";
+document.getElementById("application-status").textContent =
+  generalStatus === "ApprovedByCommittee" ? "Εγκρίθηκε από την Επιτροπή" :
+  generalStatus === "RejectedByCommittee" ? "Απορρίφθηκε από την Επιτροπή" :
+  generalStatus === "ApprovedByAdmin" ? "Εγκεκριμένη από τη Γραμματεία" :
+  generalStatus === "Rejected" ? "Απορριφθείσα από τη Γραμματεία" :
+  "Εκκρεμεί";
+
+  
+  const epitrophNote = localStorage.getItem(`student_${studentId}_epitroph_comment`) || "";
+const finalStatus = localStorage.getItem(`student_${studentId}_status`);
+
+const commentBox = document.getElementById("epitroph-comment-box");
+const epitrophcommentText = document.getElementById("epitroph-comment-text");
+
+if ((finalStatus === "ApprovedByCommittee" || finalStatus === "RejectedByCommittee") && epitrophNote.trim() !== "") {
+  commentBox.style.display = "block";
+  commentText.textContent = epitrophNote;
+}
+
+
+
 
     if (editBtn) {
         editBtn.addEventListener("click", function () {
@@ -520,8 +547,8 @@ function createDocumentTemplates() {
                 <div>ΤΜΗΜΑ ΨΗΦΙΑΚΩΝ ΣΥΣΤΗΜΑΤΩΝ</div>
             </div>
             <div class="document-body">
-                <p>Ο/η κάτωθι υπογεγραμμένος/η {{emp_sup}}, νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου Φορέα,
-                με επωνυμία: {{emp_name}}, Διεύθυνση: {{emp_addr}}, Αντικείμενο εργασιών: {{job_desc}},
+                <p>Ο/η κάτωθι υπογεγραμμένος/η {{repr}}, νόμιμος/η εκπρόσωπος της Επιχείρησης ή Δημόσιου Φορέα,
+                με επωνυμία: {{org}}, Διεύθυνση: {{addr}}, Αντικείμενο εργασιών: {{job_desc}},
                 βεβαιώνω ότι: </p>
 
                 <p>Αποδεχόμαστε το αίτημα του/της {{stud_name}} {{stud_surname}} φοιτητή/τριας του Τμήματος Ψηφιακών Συστημάτων
