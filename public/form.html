@@ -635,6 +635,32 @@ localStorage.setItem(`student_${studentId}_log`, JSON.stringify(logs));
 });
 
 
+function updateFileStatus(inputId) {
+  const studentId = localStorage.getItem("active_student_id");
+  const input = document.getElementById(inputId);
+  const statusSpan = document.getElementById(`status_${inputId}`);
+
+  if (input && input.files.length > 0) {
+    // Ενημέρωση localStorage
+    if (studentId) {
+      localStorage.setItem(`${inputId}_submitted_${studentId}`, "true");
+    }
+    if (statusSpan) {
+      statusSpan.textContent = "✔️ Έχει υποβληθεί";
+      statusSpan.style.color = "green";
+    }
+  } else {
+    if (studentId) {
+      localStorage.removeItem(`${inputId}_submitted_${studentId}`);
+    }
+    if (statusSpan) {
+      statusSpan.textContent = "❌ Δεν έχει υποβληθεί";
+      statusSpan.style.color = "red";
+    }
+  }
+}
+
+
 
 </script>
 
