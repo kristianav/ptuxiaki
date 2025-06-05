@@ -269,6 +269,9 @@ function viewForm(studentId, type) {
   }
 
   const mergedData = { ...studentData, ...upDilwshData, ...vevaiwsiData };
+  mergedData.org = vevaiwsiData.emp_name || '';
+  mergedData.addr = vevaiwsiData.emp_addr || '';
+  mergedData.repr = vevaiwsiData.emp_sup || '';
   const filled = template.replace(/{{\s*(\w+)\s*}}/g, (match, key) => mergedData[key] || `[${key}]`);
 
   document.getElementById("form-content").innerHTML = '<div class="document-preview">' + filled + '</div>';
@@ -286,6 +289,7 @@ function showDocumentPreview(key, title) {
     ...vevaiwsiData,
     ...updilwshData
   };
+  
 
   // Εναλλακτικά aliases (αν υπάρχουν στο template)
   merged.org = vevaiwsiData.emp_name;
