@@ -405,7 +405,7 @@ const generalStatus = localStorage.getItem(`student_${studentId}_status`) || "Pe
 document.getElementById("application-status").textContent =
   generalStatus === "ApprovedByCommittee" ? "Εγκρίθηκε από την Επιτροπή" :
   generalStatus === "RejectedByCommittee" ? "Απορρίφθηκε από την Επιτροπή" :
-  generalStatus === "ApprovedByAdmin" ? "Εγκεκριμένη από τη Γραμματεία" :
+  generalStatus === "ApprovedByAdmin" ? "Εγκρίθηκε από τη Γραμματεία, αναμονή για Επιτροπή" :
   generalStatus === "Rejected" ? "Απορριφθείσα από τη Γραμματεία" :
   "Εκκρεμεί";
 

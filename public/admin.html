@@ -44,6 +44,16 @@
       font-weight: bold;
       text-decoration: none;
     }
+    .print-btn {
+      background: #007bff;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
     h1 { text-align: center; color: #333; }
     table {
       width: 100%;
@@ -121,8 +131,9 @@
 </div>
 <a class="logout-btn" href="login.html">Αποσύνδεση</a>
 </div>
-<h1>Διαχείριση Αιτήσεων</h1>
+<h1>Έγκριση αιτήσεων από Γραμματεία</h1>
 <button onclick="deleteAllApplications()" style="background-color: #c0392b; color: white; padding: 10px 15px; border: none; border-radius: 6px; font-size: 15px; margin-bottom: 20px;">🗑️ Διαγραφή Όλων των Αιτήσεων</button>
+<button class="print-btn" onclick="window.print()">🖨️ Εκτύπωση Πίνακα</button>
 <table>
 <thead>
 <tr>
@@ -217,6 +228,7 @@ function loadApplications() {
         <span>Βεβ: ${localStorage.getItem(`vevaiwsi_apodoxis_html_${studentId}`) ? '✔️' : '❌'}</span><br/>
         <button class="form-button" onclick="viewForm('${studentId}', 'up_dilwsh')">Προβολή ΥΔ</button>
         <button class="form-button" onclick="viewForm('${studentId}', 'vevaiwsi_apodoxis')">Προβολή Βεβαίωσης</button>
+        <button class="form-button" onclick="viewVath('${studentId}')">Προβολή Αναλυτικής Βαθμολογίας</button>
       </td>
     `;
     tableBody.appendChild(row);
@@ -243,17 +255,14 @@ function saveStatus(studentId) {
   localStorage.setItem(`student_${studentId}_comments`, comments);
   alert("Η κατάσταση και τα σχόλια αποθηκεύτηκαν.");
 
-
-const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
-logs.push({
+  const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
+  logs.push({
     action: status === "ApprovedByAdmin" ? "Εγκρίθηκε από Γραμματεία" : "Απορρίφθηκε από Γραμματεία",
     by: "Γραμματεία",
     comment: comments,
     date: new Date().toLocaleString("el-GR")
-});
-localStorage.setItem(`student_${studentId}_log`, JSON.stringify(logs));
-
-
+  });
+  localStorage.setItem(`student_${studentId}_log`, JSON.stringify(logs));
 }
 
 function viewForm(studentId, type) {
@@ -278,51 +287,56 @@ function viewForm(studentId, type) {
   document.getElementById("form-viewer").style.display = "flex";
 }
 
-function showDocumentPreview(key, title) {
-  const studentId = localStorage.getItem('active_student_id');
-  const studentData = JSON.parse(localStorage.getItem('student_' + studentId + '_data') || '{}');
-  const vevaiwsiData = JSON.parse(localStorage.getItem('vevaiwsi_apodoxis_data_' + studentId) || '{}');
-  const updilwshData = JSON.parse(localStorage.getItem('up_dilwsh_data_' + studentId) || '{}');
+function viewVath(studentId) {
+  const pdfUrl = localStorage.getItem(`vath_pdf_${studentId}`);
+  const vathJson = localStorage.getItem(`vath_data_${studentId}`);
+  const studentData = JSON.parse(localStorage.getItem(`student_${studentId}_data`) || "{}");
 
-  const merged = {
-    ...studentData,
-    ...vevaiwsiData,
-    ...updilwshData
-  };
-  
+  if (pdfUrl) {
+    document.getElementById("form-content").innerHTML = `
+      <h3>Αναλυτική Βαθμολογία (PDF)</h3>
+      <iframe src="${pdfUrl}" width="100%" height="600px" style="border:none;"></iframe>
+    `;
+    document.getElementById("form-viewer").style.display = "flex";
+    return;
+  }
 
-  // Εναλλακτικά aliases (αν υπάρχουν στο template)
-  merged.org = vevaiwsiData.emp_name;
-  merged.addr = vevaiwsiData.emp_addr;
-  merged.repr = vevaiwsiData.emp_sup;
+  if (vathJson) {
+    try {
+      const data = JSON.parse(vathJson);
+      if (!Array.isArray(data.courses)) throw new Error("Λάθος μορφή δεδομένων.");
 
-  const template = localStorage.getItem(key);
-  const filled = template.replace(/{{\\s*(\\w+)\\s*}}/g, (match, key) => merged[key] || `[${key}]`);
+      let html = `
+        <h3>Αναλυτική Βαθμολογία</h3>
+        <table><tr><th>Μάθημα</th><th>Βαθμός</th></tr>`;
+      data.courses.forEach(c => {
+        html += `<tr><td>${c.title}</td><td>${c.grade}</td></tr>`;
+      });
+      html += "</table>";
 
-  const modal = document.getElementById('documentModal');
-  const modalTitle = document.getElementById('modalTitle');
-  const documentPreview = document.getElementById('documentPreview');
+      document.getElementById("form-content").innerHTML = html;
+      document.getElementById("form-viewer").style.display = "flex";
+      return;
+    } catch (e) {
+      alert("Σφάλμα κατά την ανάγνωση της βαθμολογίας.");
+    }
+  }
 
-  modalTitle.textContent = title;
-  documentPreview.innerHTML = filled;
-  modal.style.display = 'block';
+  const template = localStorage.getItem("analytiki_vathmologia") || "Δεν υπάρχει πρότυπο.";
+  const filled = template.replace(/{{\s*(\w+)\s*}}/g, (match, key) => studentData[key] || `[${key}]`);
+  document.getElementById("form-content").innerHTML = filled;
+  document.getElementById("form-viewer").style.display = "flex";
+}
+
+function initAnalytikiTemplate() {
+  if (!localStorage.getItem('analytiki_vathmologia')) {
+    const analytiki = `...`; // (Συντόμευση εδώ — βάλε το template όπως πριν)
+    localStorage.setItem('analytiki_vathmologia', analytiki);
+  }
 }
 
 function closeFormViewer() {
   document.getElementById("form-viewer").style.display = "none";
-
-
-  const logList = document.getElementById("log-history");
-logList.innerHTML = "";
-
-const logs = JSON.parse(localStorage.getItem(`student_${studentId}_log`) || "[]");
-
-logs.forEach(entry => {
-  const li = document.createElement("li");
-  li.textContent = `${entry.date} — ${entry.by}: ${entry.action}` + (entry.comment ? ` (${entry.comment})` : "");
-  logList.appendChild(li);
-});
-
 }
 
 function deleteAllApplications() {
@@ -345,7 +359,10 @@ function deleteAllApplications() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', loadApplications);
+document.addEventListener('DOMContentLoaded', () => {
+  initAnalytikiTemplate();
+  loadApplications();
+});
 </script>
 </body>
 </html>
